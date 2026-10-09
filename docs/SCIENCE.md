@@ -205,8 +205,9 @@ Multiplier table, computed from the formula (relative to $100 \times \mathrm{BW}
 | $f(p)$ | 2.153 | 2.029 | 1.909 | 1.790 | 1.674 | 1.560 | 1.448 | 1.338 | 1.230 | 1.124 |
 
 FEDIAF 2025 Table VII-10 instead gives multiples of MER by age: up to 4 months 2.0-2.5; 4-9 months
-1.75-2.0; 9-12 months 1.5 [1]. It does not say which MER is multiplied (UNVERIFIED); the engine interprets it
-as $k \times \mathrm{BW}^{0.67}$ with $k$ from 75 (lower) to 100 (upper). AAHA Box 1 uses a flat growth factor of
+1.75-2.0; 9-12 months 1.5 [1]. The table column is headed only "Times MER" and defines no MER (checked
+in the primary 2025 PDF, p. 57, Claude review of 2026-10-09), so the ambiguity lies in the source; the engine interprets it
+as $k \times \mathrm{BW}^{0.67}$ with $k$ from 75 (lower) to 100 (upper), an app choice (X). AAHA Box 1 uses a flat growth factor of
 $2.5 \times \mathrm{RER}$ [6]; Merck also gives $2.5 \times \mathrm{RER}$ and says kittens "can alternatively be fed free choice" [9].
 
 Practical growth markers (S, from Hand et al., Small Animal Clinical Nutrition, ch. 24 [12]): kittens
@@ -307,7 +308,8 @@ shows no kcal target; only a fixed message to follow the veterinary team's plan 
 
 $$\mathrm{ME}_{\text{gestation}} = 140 \times \mathrm{BW}^{0.67} \qquad (\text{FEDIAF 2025 Table VII-10; G})$$
 
-BW is not defined in the FEDIAF table; NRC practice is BW at breeding (**UNVERIFIED**). The engine uses the queen's
+The FEDIAF table defines no body weight for queens (checked in the primary 2025 PDF, p. 57); whether NRC intends
+BW at breeding remains **UNVERIFIED**. The engine uses the queen's
 pre-breeding (ideal) weight. For a 4 kg queen: 354.4 kcal/day ($1.40 \times$ the active adult MER of 253). Queens gain up
 to about 38 % of pre-pregnancy weight, rate linear; energy rises about 10 %/week from early pregnancy,
 ending at 25-50 % above maintenance (Fontaine 2012) [13], consistent with $140 / 100 = 1.4$. Guidance
@@ -325,7 +327,8 @@ with $c = 18$ (fewer than 3 kittens), $60$ (3 to 4 kittens), $70$ (more than 4 k
 $L = 0.9$ (weeks 1-2), $1.2$ (weeks 3-4), $1.1$ (week 5), $1.0$ (week 6), $0.8$ (week 7).
 
 (FEDIAF Table VII-10; G.) kJ versions: $418 \times \mathrm{BW}^{0.67} + \lbrace 75, 250, 293 \rbrace \times \mathrm{BW} \times L$. The table does not say how to define BW
-during lactation (current vs. pre-breeding; **UNVERIFIED**); the engine uses the queen's current weight and
+during lactation (current vs. pre-breeding; confirmed absent in the primary 2025 PDF, p. 57, which cites Loveridge 1986/1987,
+Kienzle 1998, Dobenecker 1998 and NRC 2006 for the equation); the engine uses the queen's current weight and
 shows a note. Computed for a 4 kg queen (kcal/day):
 
 | Litter | wk 1-2 (0.9) | wk 3-4 (1.2) | wk 5 (1.1) | wk 6 (1.0) | wk 7 (0.8) |
@@ -614,7 +617,9 @@ an assumed energy intake). The general rule in the guideline text:
 
 $$\text{units per 1000 kcal} = \frac{\text{nutrient requirement per day (units/kg}^{0.67}) \times 1000}{\text{DER (kcal/kg}^{0.67})}$$
 
-For protein, the requirement is 6.25 g/kg^0.67 ($62.5 \times 100 / 1000$; same as $83.3 \times 75 / 1000$) [1]. So the
+For protein, the requirement is 6.25 g/kg^0.67 ($62.5 \times 100 / 1000$; same as $83.3 \times 75 / 1000$); FEDIAF 2025
+Table VII-11 (p. 57) prints exactly this figure, 6.25 g protein per kg BW^0.67 for adult cat maintenance, and 2.25 g fat
+(checked in the primary PDF, Claude review of 2026-10-09) [1]. So the
 minimum protein density is
 
 $$\text{min protein (g/1000 kcal)} = \max\Big(62.5,\ \frac{6250}{k_{\text{actual}}}\Big) \qquad k_{\text{actual}} = \frac{\text{daily kcal}}{W^{0.67}}$$
@@ -924,14 +929,14 @@ analysis (as-fed %):
 | --- | --- |
 | age < 8 weeks, orphan or hand-reared | neonatal energy 130-220 kcal/kg, milk replacers; outside evidence reviewed [13] |
 | any `medical` flag, hospitalised, post-op, or on a prescription diet | section 8 (chronic flags give a reference-only calculation, acute flags a referral) |
-| BCS ≤3/9 or MCS severe, or BCS 9 with any other sign | HR 4.67 at BCS 3 [19]; emaciation requires work-up; refeeding risk [28] |
+| BCS ≤3/9 or MCS severe | HR 4.67 at BCS 3 [19]; emaciation requires work-up; refeeding risk [28]. BCS 9 alone is not a stop in the engine: it adds the note `overweight-consider-loss`; any clinical sign refers through the `clinical-signs` flag (last row) |
 | unintended weight change ≥5 % in 4 weeks, or any loss > 2 %/wk outside a weight-loss plan | disease signal; AAHA upper rate [5] |
 | on a weight-loss plan: loss faster than 3 %/wk, or ≥ 8 % in 28 days, or a gain ≥ 5 % in 28 days | hepatic-lipidosis safety, above the AAHA 2 %/wk alert (X, D5) |
 | verified intake of a weight-stable cat below $0.6 \times \mathrm{RER}(\mathrm{IBW})$ | a further cut would go below the floor; needs a work-up (X, D1) |
-| not eating (anorexia) ≥ 24 h (cat on weight-loss plan or BCS ≥7) or ≥ 48 h (any cat) | HL risk; AAHA 72 h/≤1/3 RER tube trigger is the hospital limit [4]; the 24/48 h figures are X (conservative) |
+| not eating (anorexia) ≥ 24 h, any cat (flag `not-eating`, acute) | HL risk; AAHA 72 h/≤1/3 RER tube trigger is the hospital limit [4]; the single 24 h figure is X (conservative). An earlier draft distinguished 24 h (weight-loss plan or BCS ≥7) from 48 h (any cat); the engine and UI use 24 h for every cat |
 | `repro` ≠ none (pregnant/lactating) | calculation shown as reference only, plus banner: lactation needs vary widely; queens usually cannot meet needs [13] |
 | goal `lose` with kcal would fall below $0.6 \times \mathrm{RER}(\mathrm{IBW})$ | app referral policy (X), informed by AAHA's restriction risks [5, printed p. 8]; section 7.1 |
-| kitten with adult weight unknown **and** age < 4 months | cannot apply NRC; show FEDIAF band only and ask |
+| kitten with adult weight unknown | **not a stop** in the engine: NRC cannot be applied, so the start is the interpolated FEDIAF band midpoint with the note `kitten-adult-weight-unknown`, and the app asks for the adult weight (3.1, D4). An earlier draft made this a stop below 4 months |
 | user/vet target differs from engine range by >30 % | show both, never overwrite; recommend vet confirmation |
 | vomiting, diarrhoea, lethargy, straining to urinate, drinking/urinating more | any clinical sign → vet; (X, standard practice) |
 
@@ -1017,7 +1022,7 @@ a growth/reproduction diet; weigh the queen weekly; wean kittens from 4-6 weeks.
 ## 15. What I could not verify
 
 * The NRC 2006 chapter text itself (OpenBook blocks it). Growth equation $6.7 \times (e^{-0.189p} - 0.66)$, $100 \times \mathrm{BW}^{0.67}$, $130 \times \mathrm{BW}^{0.4}$ were checked through secondary reproductions; the kitten expression is additionally corroborated by a primary study [40] and the numeric cross-check in 3.1. The NRC chapter itself remains unread.
-* Whether FEDIAF's "times MER" for kittens uses $k = 75$ or $100$ (or an unspecified MER); which body weight FEDIAF uses for gestation and lactation.
+* Partly resolved in the Claude review of 2026-10-09 from the primary 2025 PDF (p. 57): FEDIAF Table VII-10 says only "Times MER" for kittens and defines no body weight for gestation or lactation, so these are gaps in the source, not in the transcription. Still unverified: which MER and which body weight NRC 2006 intends behind those FEDIAF rows.
 * Resolved in the follow-up audit: AAHA 2014 printed page 8 contains the 60 %-of-RER guidance and the 10-20 % reduction step. Their clinical context remains essential (section 7.1).
 * Full AAHA 2021 JAAHA DOI was relayed by a search result (10.5326/JAAHA-MS-7232); the PDF I read confirms the content.
 * Resolved in the follow-up audit: AAHA 2026 section 8 was accessible and its dietary guidance checked [34]; iCatCare 2025 numbers were read via a copy of the full text by a subagent (the ≤12 % ME carbohydrate threshold was confirmed in the 2026-10-09 audit [39]).
