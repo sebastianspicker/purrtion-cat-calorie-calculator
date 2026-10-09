@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Same policy as script/serve.mjs, minus frame-ancestors (not supported in meta), so static hosts such as GitHub Pages get it too. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="A local-first cat calorie calculator. Estimate energy needs, plan fixed meals and a measured balance food for every cat.">
+    <meta name="color-scheme" content="light dark">
+    <title>Purrtion: cat calorie and portion planner</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+    <link rel="stylesheet" href="./assets/styles.css">
+    <script src="./vendor/temml/temml.min.js"></script>
+    <script type="module" src="./apps/web/src/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div id="app"><main class="loading"><h1>Purrtion</h1><p>Opening your feeding plan…</p></main></div>
+    <noscript>This calculator needs JavaScript. All calculations run on your device.</noscript>
+  </body>
+</html>
