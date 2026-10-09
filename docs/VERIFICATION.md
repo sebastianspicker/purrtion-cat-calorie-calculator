@@ -38,6 +38,20 @@ check 225 adult weight/ideal-weight/lifestyle/goal combinations in each engine, 
 above and below the floor for all three goals. Tests found no remaining mismatch in these checks.
 See SCIENCE.md §16.3 for corrections and the limits of the evidence review.
 
+### Claude review of the follow-up commit (2026-10-09)
+
+The review recomputed, from the formulas as written in the documents and independently of
+both engines, every §12.2 test vector, §13 A–E, §10.4, the §4.2 lactation table, the §2.2
+comparison table, D1–D7 and the §16.3 example, the CALCULATIONS.md Luna allocation and the
+README household (including Oskar's least-squares rate and Mochi's age-dependent band). All
+agree at the displayed precision. The FEDIAF July 2024 PDF was read directly: the 4-step and
+fresh-food equations, Table VII-9 (52–75 / 100), Table VII-10 (kitten multiples, gestation,
+lactation) and Table III-4b (protein 83.3 / 62.5 adult; growth 70 / reproduction 75, with no
+early/late-growth split for cats) match the engine. One engine defect was found and fixed (D8:
+the default weigh-in cadence of 30 days lay outside the 28-day trend window). `npm run check`
+passed after the change (358 of 358), and `swift test`, run outside the sandbox, passed 55 of 55
+methods including the rewritten golden expectations.
+
 ### Browser smoke test: passed in Chromium
 
 `tests/browser_smoke.py` passed on 2026-10-09 against the final build in its default mode: a real

@@ -456,7 +456,12 @@ $r$ exists. Otherwise `suggestion` is null.
 
 Because of the stop $r < -3$, the `loss-too-fast` row is reached only for $-3 \le r < -2$.
 
-- `nextWeighInDays`: stage kitten 7; goal loss 14; recently neutered 14; otherwise 30 (first match).
+- `nextWeighInDays`: stage kitten 7; goal loss 14; goal gain 14; recently neutered 14; otherwise 28
+  (first match). The default is 28 (AAHA's "monthly", counted in weeks) and not 30 because the window
+  above is 28 days inclusive: a cat weighed every 30 days never has two entries in the window, so $r$,
+  $c_{28}$, the suggestion and the `rapid-weight-change` stop would never exist for it (D8). A weigh-in
+  on the due date counts; a weigh-in later than 28 days after the previous one skips that comparison,
+  and the next on-time weigh-in restores it.
 - **Not implemented (needs an adjustment history):** "at most one change per 2 weeks" and "second plateau → veterinarian". The UI shows both as advice.
 
 ---
@@ -519,6 +524,7 @@ Notes:
     $\min(\mathrm{RER}, \mathrm{MER})$).
   - `trend.plateauMinSpanDays: 21` (was 28), `trend.gainStalledMinSpanDays: 21` (was 28),
     `trend.lossRapidRatePercent: -3`, `trend.lossRapidChangePercent: -8`.
+  - `trend.weighInOtherDays: 28` (was 30) and `trend.weighInGainDays: 14` (new), see §6 and SCIENCE.md D8.
   - `nutrition.growthMinProteinPer1000: 70` (was 75), `nutrition.reproductionMinProteinPer1000: 75`.
 - `shared/messages.json`: `{ "en": { code: text }, "de": { code: text } }` for every warning,
   reason, missing-input, note, nutrition status and note, suggestion reason, ideal-weight source

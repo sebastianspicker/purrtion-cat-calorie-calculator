@@ -225,7 +225,12 @@ test('trend: suggestions scale the current target and respect the floor', () => 
   assert.equal(loss(200, log([-14, 6], [0, 6])).nextWeighInDays, 14);
   assert.equal(run(cat({ weightLog: log([-14, 4], [0, 4.01]) }, { bcs: null })).suggestion, null);
   assert.equal(run(cat()).suggestion, null);
-  assert.equal(run(cat()).nextWeighInDays, 30);
+  assert.equal(run(cat()).nextWeighInDays, 28);
+  assert.equal(gain(log([-14, 4], [0, 4])).nextWeighInDays, 14);
+  // D8: a cat weighed exactly on the default cadence must still get a 28-day change and a rate (the window is inclusive).
+  const onCadence = run(cat({ weightLog: log([-28, 4], [0, 4.12]) }));
+  assert.ok(onCadence.change28dPercent !== null && onCadence.ratePercentPerWeek !== null);
+  assert.equal(onCadence.suggestion.reason, 'gaining');
   const kitten = run(cat({ weightKg: 2, weightLog: log([-14, 1.8], [0, 2]) }, { approxAgeYears: 0.3 }));
   assert.equal(kitten.suggestion, null); assert.equal(kitten.nextWeighInDays, 7);
 });

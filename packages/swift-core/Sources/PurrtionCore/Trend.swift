@@ -96,6 +96,8 @@ public enum TrendAnalysis {
         let weighIn: Double
         if estimate.stage == .kitten { weighIn = T.weighInKittenDays }
         else if cat.goal == .loss { weighIn = T.weighInLossDays }
+        else if cat.goal == .gain { weighIn = T.weighInGainDays }
+        // The default cadence (every 4 weeks) must fit inside the inclusive 28-day window (D8), or a maintenance cat never gets a trend.
         else { weighIn = try Estimator.isRecentlyNeutered(cat.profile, asOf: asOf) ? T.weighInRecentlyNeuteredDays : T.weighInOtherDays }
         return Trend(entries: series.entries.count, latestKg: series.latest?.weightKg, ratePercentPerWeek: series.ratePercentPerWeek,
                      change28dPercent: series.change28dPercent, suggestion: try suggest(cat, asOf: asOf, estimate: estimate, series: series),

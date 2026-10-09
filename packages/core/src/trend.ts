@@ -82,7 +82,9 @@ export function trendFor(cat: Cat, asOf: string, estimate: EnergyEstimate, serie
     entries: series.entries.length, latestKg: series.latest?.weightKg ?? null,
     ratePercentPerWeek: series.ratePercentPerWeek, change28dPercent: series.change28dPercent,
     suggestion: suggest(cat, asOf, estimate, series),
+    // The default cadence (every 4 weeks) must fit inside the inclusive 28-day window (D8), or a maintenance cat never gets a trend.
     nextWeighInDays: estimate.stage === 'kitten' ? t.weighInKittenDays : cat.goal === 'loss' ? t.weighInLossDays
+      : cat.goal === 'gain' ? t.weighInGainDays
       : isRecentlyNeutered(cat.profile, asOf) ? t.weighInRecentlyNeuteredDays : t.weighInOtherDays,
   };
 }

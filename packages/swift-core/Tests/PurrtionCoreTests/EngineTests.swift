@@ -274,7 +274,12 @@ final class EngineTests: XCTestCase {
         XCTAssertEqual(try run(loss(200, [(-14, 6), (0, 6)])).nextWeighInDays, 14)
         XCTAssertNil(try run(cat({ $0.weightLog = entries([(-14, 4), (0, 4.01)]) }, { $0.bcs = nil })).suggestion)
         XCTAssertNil(try run(cat()).suggestion)
-        XCTAssertEqual(try run(cat()).nextWeighInDays, 30)
+        XCTAssertEqual(try run(cat()).nextWeighInDays, 28)
+        XCTAssertEqual(try run(gain([(-14, 4), (0, 4)])).nextWeighInDays, 14)
+        // D8: a cat weighed exactly on the default cadence must still get a 28-day change and a rate (the window is inclusive).
+        let onCadence = try run(cat({ $0.weightLog = entries([(-28, 4), (0, 4.12)]) }))
+        XCTAssertNotNil(onCadence.change28dPercent); XCTAssertNotNil(onCadence.ratePercentPerWeek)
+        XCTAssertEqual(onCadence.suggestion?.reason, .gaining)
         let kitten = try run(cat({ $0.weightKg = 2; $0.weightLog = entries([(-14, 1.8), (0, 2)]) }, { $0.approxAgeYears = 0.3 }))
         XCTAssertNil(kitten.suggestion); XCTAssertEqual(kitten.nextWeighInDays, 7)
         XCTAssertEqual(try run(cat({ $0.weightLog = entries([(-28, 4), (0, 4.12)]) })).suggestion?.reason, .gaining)

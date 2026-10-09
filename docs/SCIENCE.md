@@ -738,7 +738,7 @@ kcal–kJ: $\text{kcal} = \text{kJ} / 4.184$ (existing repo behaviour). Example:
 * **Multi-cat households:** separate calorie budgets per cat, prevent food theft; microchip feeders are suggested [38]. Existing app model
   already per-cat.
 * **Monitoring cadence (X from AAHA):** weight loss: first contact after 1 week, weigh every 2 weeks, monthly when stable [5]. Maintenance: weigh monthly,
-  BCS at least every 3 months, clinic recheck annually (AAHA: nutritional assessment at every visit [4]). Kittens: weekly (Hand: monthly vet checks until 4 months,
+  implemented as every 4 weeks (28 days) so that the reminder fits the 28-day trend window (section 16, D8), BCS at least every 3 months, clinic recheck annually (AAHA: nutritional assessment at every visit [4]). Kittens: weekly (Hand: monthly vet checks until 4 months,
   owner weighs weekly [12]).
 * **Step size:** ±10 % of the daily energy per adjustment (AAHA 2014, Hoelmkjaer) [5][13b]; re-evaluate after at least 2 weeks.
 * **Accuracy of household weighing:** kitchen-scale versus baby-scale accuracy in cats was not found (UNVERIFIED); recommend a scale with 1-5 g
@@ -897,7 +897,8 @@ current weight) and its ±10 % uncertainty for estimates.
 * Gain: $r > 1$ %/wk → −10 %; $r \le 0$ over a window spanning ≥ 21 days → +10 %; BCS 5 reached → maintenance.
 * Kitten: weekly weighing; expect about 100 g/week to about 20 weeks; weight not above the weigh-in of 7-14 days earlier → vet.
 * Step size always 10 % of current kcal; at most one change per 2 weeks.
-* Suggested cadence of reminders: weight loss every 2 weeks; maintenance monthly; kittens weekly; seniors monthly plus BCS/MCS quarterly.
+* Suggested cadence of reminders: weight loss and weight gain every 2 weeks; maintenance every 4 weeks (AAHA "monthly", D8); kittens weekly;
+  seniors every 4 weeks plus BCS/MCS quarterly.
 
 These thresholds are X, derived from AAHA 2014 (10 % steps, 0.5-2 %/wk, 2-week/monthly cadence) [5]; the 3 %/wk and 8 %/28 d
 referral limits and the 21-day plateau span are section 16, D5.
@@ -946,7 +947,7 @@ All numbers recomputed to full precision; rounding at the last step only.
 **A. 4 kg neutered indoor adult, BCS 5, typical lifestyle, maintain.**
 $\text{start} = 75 \times 4^{0.67} = 189.9$ kcal/day (47 kcal/kg). Range $\times 0.85 / \times 1.15$ = **161-218 kcal** (161.4-218.3).
 Reference band 131.6-253.2. RER = 198.0. If the cat is a sedentary tier: $63.5 \times 4^{0.67} = 160.8$. Comparators: AAHA $1.2 \times \mathrm{RER} = 237.6$; WSAVA 225-250.
-Plan: weigh monthly; if the 28-day change is ≤ −2 % choose +10 % (208.8), if it is ≥ +2 % choose −10 % (170.9).
+Plan: weigh every 4 weeks (D8); if the 28-day change is ≤ −2 % choose +10 % (208.8), if it is ≥ +2 % choose −10 % (170.9).
 Food check (wet food of 10.4, 99.2 kcal/100 g): 189.9 kcal = 191.3 g/day; protein $10 \times 1.913 = 19.1$ g/day = 100.8 g/1000 kcal ≥ 83.3
 ($k_{\text{actual}} = 75$) OK. Carbohydrate 16.9 % ME (information only).
 
@@ -1123,6 +1124,18 @@ reference-only (otherwise not applicable); the 5 g/kg-IBW warning only for the `
 **D7. Adult cap (X).**
 The adult maintenance start stays capped at $1.4 \times \mathrm{RER}(\mathrm{BW})$ (the top of AAHA's neutered range). It is a guard, not a model term:
 $100 \times w^{0.67} > 1.4 \times 70 \times w^{0.75}$ only for $w < 0.98^{-12.5} = 1.29$ kg, so it binds only for very small active cats.
+
+**D8. Default weigh-in cadence (X; Claude review, 2026-10-09).**
+*Problem:* the trend window is 28 days (12.4), but the default reminder for maintenance cats was every 30 days. An owner who
+follows the reminder never has two weigh-ins inside the window, so $r$, $c_{28}$, every maintenance suggestion and the
+`rapid-weight-change` safety stop never exist for that cat. Gain plans used the same 30 days although 7.3 asks for a review in 2 weeks.
+*Numbers:* with weigh-ins on days 0 and 30 the window holds one entry; the maintenance rule ($\lvert c_{28} \rvert \ge 2\ \%$) and the
+referral ($\ge 5\ \%$) can only fire if the owner weighs more often than asked.
+*Decision:* keep the clinical cadences and count them in weeks, as AAHA does: maintenance every 4 weeks (28 days, "monthly"), which the
+inclusive 28-day window accepts exactly; gain plans every 2 weeks like every other active plan (AAHA rechecks every 2 weeks, 7.2 and 7.3).
+Kitten (7) and recently neutered (14) cadences are unchanged. No threshold and no target changes. A weigh-in later than 28 days after the
+previous one skips that one comparison; the next on-time weigh-in restores the trend. A cadence of 21 days would add slack but is not
+what the sources recommend, so it was not chosen.
 
 ### 16.3 Follow-up correctness audit (Codex, 2026-10-09)
 

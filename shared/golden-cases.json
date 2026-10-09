@@ -345,7 +345,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -401,7 +401,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -793,7 +793,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -849,7 +849,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -1241,7 +1241,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -1297,7 +1297,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -1689,7 +1689,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -1745,7 +1745,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -2078,7 +2078,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -2133,7 +2133,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -2526,7 +2526,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -2582,7 +2582,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -2975,7 +2975,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -3031,7 +3031,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -3423,7 +3423,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -3479,7 +3479,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -3871,7 +3871,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -3927,7 +3927,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -4260,7 +4260,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -4315,7 +4315,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -4707,7 +4707,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -4763,7 +4763,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -5141,7 +5141,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -5195,7 +5195,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -5528,7 +5528,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -5583,7 +5583,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -5895,7 +5895,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -5951,7 +5951,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -6158,7 +6158,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -6406,7 +6406,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -6654,7 +6654,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -6902,7 +6902,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -7150,7 +7150,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -7400,7 +7400,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -10635,7 +10635,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -10883,7 +10883,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -11131,7 +11131,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "ok",
@@ -11379,7 +11379,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "ok",
@@ -11629,7 +11629,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "ok",
@@ -11879,7 +11879,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -12127,7 +12127,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -12363,7 +12363,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -12608,7 +12608,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -13094,7 +13094,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -13323,7 +13323,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -13555,7 +13555,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -13784,7 +13784,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -14026,7 +14026,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": -1.2499999999999956,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -14284,7 +14284,7 @@
               "reason": "losing",
               "suggestedKcal": 209.00000000000003
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -14551,7 +14551,7 @@
               "reason": "stable",
               "suggestedKcal": null
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -14787,7 +14787,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -15029,7 +15029,7 @@
             "ratePercentPerWeek": 2.02020202020202,
             "change28dPercent": 6.25,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -15271,7 +15271,7 @@
             "ratePercentPerWeek": -2.4327784891165165,
             "change28dPercent": -4.749999999999998,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "not-applicable"
@@ -15984,7 +15984,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -16214,7 +16214,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -16444,7 +16444,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -16937,7 +16937,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -20124,7 +20124,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -20361,7 +20361,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -20860,7 +20860,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -21106,7 +21106,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -21351,7 +21351,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -21596,7 +21596,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -21841,7 +21841,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -22086,7 +22086,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -22331,7 +22331,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -22577,7 +22577,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -22915,7 +22915,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -23365,7 +23365,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -23732,7 +23732,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -24064,7 +24064,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -24134,7 +24134,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -24204,7 +24204,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -24527,7 +24527,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -24597,7 +24597,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -24667,7 +24667,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -27861,7 +27861,7 @@
               "reason": "gaining",
               "suggestedKcal": 171
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -28126,7 +28126,7 @@
               "reason": "losing",
               "suggestedKcal": 209.00000000000003
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -28403,7 +28403,7 @@
               "reason": "stable",
               "suggestedKcal": null
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -28670,7 +28670,7 @@
               "reason": "ideal-condition-reached",
               "suggestedKcal": null
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "ok",
@@ -28935,7 +28935,7 @@
               "reason": "gain-too-fast",
               "suggestedKcal": 207
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "ok",
@@ -29206,7 +29206,7 @@
               "reason": "not-gaining",
               "suggestedKcal": 253.00000000000003
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "ok",
@@ -29477,7 +29477,7 @@
               "reason": "not-gaining",
               "suggestedKcal": 253.00000000000003
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "ok",
@@ -29742,7 +29742,7 @@
               "reason": "on-track",
               "suggestedKcal": null
             },
-            "nextWeighInDays": 30
+            "nextWeighInDays": 14
           },
           "nutrition": {
             "status": "ok",
@@ -30009,7 +30009,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": 1.2499999999999956,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -30257,7 +30257,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -30511,7 +30511,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -30752,7 +30752,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -30997,7 +30997,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -31244,7 +31244,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",
@@ -31482,7 +31482,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "not-applicable"
@@ -31813,7 +31813,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "incomplete-data",
@@ -32176,7 +32176,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 30
+            "nextWeighInDays": 28
           },
           "nutrition": {
             "status": "ok",

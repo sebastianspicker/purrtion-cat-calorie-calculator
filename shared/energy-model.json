@@ -160,8 +160,9 @@
     "decreaseFactor": 0.9,
     "weighInKittenDays": 7,
     "weighInLossDays": 14,
+    "weighInGainDays": 14,
     "weighInRecentlyNeuteredDays": 14,
-    "weighInOtherDays": 30
+    "weighInOtherDays": 28
   },
   "nutrition": {
     "growthMinProteinPer1000": 70,

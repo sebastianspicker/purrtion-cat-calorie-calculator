@@ -134,8 +134,9 @@ public enum EnergyModel {
         public static let decreaseFactor: Double = 0.9
         public static let weighInKittenDays: Double = 7
         public static let weighInLossDays: Double = 14
+        public static let weighInGainDays: Double = 14
         public static let weighInRecentlyNeuteredDays: Double = 14
-        public static let weighInOtherDays: Double = 30
+        public static let weighInOtherDays: Double = 28
     }
     public enum Nutrition {
         public static let growthMinProteinPer1000: Double = 70
