@@ -1,0 +1,2493 @@
+[
+  {
+    "name": "mixed-wet-40-60-40",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 100,
+          "dryGramsExact": 26.150000000000002,
+          "dryGramsRounded": 26,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            8,
+            8,
+            10
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 180,
+          "dryKcal": 90,
+          "dryGramsExact": 23.535,
+          "dryGramsRounded": 24,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            7,
+            7,
+            10
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 150,
+          "dryGramsExact": 39.225,
+          "dryGramsRounded": 39,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            12,
+            12,
+            15
+          ]
+        }
+      ],
+      "totalDryGramsExact": 88.91,
+      "totalDryGramsRounded": 89
+    }
+  },
+  {
+    "name": "all-wet-a",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-a",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-a",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-a",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 104.39999999999999,
+          "dryKcal": 115.60000000000001,
+          "dryGramsExact": 30.229400000000005,
+          "dryGramsRounded": 30,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            9,
+            9,
+            12
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 156.60000000000002,
+          "dryKcal": 113.39999999999998,
+          "dryGramsExact": 29.654099999999996,
+          "dryGramsRounded": 30,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            9,
+            9,
+            12
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 104.39999999999999,
+          "dryKcal": 165.60000000000002,
+          "dryGramsExact": 43.30440000000001,
+          "dryGramsRounded": 43,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            13,
+            13,
+            17
+          ]
+        }
+      ],
+      "totalDryGramsExact": 103.18790000000001,
+      "totalDryGramsRounded": 103
+    }
+  },
+  {
+    "name": "all-wet-b",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-b",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-b",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-b",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 132,
+          "dryKcal": 88,
+          "dryGramsExact": 23.012,
+          "dryGramsRounded": 23,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            7,
+            7,
+            9
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 198,
+          "dryKcal": 72,
+          "dryGramsExact": 18.828,
+          "dryGramsRounded": 19,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            6,
+            6,
+            7
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 132,
+          "dryKcal": 138,
+          "dryGramsExact": 36.087,
+          "dryGramsRounded": 36,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            11,
+            11,
+            14
+          ]
+        }
+      ],
+      "totalDryGramsExact": 77.927,
+      "totalDryGramsRounded": 78
+    }
+  },
+  {
+    "name": "all-wet-c",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-c",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-c",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-c",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-c",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-c",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-c",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 123.60000000000001,
+          "dryKcal": 96.39999999999999,
+          "dryGramsExact": 25.2086,
+          "dryGramsRounded": 25,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            8,
+            7,
+            10
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 185.4,
+          "dryKcal": 84.6,
+          "dryGramsExact": 22.1229,
+          "dryGramsRounded": 22,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            7,
+            6,
+            9
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 123.60000000000001,
+          "dryKcal": 146.39999999999998,
+          "dryGramsExact": 38.28359999999999,
+          "dryGramsRounded": 38,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            12,
+            11,
+            15
+          ]
+        }
+      ],
+      "totalDryGramsExact": 85.6151,
+      "totalDryGramsRounded": 85
+    }
+  },
+  {
+    "name": "all-dry-no-wet-meals",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": []
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": []
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": []
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 220,
+          "dryGramsExact": 57.53,
+          "dryGramsRounded": 58,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            18,
+            17,
+            23
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 270,
+          "dryGramsExact": 70.605,
+          "dryGramsRounded": 71,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            21,
+            21,
+            29
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 270,
+          "dryGramsExact": 70.605,
+          "dryGramsRounded": 71,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            21,
+            21,
+            29
+          ]
+        }
+      ],
+      "totalDryGramsExact": 198.74,
+      "totalDryGramsRounded": 200
+    }
+  },
+  {
+    "name": "extras-deducted",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 25,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 75,
+          "dryGramsExact": 19.6125,
+          "dryGramsRounded": 20,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            6,
+            6,
+            8
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 180,
+          "dryKcal": 90,
+          "dryGramsExact": 23.535,
+          "dryGramsRounded": 24,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            7,
+            7,
+            10
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 150,
+          "dryGramsExact": 39.225,
+          "dryGramsRounded": 39,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            12,
+            12,
+            15
+          ]
+        }
+      ],
+      "totalDryGramsExact": 82.3725,
+      "totalDryGramsRounded": 83
+    }
+  },
+  {
+    "name": "over-budget-clamps-dry-to-zero",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 400
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 480,
+          "wetKcal": 433.2,
+          "dryKcal": 0,
+          "dryGramsExact": 0,
+          "dryGramsRounded": 0,
+          "overBudgetKcal": 213.2,
+          "activityRoundedGrams": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 180,
+          "dryKcal": 90,
+          "dryGramsExact": 23.535,
+          "dryGramsRounded": 24,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            7,
+            7,
+            10
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 150,
+          "dryGramsExact": 39.225,
+          "dryGramsRounded": 39,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            12,
+            12,
+            15
+          ]
+        }
+      ],
+      "totalDryGramsExact": 62.760000000000005,
+      "totalDryGramsRounded": 63
+    }
+  },
+  {
+    "name": "kilojoules-per-kilogram",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 16000,
+          "energyUnit": "kJ/kg",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 100,
+          "dryGramsExact": 26.150000000000002,
+          "dryGramsRounded": 26,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            8,
+            8,
+            10
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 180,
+          "dryKcal": 90,
+          "dryGramsExact": 23.535,
+          "dryGramsRounded": 24,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            7,
+            7,
+            10
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 150,
+          "dryGramsExact": 39.225,
+          "dryGramsRounded": 39,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            12,
+            12,
+            15
+          ]
+        }
+      ],
+      "totalDryGramsExact": 88.91,
+      "totalDryGramsRounded": 89
+    }
+  },
+  {
+    "name": "kilocalories-per-kilogram",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 3824.0917782026763,
+          "energyUnit": "kcal/kg",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 100,
+          "dryGramsExact": 26.150000000000006,
+          "dryGramsRounded": 26,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            8,
+            8,
+            10
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 180,
+          "dryKcal": 90,
+          "dryGramsExact": 23.535000000000004,
+          "dryGramsRounded": 24,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            7,
+            7,
+            10
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 150,
+          "dryGramsExact": 39.22500000000001,
+          "dryGramsRounded": 39,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            12,
+            12,
+            15
+          ]
+        }
+      ],
+      "totalDryGramsExact": 88.91000000000003,
+      "totalDryGramsRounded": 89
+    }
+  },
+  {
+    "name": "small-ration-rounding-is-per-cat",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 10,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": []
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 10,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": []
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 10,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": []
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 10,
+          "dryGramsExact": 2.615,
+          "dryGramsRounded": 3,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 10,
+          "dryGramsExact": 2.615,
+          "dryGramsRounded": 3,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 10,
+          "dryGramsExact": 2.615,
+          "dryGramsRounded": 3,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "totalDryGramsExact": 7.845000000000001,
+      "totalDryGramsRounded": 9
+    }
+  },
+  {
+    "name": "fractional-enrichment-shares",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "a",
+          "label": "First",
+          "sharePercent": 33.3
+        },
+        {
+          "id": "b",
+          "label": "Second",
+          "sharePercent": 33.3
+        },
+        {
+          "id": "c",
+          "label": "Third",
+          "sharePercent": 33.4
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 100,
+          "dryGramsExact": 26.150000000000002,
+          "dryGramsRounded": 26,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            9,
+            8,
+            9
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 180,
+          "dryKcal": 90,
+          "dryGramsExact": 23.535,
+          "dryGramsRounded": 24,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 150,
+          "dryGramsExact": 39.225,
+          "dryGramsRounded": 39,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            13,
+            13,
+            13
+          ]
+        }
+      ],
+      "totalDryGramsExact": 88.91,
+      "totalDryGramsRounded": 89
+    }
+  },
+  {
+    "name": "one-enrichment-session",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 220,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 60
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 60
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 60
+            }
+          ]
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 270,
+          "targetSource": "provisional",
+          "extraKcal": 0,
+          "dryFoodId": "dry",
+          "meals": [
+            {
+              "id": "breakfast",
+              "label": "Breakfast",
+              "foodId": "wet-a",
+              "grams": 40
+            },
+            {
+              "id": "afternoon",
+              "label": "Afternoon",
+              "foodId": "wet-b",
+              "grams": 40
+            },
+            {
+              "id": "evening",
+              "label": "Evening",
+              "foodId": "wet-c",
+              "grams": 40
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "a",
+          "label": "Direct feeding",
+          "sharePercent": 100
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 100,
+          "dryGramsExact": 26.150000000000002,
+          "dryGramsRounded": 26,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            26
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 180,
+          "wetKcal": 180,
+          "dryKcal": 90,
+          "dryGramsExact": 23.535,
+          "dryGramsRounded": 24,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            24
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 120,
+          "wetKcal": 120,
+          "dryKcal": 150,
+          "dryGramsExact": 39.225,
+          "dryGramsRounded": 39,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            39
+          ]
+        }
+      ],
+      "totalDryGramsExact": 88.91,
+      "totalDryGramsRounded": 89
+    }
+  },
+  {
+    "name": "exact-zero-dry",
+    "plan": {
+      "schemaVersion": 1,
+      "name": "Test household",
+      "foods": [
+        {
+          "id": "wet-a",
+          "name": "Wet food A",
+          "type": "wet",
+          "energyPerUnit": 87,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-b",
+          "name": "Wet food B",
+          "type": "wet",
+          "energyPerUnit": 110,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "wet-c",
+          "name": "Wet food C",
+          "type": "wet",
+          "energyPerUnit": 103,
+          "energyUnit": "kcal/100g",
+          "energySource": "estimate",
+          "completeness": "unknown",
+          "note": "Test value."
+        },
+        {
+          "id": "dry",
+          "name": "Dry food",
+          "type": "dry",
+          "energyPerUnit": 1600,
+          "energyUnit": "kJ/100g",
+          "energySource": "label",
+          "completeness": "unknown",
+          "note": "Test label value: 1,600 kJ per 100 g."
+        }
+      ],
+      "cats": [
+        {
+          "id": "cat-1",
+          "name": "Cat 1",
+          "weightKg": 6,
+          "goal": "loss",
+          "targetKcal": 200,
+          "targetSource": "provisional",
+          "extraKcal": 200,
+          "dryFoodId": "dry",
+          "meals": []
+        },
+        {
+          "id": "cat-2",
+          "name": "Cat 2",
+          "weightKg": 5.5,
+          "goal": "maintain",
+          "targetKcal": 200,
+          "targetSource": "provisional",
+          "extraKcal": 200,
+          "dryFoodId": "dry",
+          "meals": []
+        },
+        {
+          "id": "cat-3",
+          "name": "Cat 3",
+          "weightKg": 4.2,
+          "goal": "gain",
+          "targetKcal": 200,
+          "targetSource": "provisional",
+          "extraKcal": 200,
+          "dryFoodId": "dry",
+          "meals": []
+        }
+      ],
+      "activities": [
+        {
+          "id": "hunt",
+          "label": "Morning hunt",
+          "sharePercent": 30
+        },
+        {
+          "id": "puzzle",
+          "label": "Afternoon puzzle",
+          "sharePercent": 30
+        },
+        {
+          "id": "play",
+          "label": "Evening play",
+          "sharePercent": 40
+        }
+      ]
+    },
+    "expected": {
+      "cats": [
+        {
+          "id": "cat-1",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 0,
+          "dryGramsExact": 0,
+          "dryGramsRounded": 0,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "cat-2",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 0,
+          "dryGramsExact": 0,
+          "dryGramsRounded": 0,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "cat-3",
+          "wetGrams": 0,
+          "wetKcal": 0,
+          "dryKcal": 0,
+          "dryGramsExact": 0,
+          "dryGramsRounded": 0,
+          "overBudgetKcal": 0,
+          "activityRoundedGrams": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "totalDryGramsExact": 0,
+      "totalDryGramsRounded": 0
+    }
+  }
+]

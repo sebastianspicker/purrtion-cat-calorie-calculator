@@ -1,0 +1,634 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Purrtion feeding plan v2",
+  "description": "Schema v2 (docs/ENGINE.md §1). Decoders also accept legacy schemaVersion 1 documents and migrate them (§9); this schema describes v2 only. Nullable fields may be missing or null; exports write explicit null. IDs must be unique within each list and references must exist; those rules are enforced by the decoders.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "name",
+    "foods",
+    "cats",
+    "activities"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "name": {
+      "$ref": "#/$defs/name"
+    },
+    "foods": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/food"
+      }
+    },
+    "cats": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/$defs/cat"
+      }
+    },
+    "activities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "$ref": "#/$defs/activity"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "\\S"
+    },
+    "food": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "energyUnit",
+        "energySource",
+        "completeness",
+        "lifeStageClaim",
+        "note"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/name"
+        },
+        "type": {
+          "enum": [
+            "wet",
+            "dry"
+          ]
+        },
+        "energyPerUnit": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0.001,
+              "maximum": 50000
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Null only when energySource is analysis. Missing key or null are accepted."
+        },
+        "energyUnit": {
+          "enum": [
+            "kcal/100g",
+            "kJ/100g",
+            "kcal/kg",
+            "kJ/kg"
+          ]
+        },
+        "energySource": {
+          "enum": [
+            "label",
+            "estimate",
+            "analysis"
+          ]
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "complementary",
+            "unknown"
+          ]
+        },
+        "lifeStageClaim": {
+          "enum": [
+            "adult",
+            "growth",
+            "all",
+            "unknown"
+          ]
+        },
+        "analysis": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/analysis"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "energySource": {
+                "const": "analysis"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "analysis"
+            ],
+            "properties": {
+              "analysis": {
+                "$ref": "#/$defs/analysis"
+              }
+            }
+          },
+          "else": {
+            "required": [
+              "energyPerUnit"
+            ],
+            "properties": {
+              "energyPerUnit": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "meal": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "foodId",
+        "grams"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "$ref": "#/$defs/name"
+        },
+        "foodId": {
+          "$ref": "#/$defs/id"
+        },
+        "grams": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000
+        }
+      }
+    },
+    "cat": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "weightKg",
+        "goal",
+        "targetKcal",
+        "targetSource",
+        "extraKcal",
+        "balanceFoodId",
+        "meals",
+        "profile",
+        "weightLog"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/name"
+        },
+        "icon": {
+          "oneOf": [
+            {
+              "enum": [
+                "moon",
+                "scale",
+                "dango",
+                "stripes",
+                "bolt",
+                "paw",
+                "fish",
+                "yarn",
+                "star",
+                "heart",
+                "leaf",
+                "bow"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "weightKg": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 40
+        },
+        "goal": {
+          "enum": [
+            "loss",
+            "maintain",
+            "gain"
+          ]
+        },
+        "targetKcal": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3000
+        },
+        "targetSource": {
+          "enum": [
+            "provisional",
+            "owner",
+            "veterinarian"
+          ]
+        },
+        "extraKcal": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3000
+        },
+        "balanceFoodId": {
+          "$ref": "#/$defs/id"
+        },
+        "meals": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 24,
+          "items": {
+            "$ref": "#/$defs/meal"
+          }
+        },
+        "profile": {
+          "$ref": "#/$defs/profile"
+        },
+        "weightLog": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/weightEntry"
+          }
+        }
+      }
+    },
+    "activity": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "sharePercent"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "$ref": "#/$defs/name"
+        },
+        "sharePercent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "description": "Analytical constituents in percent as fed. The five constituents (with assumed moisture) must add up to at most 100; moisture must be below 100; null moisture only for dry food.",
+      "required": [
+        "protein",
+        "fat",
+        "fibre",
+        "ash",
+        "kind"
+      ],
+      "properties": {
+        "protein": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "fat": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "fibre": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "ash": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "moisture": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "enum": [
+            "prepared",
+            "fresh"
+          ]
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "required": [
+        "sex",
+        "neutered",
+        "reproduction",
+        "medical",
+        "endOfLife"
+      ],
+      "properties": {
+        "birthDate": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "description": "Calendar date YYYY-MM-DD (must be a valid date)"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "approxAgeYears": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 30
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sex": {
+          "enum": [
+            "female",
+            "male",
+            "unknown"
+          ]
+        },
+        "neutered": {
+          "enum": [
+            "yes",
+            "no",
+            "unknown"
+          ]
+        },
+        "neuteredDate": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "description": "Calendar date YYYY-MM-DD (must be a valid date)"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lifestyle": {
+          "oneOf": [
+            {
+              "enum": [
+                "sedentary",
+                "typical",
+                "active"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bcs": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mcs": {
+          "oneOf": [
+            {
+              "enum": [
+                "normal",
+                "mild",
+                "moderate",
+                "severe"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "idealWeightKg": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "idealWeightSource": {
+          "oneOf": [
+            {
+              "enum": [
+                "veterinarian",
+                "estimate"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Must be null when idealWeightKg is null (enforced by the decoders)"
+        },
+        "expectedAdultWeightKg": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reproduction": {
+          "$ref": "#/$defs/reproduction"
+        },
+        "medical": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ckd",
+              "diabetes",
+              "hyperthyroid",
+              "gi",
+              "pancreatitis",
+              "urinary",
+              "cancer",
+              "prescription-diet",
+              "other",
+              "hepatic-lipidosis",
+              "hospitalised",
+              "not-eating",
+              "clinical-signs"
+            ]
+          }
+        },
+        "endOfLife": {
+          "type": "boolean"
+        },
+        "verifiedIntakeKcal": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 3000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "reproduction": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "none",
+            "gestation",
+            "lactation"
+          ]
+        },
+        "litterSize": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lactationWeek": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "preBreedingWeightKg": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "weightEntry": {
+      "type": "object",
+      "required": [
+        "id",
+        "date",
+        "weightKg"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "Calendar date YYYY-MM-DD (must be a valid date)"
+        },
+        "weightKg": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 40
+        },
+        "bcs": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
