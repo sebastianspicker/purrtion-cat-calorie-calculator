@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 2,
+  "name": "Example household",
+  "foods": [
+    {
+      "id": "wet-chicken",
+      "name": "Example wet food, chicken pâté",
+      "type": "wet",
+      "energyPerUnit": null,
+      "energyUnit": "kcal/100g",
+      "energySource": "analysis",
+      "completeness": "complete",
+      "lifeStageClaim": "adult",
+      "analysis": {
+        "protein": 11,
+        "fat": 5,
+        "fibre": 0.3,
+        "ash": 2,
+        "moisture": 80,
+        "kind": "prepared"
+      },
+      "note": "Illustrative example values, not a specific product."
+    },
+    {
+      "id": "wet-fish",
+      "name": "Example wet food, fish in jelly",
+      "type": "wet",
+      "energyPerUnit": 75,
+      "energyUnit": "kcal/100g",
+      "energySource": "label",
+      "completeness": "complete",
+      "lifeStageClaim": "all",
+      "analysis": {
+        "protein": 10,
+        "fat": 3.5,
+        "fibre": 0.3,
+        "ash": 1.8,
+        "moisture": 82,
+        "kind": "prepared"
+      },
+      "note": "Illustrative example values, not a specific product."
+    },
+    {
+      "id": "dry-adult",
+      "name": "Example dry food, adult",
+      "type": "dry",
+      "energyPerUnit": 1600,
+      "energyUnit": "kJ/100g",
+      "energySource": "label",
+      "completeness": "complete",
+      "lifeStageClaim": "adult",
+      "analysis": {
+        "protein": 34,
+        "fat": 14,
+        "fibre": 3,
+        "ash": 7,
+        "moisture": null,
+        "kind": "prepared"
+      },
+      "note": "Illustrative example values, not a specific product."
+    },
+    {
+      "id": "dry-kitten",
+      "name": "Example dry food, kitten",
+      "type": "dry",
+      "energyPerUnit": 4000,
+      "energyUnit": "kcal/kg",
+      "energySource": "label",
+      "completeness": "complete",
+      "lifeStageClaim": "growth",
+      "analysis": {
+        "protein": 36,
+        "fat": 18,
+        "fibre": 2.5,
+        "ash": 7.5,
+        "moisture": 8,
+        "kind": "prepared"
+      },
+      "note": "Illustrative example values, not a specific product."
+    },
+    {
+      "id": "wet-light",
+      "name": "Example wet food, weight control",
+      "type": "wet",
+      "energyPerUnit": null,
+      "energyUnit": "kcal/100g",
+      "energySource": "analysis",
+      "completeness": "complete",
+      "lifeStageClaim": "adult",
+      "analysis": {
+        "protein": 12,
+        "fat": 2.5,
+        "fibre": 1.5,
+        "ash": 2,
+        "moisture": 81,
+        "kind": "prepared"
+      },
+      "note": "Illustrative example values, not a specific product."
+    },
+    {
+      "id": "raw-mix",
+      "name": "Example raw (BARF) mix",
+      "type": "wet",
+      "energyPerUnit": null,
+      "energyUnit": "kcal/100g",
+      "energySource": "analysis",
+      "completeness": "unknown",
+      "lifeStageClaim": "unknown",
+      "analysis": {
+        "protein": 17,
+        "fat": 9,
+        "fibre": 0.5,
+        "ash": 1.5,
+        "moisture": 72,
+        "kind": "fresh"
+      },
+      "note": "Illustrative example values, not a specific product."
+    }
+  ],
+  "cats": [
+    {
+      "id": "luna",
+      "name": "Luna",
+      "icon": "moon",
+      "weightKg": 4,
+      "goal": "maintain",
+      "targetKcal": 190,
+      "targetSource": "owner",
+      "extraKcal": 0,
+      "balanceFoodId": "dry-adult",
+      "meals": [
+        {
+          "id": "morning",
+          "label": "Morning",
+          "foodId": "wet-chicken",
+          "grams": 85
+        },
+        {
+          "id": "evening",
+          "label": "Evening",
+          "foodId": "wet-chicken",
+          "grams": 85
+        }
+      ],
+      "profile": {
+        "birthDate": "2021-05-12",
+        "approxAgeYears": null,
+        "sex": "female",
+        "neutered": "yes",
+        "neuteredDate": null,
+        "lifestyle": "typical",
+        "bcs": 5,
+        "mcs": null,
+        "idealWeightKg": null,
+        "idealWeightSource": null,
+        "expectedAdultWeightKg": null,
+        "reproduction": {
+          "status": "none",
+          "litterSize": null,
+          "lactationWeek": null,
+          "preBreedingWeightKg": null
+        },
+        "medical": [],
+        "endOfLife": false,
+        "verifiedIntakeKcal": null
+      },
+      "weightLog": []
+    },
+    {
+      "id": "oskar",
+      "name": "Oskar",
+      "icon": "scale",
+      "weightKg": 6.2,
+      "goal": "loss",
+      "targetKcal": 145,
+      "targetSource": "provisional",
+      "extraKcal": 0,
+      "balanceFoodId": "dry-adult",
+      "meals": [
+        {
+          "id": "morning",
+          "label": "Morning",
+          "foodId": "wet-light",
+          "grams": 70
+        },
+        {
+          "id": "evening",
+          "label": "Evening",
+          "foodId": "wet-light",
+          "grams": 70
+        }
+      ],
+      "profile": {
+        "birthDate": "2018-03-20",
+        "approxAgeYears": null,
+        "sex": "male",
+        "neutered": "yes",
+        "neuteredDate": null,
+        "lifestyle": "sedentary",
+        "bcs": 8,
+        "mcs": null,
+        "idealWeightKg": 4.8,
+        "idealWeightSource": "estimate",
+        "expectedAdultWeightKg": null,
+        "reproduction": {
+          "status": "none",
+          "litterSize": null,
+          "lactationWeek": null,
+          "preBreedingWeightKg": null
+        },
+        "medical": [],
+        "endOfLife": false,
+        "verifiedIntakeKcal": null
+      },
+      "weightLog": [
+        {
+          "id": "oskar-w1",
+          "date": "2026-09-11",
+          "weightKg": 6.38,
+          "bcs": null
+        },
+        {
+          "id": "oskar-w2",
+          "date": "2026-09-25",
+          "weightKg": 6.29,
+          "bcs": null
+        },
+        {
+          "id": "oskar-w3",
+          "date": "2026-10-09",
+          "weightKg": 6.2,
+          "bcs": 8
+        }
+      ]
+    },
+    {
+      "id": "mochi",
+      "name": "Mochi",
+      "icon": "dango",
+      "weightKg": 2,
+      "goal": "maintain",
+      "targetKcal": 266,
+      "targetSource": "provisional",
+      "extraKcal": 0,
+      "balanceFoodId": "dry-kitten",
+      "meals": [
+        {
+          "id": "morning",
+          "label": "Morning",
+          "foodId": "wet-fish",
+          "grams": 40
+        }
+      ],
+      "profile": {
+        "birthDate": "2026-06-08",
+        "approxAgeYears": null,
+        "sex": "female",
+        "neutered": "unknown",
+        "neuteredDate": null,
+        "lifestyle": null,
+        "bcs": null,
+        "mcs": null,
+        "idealWeightKg": null,
+        "idealWeightSource": null,
+        "expectedAdultWeightKg": 4,
+        "reproduction": {
+          "status": "none",
+          "litterSize": null,
+          "lactationWeek": null,
+          "preBreedingWeightKg": null
+        },
+        "medical": [],
+        "endOfLife": false,
+        "verifiedIntakeKcal": null
+      },
+      "weightLog": []
+    },
+    {
+      "id": "tiger",
+      "name": "Tiger",
+      "icon": "stripes",
+      "weightKg": 3.8,
+      "goal": "maintain",
+      "targetKcal": 210,
+      "targetSource": "veterinarian",
+      "extraKcal": 0,
+      "balanceFoodId": "wet-fish",
+      "meals": [],
+      "profile": {
+        "birthDate": "2012-08-01",
+        "approxAgeYears": null,
+        "sex": "male",
+        "neutered": "yes",
+        "neuteredDate": null,
+        "lifestyle": null,
+        "bcs": 4,
+        "mcs": "mild",
+        "idealWeightKg": null,
+        "idealWeightSource": null,
+        "expectedAdultWeightKg": null,
+        "reproduction": {
+          "status": "none",
+          "litterSize": null,
+          "lactationWeek": null,
+          "preBreedingWeightKg": null
+        },
+        "medical": [
+          "ckd"
+        ],
+        "endOfLife": false,
+        "verifiedIntakeKcal": null
+      },
+      "weightLog": []
+    },
+    {
+      "id": "pixel",
+      "name": "Pixel",
+      "icon": "bolt",
+      "weightKg": 3.5,
+      "goal": "maintain",
+      "targetKcal": 231,
+      "targetSource": "owner",
+      "extraKcal": 0,
+      "balanceFoodId": "raw-mix",
+      "meals": [],
+      "profile": {
+        "birthDate": "2024-07-01",
+        "approxAgeYears": null,
+        "sex": "male",
+        "neutered": "no",
+        "neuteredDate": null,
+        "lifestyle": "active",
+        "bcs": 5,
+        "mcs": null,
+        "idealWeightKg": null,
+        "idealWeightSource": null,
+        "expectedAdultWeightKg": null,
+        "reproduction": {
+          "status": "none",
+          "litterSize": null,
+          "lactationWeek": null,
+          "preBreedingWeightKg": null
+        },
+        "medical": [],
+        "endOfLife": false,
+        "verifiedIntakeKcal": null
+      },
+      "weightLog": []
+    }
+  ],
+  "activities": [
+    {
+      "id": "puzzle",
+      "label": "Puzzle feeder",
+      "sharePercent": 30
+    },
+    {
+      "id": "scatter",
+      "label": "Scatter feeding",
+      "sharePercent": 30
+    },
+    {
+      "id": "evening-bowl",
+      "label": "Evening bowl",
+      "sharePercent": 40
+    }
+  ]
+}
