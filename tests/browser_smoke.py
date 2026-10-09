@@ -375,9 +375,11 @@ def main() -> None:
             expect(page.locator("form.food-editor").first).to_contain_text("Rohprotein")
             page.get_by_role("button", name="So wird gerechnet", exact=True).click()
             assert page.locator(".method-card math").count() >= 10, "Method formulas were not rendered"
+            assert page.locator(".math-fallback").count() == 0, "A German formula failed to render"
             shoot("desktop-light-method-de")
             page.get_by_role("button", name="English", exact=True).click()
             expect(page.locator("html")).to_have_attribute("lang", "en")
+            assert page.locator(".math-fallback").count() == 0, "An English formula failed to render"
             page.get_by_role("button", name="Daily plan", exact=True).click()
 
             # Layout checks at 390 px.

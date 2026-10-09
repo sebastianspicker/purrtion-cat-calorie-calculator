@@ -15,6 +15,8 @@ export function word(key: UiKey): string {
   return `\\text{${t(key).replace(/[\\{}$&#^_%~]/g, ch => `\\${ch === '\\' ? 'textbackslash ' : ch}`)}}`;
 }
 const pow = (base: string, exponent: number) => `${base}^{${c(exponent)}}`;
+const floored = (value: string) => `\\max\\big(${word('math.floor')},\\ ${value}\\big)`;
+const interval = (low: string, high: string) => `${word('math.range')}=[${low};\\ ${high}]`;
 
 /** Generic equations for the method page. */
 export const generic = {
@@ -22,10 +24,14 @@ export const generic = {
   mer: () => `\\mathrm{MER}=k\\times ${pow('W', m.mer.exponent)},\\quad k\\in\\{${c(m.mer.sedentary)};\\ ${c(m.mer.typical)};\\ ${c(m.mer.active)}\\}`,
   band: () => `${c(m.mer.referenceBandLow)}\\times ${pow('W', m.mer.exponent)}\\ ${word('math.to')}\\ ${c(m.mer.referenceBandHigh)}\\times ${pow('W', m.mer.exponent)}`,
   ibw: () => `\\mathrm{IBW}=\\dfrac{\\mathrm{BW}}{1+${c(m.idealWeight.fractionPerBcsUnit)}\\times(\\mathrm{BCS}-${m.bcs.ideal})},\\quad \\mathrm{BCS}\\ge ${m.bcs.overweightMin}`,
-  maintainRange: () => `${word('math.range')}=[${c(m.maintain.lowFactor)};\\ ${c(m.maintain.highFactor)}]\\times ${word('math.start')},\\quad \\text{start}\\le ${c(m.maintain.maxRerMultiple)}\\times\\mathrm{RER}(\\mathrm{BW})`.replace('\\text{start}', word('math.start')),
-  loss: () => `${word('math.start')}=${c(m.loss.startFactor)}\\times\\min\\big(\\mathrm{RER}(\\mathrm{IBW}),\\ \\mathrm{MER}(k,\\mathrm{IBW})\\big),\\quad ${word('math.range')}=[${c(m.loss.lowFactor)};\\ ${c(m.loss.highFactor)}]\\times ${word('math.start')}`,
+  maintainStart: () => `${word('math.start')}=${floored(`\\min(\\mathrm{MER},\\ ${c(m.maintain.maxRerMultiple)}\\times\\mathrm{RER}(\\mathrm{BW}))`)}`,
+  maintainRange: () => interval(floored(`${c(m.maintain.lowFactor)}\\times ${word('math.start')}`), `${c(m.maintain.highFactor)}\\times ${word('math.start')}`),
+  loss: () => `${word('math.start')}=${floored(`${c(m.loss.startFactor)}\\times\\min(\\mathrm{RER}(\\mathrm{IBW}),\\ \\mathrm{MER}(k,\\mathrm{IBW}))`)}`,
+  lossVerified: () => `${word('math.start')}=${floored(`${c(m.loss.verifiedIntakeFactor)}V`)},\\quad V\\ge ${word('math.floor')}`,
+  lossRange: () => interval(floored(`${c(m.loss.lowFactor)}\\times ${word('math.start')}`), `${c(m.loss.highFactor)}\\times ${word('math.start')}`),
   floor: () => `${word('math.floor')}=${c(m.floor.rerFactor)}\\times\\mathrm{RER}(\\mathrm{IBW})`,
-  gain: () => `${word('math.start')}=${c(m.gain.startFactor)}\\times\\mathrm{MER},\\quad ${word('math.range')}=[${c(m.gain.lowFactor)};\\ ${c(m.gain.highFactor)}]\\times\\mathrm{MER}`,
+  gain: () => `${word('math.start')}=${floored(`${c(m.gain.startFactor)}\\times\\mathrm{MER}`)}`,
+  gainRange: () => interval(floored(`${c(m.gain.lowFactor)}\\times\\mathrm{MER}`), floored(`${c(m.gain.highFactor)}\\times\\mathrm{MER}`)),
   kittenNrc: () => `${c(m.kitten.nrcK)}\\times ${pow('\\mathrm{BW}', m.mer.exponent)}\\times ${c(m.kitten.nrcFactor)}\\times\\left(e^{${c(m.kitten.nrcExponent)}\\,p}-${c(m.kitten.nrcOffset)}\\right),\\quad p=\\dfrac{\\mathrm{BW}}{\\mathrm{BW}_{\\mathrm{adult}}}`,
   kittenTransition: () => `t=\\mathrm{clamp}\\!\\left(\\max\\!\\left(\\dfrac{p-${c(m.kitten.transitionStartRatio)}}{${c(m.kitten.transitionRatioWidth)}},\\ \\dfrac{m-${c(m.kitten.transitionStartMonths)}}{${c(m.kitten.transitionMonthsWidth)}}\\right),0,1\\right),\\quad ${word('math.start')}=(1-t)\\times G+t\\times\\mathrm{MER}(k,\\mathrm{BW})`,
   kittenCap: () => `${word('math.start')}\\le ${c(m.kitten.maxRerMultiple)}\\times\\mathrm{RER}(\\mathrm{BW})`,

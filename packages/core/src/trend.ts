@@ -51,7 +51,11 @@ function suggest(cat: Cat, asOf: string, estimate: EnergyEstimate, series: Weigh
   const rate = series.ratePercentPerWeek, floor = estimate.floorKcal ?? 0, target = cat.targetKcal;
   // Suggestions are defined for adult and senior plans only; kittens grow and queens are reference-only.
   if (estimate.status !== 'ok' || rate === null || (estimate.stage !== 'adult' && estimate.stage !== 'senior')) return null;
-  const increase = Math.max(target * t.increaseFactor, floor), decrease = Math.max(target * t.decreaseFactor, floor);
+  const increase = Math.max(target * t.increaseFactor, floor), decrease = target * t.decreaseFactor;
+  // A floor must never turn a requested reduction into an increase (or an unchanged target).
+  const reduce = (reason: Suggestion['reason']): Suggestion => decrease < floor
+    ? { action: 'refer', reason: 'at-floor', suggestedKcal: null }
+    : { action: 'decrease', reason, suggestedKcal: decrease };
   if (cat.goal === 'loss') {
     const ibw = estimate.idealWeight?.kg ?? cat.weightKg;
     if (series.latest!.weightKg <= ibw)
@@ -59,18 +63,17 @@ function suggest(cat: Cat, asOf: string, estimate: EnergyEstimate, series: Weigh
     if (rate < t.lossTooFastRate) return { action: 'increase', reason: 'loss-too-fast', suggestedKcal: increase };
     if (rate <= t.lossOnTrackSlowestRate) return { action: 'none', reason: 'on-track', suggestedKcal: null };
     if (rate <= t.lossSlowRate || series.spanDays < t.plateauMinSpanDays) return { action: 'hold', reason: 'slow-recheck-2-weeks', suggestedKcal: null };
-    return target * t.decreaseFactor < floor ? { action: 'refer', reason: 'at-floor', suggestedKcal: null }
-      : { action: 'decrease', reason: 'plateau', suggestedKcal: decrease };
+    return reduce('plateau');
   }
   if (cat.goal === 'maintain') {
     const change = series.change28dPercent!;
-    if (change >= t.maintainChangePercent) return { action: 'decrease', reason: 'gaining', suggestedKcal: decrease };
+    if (change >= t.maintainChangePercent) return reduce('gaining');
     if (change <= -t.maintainChangePercent) return { action: 'increase', reason: 'losing', suggestedKcal: increase };
     return { action: 'none', reason: 'stable', suggestedKcal: null };
   }
   const bcs = effectiveBcs(cat, asOf);
   if (bcs !== null && bcs >= model.bcs.ideal) return { action: 'switch-to-maintenance', reason: 'ideal-condition-reached', suggestedKcal: null };
-  if (rate > t.gainTooFastRate) return { action: 'decrease', reason: 'gain-too-fast', suggestedKcal: decrease };
+  if (rate > t.gainTooFastRate) return reduce('gain-too-fast');
   if (rate <= t.gainStalledRate && series.spanDays >= t.gainStalledMinSpanDays) return { action: 'increase', reason: 'not-gaining', suggestedKcal: increase };
   return { action: 'none', reason: 'on-track', suggestedKcal: null };
 }

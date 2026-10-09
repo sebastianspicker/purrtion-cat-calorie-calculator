@@ -7,6 +7,15 @@ const v1Vectors = JSON.parse(readFileSync(new URL('./fixtures/golden-cases-v1.js
 const asOf = '2026-10-09', opts = { asOf };
 const clone = () => structuredClone(seed);
 const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-8, `${actual} ≠ ${expected}`);
+test('CALCULATIONS.md Luna example keeps full precision until final portion rounding', () => {
+  const r = calculatePlan(seed, opts).cats[0];
+  close(r.fixedKcal, 159.133294);
+  close(r.balanceKcal, 30.866706);
+  close(r.balanceGramsExact, 8.071643619);
+  assert.equal(r.balanceGramsRounded, 8);
+  close(r.roundedDailyKcal, 189.7260282256214);
+  assert.deepEqual(r.activities.map(a => a.roundedGrams), [3, 2, 3]);
+});
 for (const vector of v1Vectors) test(`v1 golden migrates with identical allocation: ${vector.name}`, () => {
   const result = calculatePlan(vector.plan, opts);
   for (const expected of vector.expected.cats) {

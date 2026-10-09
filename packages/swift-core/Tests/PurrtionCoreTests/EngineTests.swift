@@ -39,6 +39,45 @@ final class EngineTests: XCTestCase {
         round2(try estimate(cat({ _ in }, { $0.approxAgeYears = 3; $0.reproduction = Reproduction(status: .lactation, litterSize: 4, lactationWeek: 4) })).startKcal, 541.15)
         round2(try estimate(cat({ $0.weightKg = 6; $0.goal = .loss }, { $0.bcs = 8 })).startKcal, 167.17)
     }
+    func testGainRangeStaysOrderedAtFloor() throws {
+        let e = try estimate(cat({ $0.goal = .gain }, {
+            $0.bcs = 4; $0.lifestyle = .sedentary; $0.idealWeightKg = 8; $0.idealWeightSource = .veterinarian
+        }))
+        XCTAssertEqual(e.equation, .adultGain); round2(e.floorKcal, 199.79)
+        near(e.lowKcal, e.floorKcal!); near(e.startKcal, e.floorKcal!); near(e.highKcal, e.floorKcal!)
+        for bw in [0.1, 1, 4, 8, 40] { for ibw in [0.1, 1, 4, 8, 40] {
+            for lifestyle in [Lifestyle.sedentary, .typical, .active] { for goal in [Goal.gain, .maintain, .loss] {
+                let result = try estimate(cat({ $0.weightKg = bw; $0.goal = goal }, {
+                    $0.bcs = 4; $0.lifestyle = lifestyle; $0.idealWeightKg = ibw; $0.idealWeightSource = .veterinarian
+                }))
+                XCTAssertLessThanOrEqual(result.floorKcal!, result.lowKcal!)
+                XCTAssertLessThanOrEqual(result.lowKcal!, result.startKcal!)
+                XCTAssertLessThanOrEqual(result.startKcal!, result.highKcal!)
+            }}
+        }}
+    }
+    func testAllTrendReductionsRespectFloorAndDirection() throws {
+        for goal in [Goal.maintain, .gain, .loss] { for target in [100.0, 120, 140, 190] {
+            let latest = goal == .loss ? 4.0 : 4.15
+            let c = cat({
+                $0.goal = goal; $0.targetKcal = target; $0.weightKg = latest
+                $0.weightLog = entries([(-21, 4), (0, latest)])
+            }, { $0.bcs = goal == .gain ? 4 : goal == .loss ? 6 : 5 })
+            let series = try TrendAnalysis.weightSeries(c, asOf: asOf)
+            let stops = try TrendAnalysis.stops(c, series: series, stage: Estimator.stageOf(c, asOf: asOf))
+            let e = try estimate(c, stops)
+            let suggestion = try XCTUnwrap(TrendAnalysis.trend(c, asOf: asOf, estimate: e, series: series).suggestion)
+            if 0.9 * target < e.floorKcal! {
+                XCTAssertEqual(suggestion.action, .refer); XCTAssertEqual(suggestion.reason, .atFloor)
+                XCTAssertNil(suggestion.suggestedKcal)
+            } else {
+                XCTAssertEqual(suggestion.action, .decrease); near(suggestion.suggestedKcal, 0.9 * target)
+                XCTAssertLessThan(suggestion.suggestedKcal!, target)
+                XCTAssertGreaterThanOrEqual(suggestion.suggestedKcal!, e.floorKcal!)
+            }
+            XCTAssertEqual(c.targetKcal, target)
+        }}
+    }
     /// SCIENCE.md §12.2 weight-loss vectors (D1).
     func testWeightLossStartVectors() throws {
         let ibw = 6 / 1.3, floor = 0.6 * (try Estimator.rer(ibw))
@@ -318,7 +357,6 @@ final class EngineTests: XCTestCase {
             XCTAssertNotNil((locale == "en" ? Messages.en : Messages.de)[key], "\(locale) \(key)")
             XCTAssertNotEqual(Messages.message(key, locale: locale), key)
         } } }
-        XCTAssertTrue(Messages.message("warning.estimated-energy", locale: "en").contains("6–8"))
         XCTAssertTrue(Messages.message("warning.unknown-completeness", locale: "de-DE").contains("Alleinfuttermittel"))
         XCTAssertEqual(Messages.message("nope", locale: "fr"), "nope")
         XCTAssertEqual(EnergyModel.version, 2)

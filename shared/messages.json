@@ -1,6 +1,6 @@
 {
   "en": {
-    "warning.estimated-energy": "Uses estimated food energy. Confirm the exact product’s label before relying on these portions. Even declared label energy carries an error of about ±6–8 %.",
+    "warning.estimated-energy": "Uses estimated food energy. Confirm the exact product’s label before relying on these portions. Declared energy can also differ from measured energy; uncertainty depends on the food and estimation method.",
     "warning.provisional-target": "The calorie target is provisional, not a veterinary prescription.",
     "warning.unknown-completeness": "Check that the foods used are complete cat foods (labelled “complete feed”; in German “Alleinfuttermittel”).",
     "warning.complementary-balance-food": "The selected balance food is complementary, not a complete main ration.",
@@ -124,7 +124,7 @@
     "icon.bow": "Bow"
   },
   "de": {
-    "warning.estimated-energy": "Verwendet geschätzte Energiewerte. Prüfen Sie das Etikett des genauen Produkts, bevor Sie sich auf diese Portionen verlassen. Auch der deklarierte Energiegehalt kann um etwa ±6–8 % abweichen.",
+    "warning.estimated-energy": "Verwendet geschätzte Energiewerte. Prüfen Sie das Etikett des genauen Produkts, bevor Sie sich auf diese Portionen verlassen. Auch der deklarierte Energiegehalt kann vom gemessenen Wert abweichen; die Unsicherheit hängt vom Futter und der Schätzmethode ab.",
     "warning.provisional-target": "Der Kalorienzielwert ist vorläufig und keine tierärztliche Verordnung.",
     "warning.unknown-completeness": "Prüfen Sie, ob die verwendeten Futtermittel Alleinfuttermittel für Katzen sind.",
     "warning.complementary-balance-food": "Das gewählte Ausgleichsfutter ist ein Ergänzungsfuttermittel und keine vollständige Hauptration.",

@@ -230,7 +230,7 @@ $$\text{floor} = 0.6 \times \mathrm{RER}(\mathrm{IBW})$$
 | maintain | — | $\mathrm{MER}(k, W)$, clamped (below) | $\max(\text{floor}, 0.85 \times \text{start})$ / $\text{start} \times h$ | `adult-fediaf` |
 | loss | $\mathrm{IBW} < \mathrm{BW}$ | D1, below | $\max(\text{floor}, 0.875 \times \text{start})$ / $1.125 \times \text{start}$ | `weight-loss-aaha` |
 | loss | otherwise | as maintain | as maintain | `adult-fediaf`, note `loss-not-indicated` |
-| gain | effective BCS = 4 | $\max(\text{floor}, 1.15 \times \mathrm{MER}(k, W))$ | $\max(\text{floor}, 1.10 \times \mathrm{MER}(k, W))$ / $1.20 \times \mathrm{MER}(k, W)$ | `adult-gain` |
+| gain | effective BCS = 4 | $\max(\text{floor}, 1.15 \times \mathrm{MER}(k, W))$ | $\max(\text{floor}, 1.10 \times \mathrm{MER}(k, W))$ / $\max(\text{floor}, 1.20 \times \mathrm{MER}(k, W))$ | `adult-gain` |
 | gain | otherwise | as maintain | as maintain | `adult-fediaf`, note `gain-not-indicated` |
 
 - $h = 1.15$, or $1.25$ at ≥ 12 completed years (note `senior-wider-range`, added whenever the
@@ -387,7 +387,7 @@ conversion.
   (sum of per-cat rounded containers per food, ordered by first appearance in `cats`).
 - Warning `complementary-dry-food` becomes `complementary-balance-food`.
 - The other v1 warnings and all rounding rules are unchanged.
-- The `estimated-energy` warning text adds that label energy itself carries about ±6–8 % error (§10.3).
+- The `estimated-energy` warning text adds that declared energy can differ from measured energy, with uncertainty depending on food and method (§10.3).
 
 ---
 
@@ -431,8 +431,10 @@ $c_{28}$ never fires a condition.
 
 **Suggestions.** Only computed when the estimate status is ok, the stage is adult or senior, and
 $r$ exists. Otherwise `suggestion` is null.
-- Increase: $\max(1.10 \times T,\ \text{floor})$; decrease: $\max(0.90 \times T,\ \text{floor})$, where
+- Increase: $\max(1.10 \times T,\ \text{floor})$; decrease: $0.90 \times T$, where
   $T$ is the cat's **current** `targetKcal` and floor is `floorKcal`.
+- For **every goal**, a matching decrease row instead returns `refer`, `at-floor`, null if
+  $0.90 \times T < \text{floor}$. Clamping a reduction must not turn it into an increase.
 - Rows are evaluated top to bottom within a goal; the first match wins.
 
 | Goal | Condition | action | reason | suggestedKcal |

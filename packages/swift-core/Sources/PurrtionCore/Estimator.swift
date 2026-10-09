@@ -216,7 +216,7 @@ public enum Estimator {
                     typealias G = M.Gain
                     let m = mer(k, w)
                     calc = Calculation(equation: .adultGain, coefficient: k, weightUsedKg: w, startKcal: max(G.startFactor * m, floor),
-                                       lowKcal: max(G.lowFactor * m, floor), highKcal: G.highFactor * m)
+                                       lowKcal: max(G.lowFactor * m, floor), highKcal: max(G.highFactor * m, floor))
                 } else { calc = try maintain(w); notes.insert(.gainNotIndicated) }
             } else {
                 calc = try maintain(w)

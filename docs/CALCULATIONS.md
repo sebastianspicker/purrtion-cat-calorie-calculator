@@ -123,7 +123,7 @@ Per-cat warning codes (sorted, unique). Warnings never make a ration nutritional
 
 | Code | Raised when |
 | --- | --- |
-| `estimated-energy` | a food with positive intake has `energySource` `estimate` or `analysis`. The text adds that even declared label energy carries about ±6–8 % error |
+| `estimated-energy` | a food with positive intake has `energySource` `estimate` or `analysis`. The text adds that declared energy can also differ from measured energy; uncertainty depends on food and method |
 | `unknown-completeness` | a food with positive intake has `completeness = unknown` |
 | `complementary-balance-food` | the balance food is complementary and its grams are above zero |
 | `provisional-target` | `targetSource = provisional` |

@@ -84,7 +84,7 @@ swift test                                # the Swift core tests
 
 The script stages a locally ad-hoc-signed app for your machine's architecture. It is not notarised, not universal and not an App Store or Developer ID release. The package also opens in Xcode through `Package.swift`.
 
-The SwiftUI app has so far only been type-checked, not built, linked or run. See [docs/VERIFICATION.md](docs/VERIFICATION.md).
+The SwiftUI executable has been built and linked by SwiftPM; the native GUI and staged app bundle have not been run. See [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ## Repository layout
 
@@ -119,8 +119,8 @@ There are two separate implementations of the engine (TypeScript and Swift). The
 
 ```sh
 npm ci
-npm run check      # 355 Node tests (core engine, web store and UI), plus drift and type checks
-swift test         # 53 Swift XCTest methods
+npm run check      # 358 Node tests (core engine, web store and UI), plus drift and type checks
+swift test         # 55 Swift XCTest methods
 ```
 
 Both engines run the same 117 golden cases in `shared/golden-cases.json`. After changing `shared/energy-model.json`, `shared/messages.json`, `shared/default-plan.json` or `shared/golden-cases.json`, run `npm run gen:shared` and `npm run sync:shared`; `npm run check` fails on drift.

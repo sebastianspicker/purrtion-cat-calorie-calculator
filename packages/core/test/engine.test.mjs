@@ -12,6 +12,40 @@ const cat = (o = {}, p = {}) => ({ id: 'c', name: 'Cat', weightKg: 4, goal: 'mai
 const wet = { moisture: 78, protein: 10, fat: 5, fibre: 0.5, ash: 2, kind: 'prepared' };
 const dry = { moisture: 8, protein: 34, fat: 14, fibre: 3, ash: 7, kind: 'prepared' };
 
+test('gain range remains ordered when a stored ideal weight makes the floor bind', () => {
+  const e = estimateEnergy(cat({ goal: 'gain' }, { bcs: 4, lifestyle: 'sedentary', idealWeightKg: 8, idealWeightSource: 'veterinarian' }), asOf);
+  assert.equal(e.equation, 'adult-gain');
+  round2(e.floorKcal, 199.79);
+  near(e.lowKcal, e.floorKcal); near(e.startKcal, e.floorKcal); near(e.highKcal, e.floorKcal);
+  // Independent interval invariants over the accepted weight bounds and all adult goals.
+  for (const weightKg of [0.1, 1, 4, 8, 40]) for (const idealWeightKg of [0.1, 1, 4, 8, 40])
+    for (const lifestyle of ['sedentary', 'typical', 'active']) for (const goal of ['gain', 'maintain', 'loss']) {
+      const result = estimateEnergy(cat({ weightKg, goal }, { bcs: 4, lifestyle, idealWeightKg, idealWeightSource: 'veterinarian' }), asOf);
+      assert.ok(result.floorKcal <= result.lowKcal && result.lowKcal <= result.startKcal && result.startKcal <= result.highKcal,
+        JSON.stringify({ weightKg, idealWeightKg, lifestyle, goal, result }));
+    }
+});
+
+test('all trend reductions refer if a ten-percent cut crosses the floor', () => {
+  for (const goal of ['maintain', 'gain', 'loss']) for (const targetKcal of [100, 120, 140, 190]) {
+    const weightLog = [{ id: 'a', date: day(-21), weightKg: 4, bcs: null },
+      { id: 'b', date: day(0), weightKg: goal === 'loss' ? 4 : 4.15, bcs: null }];
+    const c = cat({ goal, targetKcal, weightKg: weightLog[1].weightKg, weightLog },
+      { bcs: goal === 'gain' ? 4 : goal === 'loss' ? 6 : 5 });
+    const before = structuredClone(c), series = weightSeries(c, asOf);
+    const e = estimateEnergy(c, asOf, trendStops(c, series, stageOf(c, asOf)));
+    const suggestion = trendFor(c, asOf, e, series).suggestion;
+    assert.ok(suggestion);
+    if (0.9 * targetKcal < e.floorKcal) {
+      assert.deepEqual(suggestion, { action: 'refer', reason: 'at-floor', suggestedKcal: null });
+    } else {
+      assert.equal(suggestion.action, 'decrease'); near(suggestion.suggestedKcal, 0.9 * targetKcal);
+      assert.ok(suggestion.suggestedKcal < targetKcal && suggestion.suggestedKcal >= e.floorKcal);
+    }
+    assert.deepEqual(c, before, 'suggestions must not mutate the plan');
+  }
+});
+
 test('SCIENCE.md §12.2 anchors: MER, RER, kitten NRC, gestation, lactation, weight loss', () => {
   round2(mer(75, 4), 189.86); round2(mer(100, 4), 253.15); round2(rer(4), 197.99);
   round2(estimateEnergy(cat({ weightKg: 2 }, { approxAgeYears: null, birthDate: day(-91), expectedAdultWeightKg: 4 }), asOf).startKcal, 266.32);
@@ -253,7 +287,6 @@ test('messages: every locale has the same keys, and every engine code has text',
     action: ['switch-to-maintenance', 'increase', 'decrease', 'hold', 'none', 'refer'], status: ['ok', 'reference-only', 'needs-input', 'refer'] };
   for (const [prefix, list] of Object.entries(codes)) for (const code of list) for (const locale of ['en', 'de'])
     assert.ok(messageFor(`${prefix}.${code}`, locale)?.length > 0, `${locale} ${prefix}.${code}`);
-  assert.match(messageFor('warning.estimated-energy'), /6–8/);
   assert.match(messageFor('warning.unknown-completeness', 'de'), /Alleinfuttermittel/);
 });
 test('energy model is versioned and every equation has SCIENCE.md references', () => {

@@ -57,7 +57,12 @@ public enum TrendAnalysis {
         let floor = estimate.floorKcal ?? 0, target = cat.targetKcal
         // Suggestions are defined for adult and senior plans only; kittens grow and queens are reference-only.
         guard estimate.status == .ok, let rate = series.ratePercentPerWeek, estimate.stage == .adult || estimate.stage == .senior else { return nil }
-        let increase = max(target * T.increaseFactor, floor), decrease = max(target * T.decreaseFactor, floor)
+        let increase = max(target * T.increaseFactor, floor), decrease = target * T.decreaseFactor
+        // A floor must never turn a requested reduction into an increase (or an unchanged target).
+        func reduce(_ reason: SuggestionReason) -> Suggestion {
+            decrease < floor ? Suggestion(action: .refer, reason: .atFloor, suggestedKcal: nil)
+                : Suggestion(action: .decrease, reason: reason, suggestedKcal: decrease)
+        }
         switch cat.goal {
         case .loss:
             let ibw = estimate.idealWeight?.kg ?? cat.weightKg
@@ -70,18 +75,17 @@ public enum TrendAnalysis {
             if rate <= T.lossSlowRate || series.spanDays < T.plateauMinSpanDays {
                 return Suggestion(action: .hold, reason: .slowRecheckTwoWeeks, suggestedKcal: nil)
             }
-            return target * T.decreaseFactor < floor ? Suggestion(action: .refer, reason: .atFloor, suggestedKcal: nil)
-                : Suggestion(action: .decrease, reason: .plateau, suggestedKcal: decrease)
+            return reduce(.plateau)
         case .maintain:
             guard let change = series.change28dPercent else { return nil }
-            if change >= T.maintainChangePercent { return Suggestion(action: .decrease, reason: .gaining, suggestedKcal: decrease) }
+            if change >= T.maintainChangePercent { return reduce(.gaining) }
             if change <= -T.maintainChangePercent { return Suggestion(action: .increase, reason: .losing, suggestedKcal: increase) }
             return Suggestion(action: .none, reason: .stable, suggestedKcal: nil)
         case .gain:
             if let bcs = try Estimator.effectiveBcs(cat, asOf: asOf), Double(bcs) >= EnergyModel.Bcs.ideal {
                 return Suggestion(action: .switchToMaintenance, reason: .idealConditionReached, suggestedKcal: nil)
             }
-            if rate > T.gainTooFastRate { return Suggestion(action: .decrease, reason: .gainTooFast, suggestedKcal: decrease) }
+            if rate > T.gainTooFastRate { return reduce(.gainTooFast) }
             if rate <= T.gainStalledRate && series.spanDays >= T.gainStalledMinSpanDays {
                 return Suggestion(action: .increase, reason: .notGaining, suggestedKcal: increase)
             }

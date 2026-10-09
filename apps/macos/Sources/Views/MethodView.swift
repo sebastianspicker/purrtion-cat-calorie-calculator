@@ -22,7 +22,8 @@ struct MethodView: View {
         RER = \(c(M.Rer.factor)) × BW^\(c(M.Rer.exponent))
         MER = k × W^\(c(M.Mer.exponent)),  k = \(c(M.Mer.sedentary)) / \(c(M.Mer.typical)) / \(c(M.Mer.active))
         IBW = BW ÷ (1 + \(c(M.IdealWeight.fractionPerBcsUnit)) × (BCS − \(Int(M.Bcs.ideal)))),  BCS ≥ \(Int(M.Bcs.overweightMin))
-        \(l.t("why.word.start")) (\(l.goal(.loss))) = \(c(M.Loss.startFactor)) × min(RER(IBW), MER(k, IBW))
+        \(l.t("why.word.start")) (\(l.goal(.loss))) = max(\(l.t("why.word.floor")), \(c(M.Loss.startFactor)) × min(RER(IBW), MER(k, IBW)))
+        V: \(l.t("why.word.start")) = max(\(l.t("why.word.floor")), \(c(M.Loss.verifiedIntakeFactor)) × V),  V ≥ \(l.t("why.word.floor"))
         \(l.t("why.word.floor")) = \(c(M.Floor.rerFactor)) × RER(IBW)
         """
     }

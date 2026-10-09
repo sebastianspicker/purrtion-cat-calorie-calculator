@@ -198,7 +198,7 @@ export function estimateEnergy(cat: Cat, asOf: string, trendStops: readonly Refe
       if (effective === bcsModel.gainOnly) {
         const g = model.gain, m = mer(k, w);
         calc = { equation: 'adult-gain', coefficient: k, weightUsedKg: w, startKcal: Math.max(g.startFactor * m, floor),
-          lowKcal: Math.max(g.lowFactor * m, floor), highKcal: g.highFactor * m };
+          lowKcal: Math.max(g.lowFactor * m, floor), highKcal: Math.max(g.highFactor * m, floor) };
       } else { calc = maintain(w); notes.add('gain-not-indicated'); }
     } else {
       calc = maintain(w);

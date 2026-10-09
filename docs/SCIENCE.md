@@ -198,7 +198,9 @@ weaning" and tabulated 0.85 kg → 180, 2.35 kg → 280, 3.20 kg → 292 kcal ME
 above with an expected adult weight of 4.0 kg gives 180.6, 279.0 and 291.6 kcal/day for the three cases (published:
 180, 280, 292); back-solving the adult weight from each case gives 3.89-4.04 kg, i.e. all three are reproduced to
 within rounding by one adult weight of about 4 kg. That cross-check is why the formula is adopted, but it
-should be confirmed against the NRC text by the reviewing veterinarian before release.
+should be confirmed against the NRC text by the reviewing veterinarian before release. The follow-up audit also
+found the same expression used explicitly in the methods of a primary kitten study [40]; this corroborates
+the transcription but does not validate the app's later transition blend.
 
 Multiplier table, computed from the formula (relative to $100 \times \mathrm{BW}^{0.67}$):
 
@@ -500,14 +502,13 @@ ideal-weight RER needs a work-up, not a further cut). The earlier rule "use the 
 and $0.8 \times$ intake" is withdrawn: for a cat that holds its weight on 150 kcal it gave 176.3 kcal, more than the cat
 already eats.
 
-**Floor.** AAHA 2014 was relayed as saying "most patients can tolerate caloric restriction as low as 60 % of RER of
-ideal BW", with consultation of a board-certified veterinary nutritionist below that and a possibly "increased risk of
-hepatic lipidosis" in cats [5]. The 2026-10-09 audit could **not** find the "as low as 60 % of RER" wording in the primary
-text; in what was found, 60 % appears only in AAHA's protein table (**UNVERIFIED**). Hoelmkjaer & Bjornvad report a
-hepatic-lipidosis case at about 30 kcal/kg target BW [13b]; the floor $0.6 \times \mathrm{RER}(\mathrm{IBW})$ is 28.7 kcal/kg at
-IBW 4.6 kg, close to that figure. The engine keeps the floor at $0.6 \times \mathrm{RER}(\mathrm{IBW})$ as a hard minimum (X),
-with this caveat: the floor is a limit, not a safe target, and a cat near it (for example a sedentary cat, section 13 B)
-needs close appetite monitoring. The engine must **never output below the floor** and must say so.
+**Floor.** The follow-up audit verified AAHA 2014, printed page 8 [5]: the authors describe
+clinical experience with restriction down to 60 % of ideal-weight RER, and warn of nutrient,
+behavioural and feline hepatic-lipidosis risks with greater restriction. This is clinical guidance,
+not proof that the threshold is safe for every cat. The app's hard floor remains an engineering
+policy (X), including its extension to maintenance and gain. Hoelmkjaer & Bjornvad report a
+hepatic-lipidosis case at about 30 kcal/kg target BW [13b]; the floor is 28.7 kcal/kg at IBW 4.6 kg.
+Close monitoring and an appropriate diet remain necessary; the floor is not a recommended target.
 
 ### 7.2 Rate, monitoring and plateaus
 
@@ -517,8 +518,7 @@ needs close appetite monitoring. The engine must **never output below the floor*
   faster than 3 %/wk or ≥ 8 % in 28 days (section 16, D5).** For a 6 kg cat: 30-60 g/wk target, 120 g/wk upper,
   180 g/wk referral. The engine's rate is in % of the current (28-day window mean) weight, not of the initial weight.
 * Adjustment: "If weight loss is greater than the above-described desired rates, increase calories by 10 % and monitor
-  response" [5]. Insufficient loss: change calories by 10-20 % and/or activity (the extracted text was truncated before
-  the verb; "decrease" is implied, UNVERIFIED). If still losing at IBW: increase calories by 10 % to move to maintenance [5].
+  response" [5]. Insufficient loss: after checking adherence and risk, reduce calories by 10-20 % and/or change activity [5, printed p. 8; verified in the follow-up audit]. If still losing at IBW: increase calories by 10 % to move to maintenance [5].
 * Schedule: first contact after week 1, weigh every 2 weeks until a stable loss rate, then monthly [5]; recalc IBW when
   BCS changes. If MCS worsens, check protein intake and rate of loss [5].
 * Plateau: the sources give no cat-specific plateau rule beyond the 10-20 % step; metabolism may "reset at a lower rate"
@@ -541,7 +541,7 @@ needs close appetite monitoring. The engine must **never output below the floor*
 * BCS ≤3/9, unexplained weight loss or low MCS are **medical** problems (disease, dental, endocrine, CKD, neoplasia).
   Teng: HR for death 4.67 at BCS 3 [19]. Engine: refer, no calculation.
 * BCS 4/9 healthy cat wanting to gain (e.g. after illness, with vet agreement): start $1.15 \times \mathrm{MER}(k, W)$ within
-  $[1.10, 1.20] \times \mathrm{MER}(k, W)$ (X; derived from AAHA 10-20 % adjustment steps) and review in 2 weeks; stop when BCS 5
+  $[1.10, 1.20] \times \mathrm{MER}(k, W)$, with start and both endpoints raised to the floor when needed (X; derived from AAHA 10-20 % adjustment steps) and review in 2 weeks; stop when BCS 5
   (or 4-5 in neutered) is reached. No evidence-based gain-rate target exists in cats; use 1 %/wk as an upper alert (X).
 * AAHA 2021: for hospitalised animals base calculations on current weight if ideal or underweight [4].
 
@@ -567,7 +567,7 @@ engine, no label recommendations beyond arithmetic). The table lists what is kno
 | --- | --- | --- | --- |
 | **CKD** | IRIS 2026: phosphate restriction by renal diet from stage 2 (plasma phosphate <1.5 mmol/L; stage 3 <1.6; stage 4 <1.9), binders if needed; renal diets are protein- and phosphate-restricted with higher calorie density; moderate protein restriction with monitoring of lean mass; "phosphate restriction is thought to be mainly responsible" for longer survival (median survival 633 vs 264, 480 vs 210 days, and RCT Ross 2006: 0 % vs 26 % uraemic episodes) [31][32] | Maintain weight and MCS; prevent protein-calorie malnutrition; tube feeding in stage 4 | Calorie-restrict, suggest a renal diet without veterinary staging, choose phosphate targets, warn that a renal diet is "below the protein minimum" (the engine skips that check for CKD) |
 | **Hyperthyroidism** | ISFM/AAFP 2016: iodine-restricted diet (0.2 ppm DM) can control T4 in 75 % within 28 days, up to 83 % remission in a one-year study but must be the only food; unsuitable for multi-cat or outdoor access; long-term effects unknown [33] | Cats are typically thin and hungry before treatment; weight rises after treatment | Combine such a diet with other foods/treats; compute weight loss |
-| **Diabetes mellitus** | iCatCare 2025 (uses ALIVE terminology): low-carbohydrate diet ideally ≤12 % ME carbohydrate (confirmed in the 2026-10-09 audit [39]; alternatively <25 % DM, <15 % ME, <5 g/100 kcal); wet food for all; avoid diet change at insulin start; obese: BCS 5/9 by 0.5-1 %/wk loss (early weight loss tied to 15-fold higher remission odds); remission 11 to >60 % in reports; stay at BCS 4-5 in remission [30]. AAHA 2026 diabetes guidelines for cats exist; diet numbers not verified (page 403) [34] | Insulin dose and food are coupled | Change food/amount without veterinary insulin plan; claim carbs cause DM |
+| **Diabetes mellitus** | iCatCare 2025 (uses ALIVE terminology): low-carbohydrate diet ideally ≤12 % ME carbohydrate (confirmed in the 2026-10-09 audit [39]; alternatively <25 % DM, <15 % ME, <5 g/100 kcal); wet food for all; avoid diet change at insulin start; obese: BCS 5/9 by 0.5-1 %/wk loss (early weight loss tied to 15-fold higher remission odds); remission 11 to >60 % in reports; stay at BCS 4-5 in remission [30]. AAHA 2026 section 8 recommends about 12 % ME carbohydrate for most diabetic cats, while allowing moderate-carbohydrate weight-loss diets (15-25 % ME) in obese cats; the threshold is not a universal diet-suitability test [34] | Insulin dose and food are coupled | Change food/amount without veterinary insulin plan; claim carbs cause DM |
 | **Obesity** | section 7 | section 7 | Go below floor; skip veterinary screen when comorbidity |
 | **Critical care / hospital** | RER only; abandoned illness factors: Kidder 2010 "Current recommendations are to just use the RER without the illness factor" [29]. Remillard 2001, Walton 2001 not verified | Start fractionally; feeding within 72 h | Any hospital feeding calculation |
 | **Hepatic lipidosis** | Do not restrict protein (Merck, S: "protein restriction compromises survival"), no fat restriction; esophagostomy tube preferred; energy about $60 \times \mathrm{BW}$, starting near half, full by days 3-5 (Merck, S) [9b] | Early assisted enteral feeding | Any HL feeding |
@@ -678,6 +678,8 @@ mean absolute differences of 173 and 180 kcal/kg [21]. Jewell & Jackson 2023 (84
 61 (modified Atwater), 52 (NRC); dry foods 347 (modified Atwater), 173 (NRC) – about 8 % of mean dry ME of 4199 kcal/kg vs 6 % for wet (mean
 996 kcal/kg) [22]. Conclusion: Atwater is acceptable for wet food, noticeably biased for dry food; the NRC/FEDIAF 4-step is better. No AAFCO/FEDIAF change
 to these formulas in 2023-2025 was found (not exhaustively searched).
+These are study-average absolute prediction errors, not a symmetric uncertainty interval for every label;
+the follow-up audit removed that overgeneralisation from the UI.
 
 ### 10.4 Derived quantities
 
@@ -792,8 +794,8 @@ The normative rules are in `docs/ENGINE.md`; this section gives the model and it
 6. **Clamps:** $\text{floor} = 0.6 \times \mathrm{RER}(\mathrm{IBW})$ for every adult/senior start and range low; adult maintenance start
    $\le 1.4 \times \mathrm{RER}(\mathrm{BW})$ (D7: binds only below about 1.3 kg); kitten start $\le 2.5 \times \mathrm{RER}(\mathrm{BW})$;
    round to 1 kcal for display.
-7. **Range:** maintain $[0.85, 1.15] \times \text{start}$ ($1.25$ high end for ≥12 y); lose
-   $[\max(\text{floor}, 0.875 \times \text{start}),\ 1.125 \times \text{start}]$; gain $[1.10, 1.20] \times \mathrm{MER}(k, W)$; kitten as in 3.1.
+7. **Range:** maintain $[\max(\text{floor}, 0.85 \times \text{start}), 1.15 \times \text{start}]$ ($1.25$ high factor for ≥12 y); lose
+   $[\max(\text{floor}, 0.875 \times \text{start}),\ 1.125 \times \text{start}]$; gain $[1.10, 1.20] \times \mathrm{MER}(k, W)$ with both endpoints floored; kitten as in 3.1.
 8. **Compare:** if a vet target is present, show it as THE target; list the engine range; warn if outside the range.
 9. **Label checks:** section 12.5, only when the estimate is usable (status ok or reference-only).
 10. **Loop:** section 12.4.
@@ -916,7 +918,7 @@ analysis (as-fed %):
 4. Taurine/Ca/P cannot be checked without analysis; if present compare with the 75/100 tier table in 9.2 scaled by $k_{\text{actual}}$.
 5. Treats and complementary items ≤10 % (existing).
 6. Complete-and-balanced claim must be recorded as a user attestation; the app cannot assess micronutrients.
-7. Display `kcal/kg` and `g/day` with an "estimated" tag; remind the user that label ME has an error of about ±6-8 % for dry and wet foods (Jewell 2023) [22].
+7. Display `kcal/kg` and `g/day` with an "estimated" tag; explain that prediction error varies by food and equation; study averages are not a universal ± error bound for labels [22].
 
 ### 12.6 Hard "refer to a veterinarian" stops (no calculation shown)
 
@@ -930,7 +932,7 @@ analysis (as-fed %):
 | verified intake of a weight-stable cat below $0.6 \times \mathrm{RER}(\mathrm{IBW})$ | a further cut would go below the floor; needs a work-up (X, D1) |
 | not eating (anorexia) ≥ 24 h (cat on weight-loss plan or BCS ≥7) or ≥ 48 h (any cat) | HL risk; AAHA 72 h/≤1/3 RER tube trigger is the hospital limit [4]; the 24/48 h figures are X (conservative) |
 | `repro` ≠ none (pregnant/lactating) | calculation shown as reference only, plus banner: lactation needs vary widely; queens usually cannot meet needs [13] |
-| goal `lose` with kcal would fall below $0.6 \times \mathrm{RER}(\mathrm{IBW})$ | AAHA: consult a nutritionist [5] (60 % wording UNVERIFIED, section 7.1) |
+| goal `lose` with kcal would fall below $0.6 \times \mathrm{RER}(\mathrm{IBW})$ | app referral policy (X), informed by AAHA's restriction risks [5, printed p. 8]; section 7.1 |
 | kitten with adult weight unknown **and** age < 4 months | cannot apply NRC; show FEDIAF band only and ask |
 | user/vet target differs from engine range by >30 % | show both, never overwrite; recommend vet confirmation |
 | vomiting, diarrhoea, lethargy, straining to urinate, drinking/urinating more | any clinical sign → vet; (X, standard practice) |
@@ -962,7 +964,7 @@ With a verified intake of 200 kcal: start 160.0; of 150 kcal: start 132.3 (floor
 The previous rule ($0.8 \times \mathrm{RER}(\mathrm{IBW}) = 176.3$ for every tier) gave the sedentary cat 99.7 % of its own maintenance at the ideal weight.
 Expected loss: 0.5-1 % of initial BW per week = 30-60 g/week, so the 1.38 kg to IBW take about **23-46 weeks**. The engine's rate is in % of the
 current (window-mean) weight, which shrinks as the cat loses: at 0.5-1 % of current weight per week the same loss takes about **26-52 weeks**
-($\ln(6 / 4.615) / {-\ln(1 - r)}$). At 2 %/wk (120 g/week at 6 kg) the engine suggests +10 %; faster than 3 %/wk (180 g/week) it refers.
+($\ln(6 / 4.615) / {-\ln(1 - r)}$). Above 2 %/wk (120 g/week at 6 kg) the engine suggests +10 %; faster than 3 %/wk (180 g/week) it refers.
 Protein, typical tier: FEDIAF scaling $k_{\text{actual}} = 167.2 / 4.615^{0.67} = 60.0$ → ≥ 104.2 g/1000 kcal; plus ≥5 g/kg IBW = 23.1 g/day = **138.0 g/1000 kcal**.
 The wet food (100.8 g/1000 kcal) would give 168.4 g food and 16.8 g protein/day (3.6 g/kg IBW): fails both; recommend a veterinary weight-loss diet.
 Treats ≤10 % (16.7 kcal). Re-check every 2 weeks; reassess the stored IBW with the veterinarian when BCS reaches 6 or 5.
@@ -985,7 +987,7 @@ $p = 0.9$ → $t = 0.5$ (age term 0). NRC 290.2; adult $\mathrm{MER}(75, 3.6) = 
 282.0-398.1; range 150.4-398.1. At 4.0 kg the cat becomes an adult and gets $\mathrm{MER}(75, 4.0) = 189.9$.
 
 **D. Lactating queen, 4 kg, 4 kittens, week 4.**
-$\mathrm{ME} = 100 \times 4^{0.67} + 60 \times 4 \times 1.2 = 253.15 + 288 = 541.2$ kcal/day (135 kcal/kg). Week 6: 493; week 7: 445. AAHA $2.0\text{–}6.0 \times \mathrm{RER}$ (396-1188). Banner: refer; free-choice feeding of
+$\mathrm{ME} = 100 \times 4^{0.67} + 60 \times 4 \times 1.2 = 253.15 + 288 = 541.2$ kcal/day (135 kcal/kg). Week 6: 493; week 7: 445. AAHA $2.0\text{–}6.0 \times \mathrm{RER}$ (396-1188). Status: reference-only (not the no-number refer status); free-choice feeding of
 a growth/reproduction diet; weigh the queen weekly; wean kittens from 4-6 weeks. Protein ≥ 75 g/1000 kcal (reproduction).
 
 **E. Gestation (4 kg queen).** $140 \times 4^{0.67} = 354.4$ kcal/day, introduced gradually (about 10 %/wk from early pregnancy) [13].
@@ -1007,7 +1009,7 @@ a growth/reproduction diet; weigh the queen weekly; wean kittens from 4-6 weeks.
    a gain plan per section 7.3 would be 216-235 kcal; sample is outside but plausible for an underweight cat – the engine should flag BCS <4.
 6. The 10 % "general guidance": correct, from AAHA 2014/2021. The doc cites the AAHA prevention page [AAHA] for it; the 2021 PDF text is the primary location (page 158). The app counts
    complementary foods toward the 10 % limit: consistent with AAHA's "complete and balanced food ≥90 %".
-7. Warnings do not mention that label ME may be wrong by about 6-8 %; consider a single sentence (Jewell 2023).
+7. Label uncertainty should be explained without treating study-average prediction errors as a universal ±6-8 % bound (corrected in the follow-up audit; [22]).
 8. Validation bounds: nothing in the evidence contradicts 0.1-40 kg and 1-3,000 kcal limits; kcal/g 0.01-10 is fine (dry cat food about 3.5-4.5 kcal/g, wet about 0.7-1.2). Not a clinical range (existing statement is right).
 9. The brief for this addendum referred to the 2018 feeding consensus as "AAFP/ISFM". It is an **AAFP** consensus statement (Sadek et al., JFMS 2018) [38]. Also, no AAFP/ISFM weight-management guideline was found; the 2014 weight-management
    guideline is AAHA's (Brooks et al.) endorsed by AAFP.
@@ -1016,11 +1018,11 @@ a growth/reproduction diet; weigh the queen weekly; wean kittens from 4-6 weeks.
 
 ## 15. What I could not verify
 
-* The NRC 2006 chapter text itself (OpenBook blocks it). Growth equation $6.7 \times (e^{-0.189p} - 0.66)$, $100 \times \mathrm{BW}^{0.67}$, $130 \times \mathrm{BW}^{0.4}$ rely on secondary reproduction plus the numeric cross-check in 3.1.
+* The NRC 2006 chapter text itself (OpenBook blocks it). Growth equation $6.7 \times (e^{-0.189p} - 0.66)$, $100 \times \mathrm{BW}^{0.67}$, $130 \times \mathrm{BW}^{0.4}$ were checked through secondary reproductions; the kitten expression is additionally corroborated by a primary study [40] and the numeric cross-check in 3.1. The NRC chapter itself remains unread.
 * Whether FEDIAF's "times MER" for kittens uses $k = 75$ or $100$ (or an unspecified MER); which body weight FEDIAF uses for gestation and lactation.
-* The AAHA 2014 wording "most patients can tolerate caloric restriction as low as 60 % of RER of ideal BW": relayed by a subagent; the 2026-10-09 audit found 60 % only in AAHA's protein table, not this sentence (section 7.1).
+* Resolved in the follow-up audit: AAHA 2014 printed page 8 contains the 60 %-of-RER guidance and the 10-20 % reduction step. Their clinical context remains essential (section 7.1).
 * Full AAHA 2021 JAAHA DOI was relayed by a search result (10.5326/JAAHA-MS-7232); the PDF I read confirms the content.
-* The AAHA 2026 cat diabetes guideline diet numbers (page returned 403); iCatCare 2025 numbers were read via a copy of the full text by a subagent (the ≤12 % ME carbohydrate threshold was confirmed in the 2026-10-09 audit [39]).
+* Resolved in the follow-up audit: AAHA 2026 section 8 was accessible and its dietary guidance checked [34]; iCatCare 2025 numbers were read via a copy of the full text by a subagent (the ≤12 % ME carbohydrate threshold was confirmed in the 2026-10-09 audit [39]).
 * Laflamme 1997 original; Hawthorne & Butterwick 2000 original and the exact divisor (0.7067 quoted vs 0.7062 recalled); "German and Martin" BF equation; any published validation of the mass-balance IBW method and DXA-based IBW errors.
 * Remillard 2001, Walton 2001, Chan, Brenner 2011, ACVECC/WSAVA refeeding statements; thiamine and electrolyte doses.
 * Xenoulis 2016 hyperlipidaemia; IBD/hypoallergenic diet primary evidence; Cupp 2004; Armstrong/Lund 1996; Kruger FLUTD wet-food paper; hairball/starch digestibility; typical wet cat food composition ranges.
@@ -1122,6 +1124,27 @@ reference-only (otherwise not applicable); the 5 g/kg-IBW warning only for the `
 The adult maintenance start stays capped at $1.4 \times \mathrm{RER}(\mathrm{BW})$ (the top of AAHA's neutered range). It is a guard, not a model term:
 $100 \times w^{0.67} > 1.4 \times 70 \times w^{0.75}$ only for $w < 0.98^{-12.5} = 1.29$ kg, so it binds only for very small active cats.
 
+### 16.3 Follow-up correctness audit (Codex, 2026-10-09)
+
+- Independently recomputed CALCULATIONS.md's Luna allocation, the README household, food-analysis
+  examples and section 13 A–E. The numeric examples agree at their displayed precision. Section 13 B
+  now says **above** 2 %/week, matching the strict comparison; D correctly calls lactation reference-only.
+- Fixed the gain interval when a high stored ideal weight makes the floor exceed the raw high bound:
+  all three values now respect the floor. Example: BW 4 kg, IBW 8 kg, BCS 4, sedentary gives floor
+  199.79 kcal; the old high was 192.90. Both engines now return an ordered interval.
+- A maintenance/gain reduction below the floor previously became a larger target labelled “decrease”.
+  All three goals now refer when the proposed 10 % reduction crosses the floor. This extends the
+  existing loss-goal rule; no target changes automatically.
+- Formula cards now include the operative floor clamps and verified-intake alternative. The web
+  evidence labels identify the model choices in maintenance, weight loss and kitten transition.
+- The primary-source checks resolved AAHA floor wording and the newer diabetes guidance, and
+  corroborated the kitten equation transcription. FEDIAF's prepared/fresh food equations, adult
+  coefficients, reproduction equations and protein scaling were cross-checked against [1].
+- The minimum-of-RER-and-MER loss rule, interpolated kitten bands and transition timing remain
+  **unvalidated app choices**, not published AAHA/NRC equations. Reaching an owner-estimated adult
+  weight does not itself establish biological maturity; D4 and the resulting adult-goal eligibility
+  require veterinary review. Arithmetic tests cannot establish clinical safety.
+
 ---
 
 ## 17. References
@@ -1132,7 +1155,7 @@ Identifier status: "opened" = I (or a subagent) read the cited page or file in t
 2. National Research Council. *Nutrient Requirements of Dogs and Cats*. National Academies Press, 2006. https://nap.nationalacademies.org/read/10668 (page opened; text not accessible).
 3. Bermingham EN, Thomas DG, Morris PJ, Hawthorne AJ. Energy requirements of adult cats. *Br J Nutr* 2010;103(8):1083-1093. doi:10.1017/S000711450999290X (opened; full text via subagent).
 4. Cline MG, Burns KM, Coe JB, Downing R, Durzi T, Murphy M, Parker V. 2021 AAHA Nutrition and Weight Management Guidelines for Dogs and Cats. *J Am Anim Hosp Assoc* 2021;57(4):153-178. doi:10.5326/JAAHA-MS-7232 (DOI relayed). PDF opened: https://www.canadianveterinarians.net/media/iuqg3rfp/cline-2021-aaha-nutrition-and-weight-management-guidelines-for-dogs-and-cats-jaaha-2021.pdf (weight-loss intake 52 ± 4.9 kcal/kg^0.711 confirmed in the 2026-10-09 audit).
-5. Brooks D, Churchill J, Fein K, Linder D, Michel KE, Tudor K, Ward E, Witzel A. 2014 AAHA Weight Management Guidelines for Dogs and Cats. *J Am Anim Hosp Assoc* 2014;50(1):1-11. https://jaaha.kglmeridian.com/view/journals/aaha/50/1/article-p1.xml (opened by subagent; the "as low as 60 % of RER" wording was not found by the 2026-10-09 audit, see section 7.1).
+5. Brooks D, Churchill J, Fein K, Linder D, Michel KE, Tudor K, Ward E, Witzel A. 2014 AAHA Weight Management Guidelines for Dogs and Cats. *J Am Anim Hosp Assoc* 2014;50(1):1-11. https://www.aaha.org/wp-content/uploads/globalassets/02-guidelines/weight-management/2014-AAHA-Weight-Management-Guidelines-for-Dogs-and-Cats (primary PDF opened in the follow-up audit; printed p. 8 confirms the floor context and reduction step).
 6. AAHA. Box 1: Energy Requirement Calculations (2021 Nutrition and Weight Management Guidelines). http://www.aaha.org/wp-content/uploads/globalassets/02-guidelines/2021-nutrition-and-weight-management/resourcepdfs/nutritiongl_box1.pdf (opened).
 7. WSAVA. Calorie Needs for an Average Healthy Adult Cat in Ideal Body Condition (updated July 2020). https://wsava.org/wp-content/uploads/2020/07/Calorie-Needs-for-Healthy-Adult-Cats-updated-July-2020.pdf (opened).
 8. WSAVA Nutritional Assessment Guidelines Task Force. WSAVA Nutritional Assessment Guidelines. *J Feline Med Surg* 2011;13(7):516-525. doi:10.1016/j.jfms.2011.05.009 (relayed); also *J Small Anim Pract* 2011;52(7):385-396. https://wsava.org/global-guidelines/global-nutrition-guidelines/ (listed).
@@ -1161,9 +1184,11 @@ Identifier status: "opened" = I (or a subagent) read the cited page or file in t
 31. International Renal Interest Society. Treatment recommendations for CKD in cats (2026). iris-kidney.com (PDF text read by subagent; exact URL not captured).
 32. Sparkes AH, et al. ISFM consensus guidelines on the diagnosis and management of feline chronic kidney disease. *J Feline Med Surg* 2016;18(3):219-239. doi:10.1177/1098612X16631234 (read first half via PMC11148907); Ross SJ et al. *J Am Vet Med Assoc* 2006;229(6):949-957 (search summary only).
 33. Carney HC, et al. 2016 AAFP guidelines for the management of feline hyperthyroidism (ISFM/AAFP). *J Feline Med Surg* 2016;18(5):400-416. doi:10.1177/1098612X16643252 (read via PMC11132203, ~80 %).
-34. AAHA 2026 Diabetes Management Guidelines for Cats. https://www.aaha.org/resources/2026-aaha-diabetes-management-guidelines-for-cats/section-9-diabetic-remission/ (search result only; full text not opened).
+34. AAHA 2026 Diabetes Management Guidelines for Cats. https://www.aaha.org/resources/2026-aaha-diabetes-management-guidelines-for-cats/section-8-dietary-management/ (primary section opened in the follow-up audit).
 35. Forman MA, et al. ACVIM consensus statement on pancreatitis in cats. *J Vet Intern Med* 2021;35:703-723. doi:10.1111/jvim.16053 (first ~40 % read via PMC7995362).
 36. Lulich JP, et al. ACVIM small animal consensus recommendations on the treatment and prevention of uroliths in dogs and cats. *J Vet Intern Med* 2016;30(5):1564-1574. doi:10.1111/jvim.14559 (read by subagent).
 37. German AJ, Holden SL, Mason SL, Bryner C, Bouldoires C, Morris PJ, Deboise M, Biourge V. Imprecision when using measuring cups to weigh out extruded dry kibbled food. *J Anim Physiol Anim Nutr* 2011;95(3):368-373. doi:10.1111/j.1439-0396.2010.01063.x (abstract read via a summary).
 38. AAFP. How to feed a cat: AAFP consensus statement on feline feeding programs and client brochure. https://catvets.com/wp-content/uploads/2024/08/2018-How-to-Feed.pdf (PDF listed; text not read). Primary paper: ref 11b.
 39. ABVP. Summary of the 2025 iCatCare feline diabetes mellitus consensus guidelines, March 2026. https://abvp.com/wp-content/uploads/2026/02/2026-03-March-Feline-icc-DM.pdf (opened in the 2026-10-09 audit; used only to confirm the ≤12 % ME carbohydrate threshold of [30]; title inferred from the file name, verify).
+
+40. Godfrey H, et al. Dietary choline in gonadectomized kittens improved food intake and body composition but not satiety, serum lipids, or energy expenditure. *PLOS ONE* 2022. https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0264321 (primary study; methods reproduce the NRC kitten energy expression; opened in the follow-up audit).

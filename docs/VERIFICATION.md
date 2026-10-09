@@ -8,39 +8,44 @@ workflows in `.github/workflows` have not yet run on GitHub.
 
 | Check | Result |
 | --- | --- |
-| `npm run check` | Passed: generated-file drift check, shared-file drift check, strict TypeScript type-check, build, Node tests: 355 of 355 pass |
-| Swift core (`PurrtionCore`) | 53 XCTest methods passed, including all 117 shared golden cases. Run with a substitute harness, see below |
-| Independent math audit | Every golden case was recomputed independently: 0 mismatches between code and specification. Defects in the model itself were found and fixed ([SCIENCE.md](SCIENCE.md) section 16) |
-| jsdom drive of the built web modules | Ran with 0 runtime errors. This is a script-level exercise, not a browser |
-| Correctness review | The estimator was re-implemented independently and compared on 6,000 random cats: 0 mismatches. The TS and Swift engines were compared function by function. Ten UI and parity defects were found and fixed |
-| Security review | No critical or high findings. Nine low or informational items were fixed. `apps/web/vendor/temml/temml.min.js` is byte-identical to the official npm `temml@0.13.5` file |
+| `npm run check` | Passed: generated-file drift check, shared-file drift check, strict TypeScript type-check, build, Node tests: 358 of 358 pass |
+| Swift core (`PurrtionCore`) | 55 XCTest methods passed via real `swift test`, including all 117 shared golden cases and the new floor/range regressions |
+| Earlier v2 math audit | Every golden case was recomputed independently: 0 mismatches between code and specification. Defects in the model itself were found and fixed ([SCIENCE.md](SCIENCE.md) section 16) |
+| Earlier v2 jsdom drive | Ran with 0 runtime errors. This is a script-level exercise, not a browser |
+| Earlier v2 correctness review | The estimator was re-implemented independently and compared on 6,000 random cats: 0 mismatches. The TS and Swift engines were compared function by function. Ten UI and parity defects were found and fixed |
+| Earlier v2 security review | No critical or high findings. Nine low or informational items were fixed. `apps/web/vendor/temml/temml.min.js` is byte-identical to the official npm `temml@0.13.5` file |
 | Browser smoke test (`tests/browser_smoke.py`) | Passed in Chromium on a real HTTP origin, see below |
 
 The golden cases are the same 117 for both engines (`shared/golden-cases.json`).
 
-### Swift core: substitute harness
+### SwiftPM: built, linked and tested
 
-SwiftPM could not run in the development sandbox, so `swift test` was **not** the command used.
-The Swift core and its tests were compiled directly with `swiftc` and executed with
-`xcrun xctest`. This runs the same source and the same 53 tests, but not the package manifest,
-resource bundling through SwiftPM or `swift test` itself. Running `swift test` on a normal
-machine is the next step.
+On 2026-10-09 the follow-up audit ran real `swift test` with permission to run outside the
+filesystem sandbox. It passed all 55 XCTest methods, including the package resources and
+117 golden cases, and built and linked the `Purrtion` SwiftUI executable with real macro expansion.
+The initial sandbox attempt failed because the compiler cache was not writable. The earlier
+53-test substitute harness is superseded by this run.
 
-### SwiftUI app: type-checked only
+**The native GUI and staged `.app` have not been launched or visually inspected.** File panels,
+menus, native persistence/recovery, window behaviour, and staged app resources remain unverified.
+`./script/build_and_run.sh` was not run.
 
-The SwiftUI sources were checked in two ways: a plain type-check, which is limited because the
-SDK's macro plugins (for example `@Observable`) are unavailable in the sandbox, and a type-check
-with a small macro shim, which reported 0 errors.
+### Follow-up arithmetic and evidence audit
 
-**The app was not built, linked, launched or visually inspected.** Nothing is known about
-resource loading in a staged `.app`, file panels, menus, local persistence and recovery, window
-behaviour, or the look of the native UI. `./script/build_and_run.sh` was not run.
+The audit independently recomputed the README household, CALCULATIONS.md Luna allocation,
+SCIENCE.md food examples and section 13 A–E. Regression tests now pin Luna's unrounded arithmetic,
+check 225 adult weight/ideal-weight/lifestyle/goal combinations in each engine, and cover reductions
+above and below the floor for all three goals. Tests found no remaining mismatch in these checks.
+See SCIENCE.md §16.3 for corrections and the limits of the evidence review.
 
 ### Browser smoke test: passed in Chromium
 
 `tests/browser_smoke.py` passed on 2026-10-09 against the final build in its default mode: a real
 local HTTP origin, real `localStorage` with a reload, and the meta Content-Security-Policy
-present. The browser was Playwright 1.57 with Chromium headless shell build 1248 on macOS.
+present. The follow-up run used the existing Playwright 1.57 environment with the explicitly selected
+Chromium headless shell build 1248 on macOS (the environment expected absent build 1200 by default).
+The test and localhost server required sandbox permission. Browser plugin not available; regular
+Playwright was used. Viewports: 1440 × 1080 desktop and 390 × 844 mobile.
 
 It covers:
 - the calculation and estimator;
@@ -49,11 +54,12 @@ It covers:
 - editing and decimal limits;
 - import, food analysis, unit conversion (to 4 decimals) and activities;
 - quick add, and the guided setup on both the ok path and the referral path (no kcal shown);
-- the German interface, mobile width and dark mode.
+- the German interface, mobile width and dark mode;
+- all method formulas rendering without a LaTeX fallback in both English and German.
 
-Screenshots from that run were reviewed by eye at desktop and mobile widths, light and dark,
-English and German. The SVG cat icons were checked separately: rendered next to the brand
-sprite, the two images were byte-identical.
+The follow-up audit visually inspected the German desktop and English mobile method-page
+screenshots. The earlier v2 audit also inspected light/dark screenshots and compared the SVG cat
+icons against the brand sprite; those earlier checks were not repeated in the follow-up.
 
 The run did not test downloads or OS print dialogs.
 
