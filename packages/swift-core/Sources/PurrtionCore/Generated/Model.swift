@@ -151,7 +151,7 @@ public enum EnergyModel {
         "adult-fediaf": [1, 2, 27],
         "weight-loss-aaha": [4, 5],
         "adult-gain": [5],
-        "kitten-nrc": [2, 25],
+        "kitten-nrc": [2, 40],
         "kitten-fediaf-band": [1],
         "gestation-fediaf": [1, 13],
         "lactation-fediaf": [1, 13],

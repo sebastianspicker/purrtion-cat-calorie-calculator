@@ -55,6 +55,23 @@ test('unconfirmed source and completeness warnings are preserved', () => {
   assert.deepEqual(calculatePlan(seed, opts).cats.map(c => c.warnings), [['estimated-energy'], ['estimated-energy', 'provisional-target'],
     ['provisional-target'], [], ['estimated-energy', 'unknown-completeness']]);
 });
+test('balance-food warnings follow delivered grams after rounding', () => {
+  for (const [target, fixed, grams, overTen] of [[190, 189.6, 0, false], [199, 179.4, 20, true], [194, 174.6, 19, false]]) {
+    const p = clone(); p.cats = [p.cats[0]];
+    const c = p.cats[0], complete = p.foods[0], balance = p.foods[2];
+    Object.assign(complete, { energyPerUnit: 100, energyUnit: 'kcal/100g', energySource: 'label', completeness: 'complete', analysis: null });
+    Object.assign(balance, { energyPerUnit: 100, energyUnit: 'kcal/100g', energySource: 'estimate', completeness: 'complementary', analysis: null });
+    Object.assign(c, { targetKcal: target, extraKcal: 0, targetSource: 'owner', balanceFoodId: balance.id,
+      meals: [{ id: 'fixed', label: 'Fixed meal', foodId: complete.id, grams: fixed }] });
+    const r = calculatePlan(p, opts).cats[0];
+    assert.equal(r.balanceGramsRounded, grams);
+    assert.equal(r.warnings.includes('complementary-balance-food'), grams > 0);
+    assert.equal(r.warnings.includes('estimated-energy'), grams > 0);
+    assert.equal(r.warnings.includes('extras-over-10-percent'), overTen);
+    balance.completeness = 'unknown';
+    assert.equal(calculatePlan(p, opts).cats[0].warnings.includes('unknown-completeness'), grams > 0);
+  }
+});
 test('confirmed complete foods and veterinarian target remove those warnings', () => {
   const p = clone();
   p.foods.forEach(f => { f.energyPerUnit ??= 100; f.energySource = 'label'; f.completeness = 'complete'; }); p.cats.forEach(c => { c.targetSource = 'veterinarian'; });

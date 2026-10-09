@@ -74,9 +74,9 @@ public enum CalorieCalculator {
         let remaining = cat.targetKcal - fixedKcal - cat.extraKcal
         let balanceKcal = max(0, remaining), exact = balanceKcal / balanceRate
         let rounded = Int(exact.rounded(.toNearestOrAwayFromZero))
-        inspect(balance, kcal: balanceKcal)
+        inspect(balance, kcal: Double(rounded) * balanceRate)
         intake.append(.init(food: balance, grams: Double(rounded)))
-        if balanceKcal > 0 && balance.completeness == .complementary { warnings.insert(.complementaryBalanceFood) }
+        if rounded > 0 && balance.completeness == .complementary { warnings.insert(.complementaryBalanceFood) }
         if cat.targetSource == .provisional { warnings.insert(.provisionalTarget) }
         if complementaryKcal > cat.targetKcal * EnergyModel.Allocation.extrasMaxFraction + 1e-8 { warnings.insert(.extrasOverTenPercent) }
         if remaining < -1e-8 { warnings.insert(.overBudget) }

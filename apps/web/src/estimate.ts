@@ -7,7 +7,7 @@ import { tex } from './math.js';
 /** Short labels for the SCIENCE.md reference numbers used in `energyModel.references`. */
 export const referenceLabels: Record<number, string> = {
   1: 'FEDIAF 2025', 2: 'NRC 2006', 4: 'AAHA 2021', 5: 'AAHA 2014', 9: 'Merck Veterinary Manual', 13: 'Fontaine 2012',
-  21: 'Hall et al. 2013', 22: 'Jewell & Jackson 2023', 25: 'Vecchiato et al. 2021', 27: 'Menniti et al. 2026',
+  21: 'Hall et al. 2013', 22: 'Jewell & Jackson 2023', 25: 'Vecchiato et al. 2021', 27: 'Menniti et al. 2026', 40: 'Godfrey et al. 2022',
 };
 export function citation(key: keyof typeof energyModel.references): string {
   return energyModel.references[key].map(ref => `[${ref}] ${referenceLabels[ref] ?? ''}`.trim()).join('; ');

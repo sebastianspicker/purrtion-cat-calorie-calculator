@@ -32,6 +32,21 @@ final class EngineTests: XCTestCase {
     let dry = Analysis(protein: 34, fat: 14, fibre: 3, ash: 7, moisture: 8)
     func estimate(_ c: Cat, _ stops: [ReferCode] = []) throws -> EnergyEstimate { try Estimator.estimate(c, asOf: asOf, trendStops: stops) }
 
+    func testBalanceWarningsUseDeliveredGrams() throws {
+        for (target, fixed, grams, overTen) in [(190.0, 189.6, 0, false), (199, 179.4, 20, true), (194, 174.6, 19, false)] {
+            let complete = Food(id: "fixed", name: "Fixed", type: .wet, energyPerUnit: 100, energyUnit: .kcalPer100g, energySource: .label, completeness: .complete)
+            var balance = Food(id: "dry", name: "Balance", type: .dry, energyPerUnit: 100, energyUnit: .kcalPer100g, energySource: .estimate, completeness: .complementary)
+            let c = cat({ $0.targetKcal = target; $0.meals = [Meal(id: "m", label: "Fixed meal", foodId: "fixed", grams: fixed)] })
+            var plan = Plan(name: "Rounding", foods: [complete, balance], cats: [c], activities: [Activity(id: "a", label: "Bowl", sharePercent: 100)])
+            let r = try CalorieCalculator.calculate(plan, asOf: asOf).cats[0]
+            XCTAssertEqual(r.balanceGramsRounded, grams)
+            XCTAssertEqual(r.warnings.contains(.complementaryBalanceFood), grams > 0)
+            XCTAssertEqual(r.warnings.contains(.estimatedEnergy), grams > 0)
+            XCTAssertEqual(r.warnings.contains(.extrasOverTenPercent), overTen)
+            balance.completeness = .unknown; plan.foods[1] = balance
+            XCTAssertEqual(try CalorieCalculator.calculate(plan, asOf: asOf).cats[0].warnings.contains(.unknownCompleteness), grams > 0)
+        }
+    }
     func testScienceAnchors() throws {
         round2(Estimator.mer(75, 4), 189.86); round2(Estimator.mer(100, 4), 253.15); round2(try Estimator.rer(4), 197.99)
         round2(try estimate(cat({ $0.weightKg = 2 }, { $0.approxAgeYears = nil; $0.birthDate = day(-91); $0.expectedAdultWeightKg = 4 })).startKcal, 266.32)
@@ -119,14 +134,25 @@ final class EngineTests: XCTestCase {
         let bandCapped = try kitten(1, 2.0 / 12) { $0.neutered = .no; $0.lifestyle = nil }
         near(bandCapped.startKcal, 2.5 * (try Estimator.rer(1))); XCTAssertTrue(bandCapped.notes.contains(.clampedHigh))
     }
-    func testGrowthCompleteKittenIsAdult() throws {
-        let grown = cat({ $0.weightKg = 4 }, { $0.approxAgeYears = 8.0 / 12; $0.expectedAdultWeightKg = 4 })
-        XCTAssertEqual(try Estimator.stageOf(grown, asOf: asOf), .adult)
-        let e = try estimate(grown)
-        XCTAssertEqual(e.lifeStageLabel, .kitten); XCTAssertTrue(e.notes.contains(.growthComplete)); near(e.startKcal, Estimator.mer(75, 4))
+    func testExpectedAdultWeightKeepsKittenProtections() throws {
+        for months in [2.0, 8, 11.9] { for weight in [4.0, 4.1] { for goal in [Goal.maintain, .loss, .gain] {
+            let c = cat({ $0.weightKg = weight; $0.goal = goal }, { $0.approxAgeYears = months / 12; $0.expectedAdultWeightKg = 4; $0.bcs = 8 })
+            let e = try estimate(c)
+            XCTAssertEqual(try Estimator.stageOf(c, asOf: asOf), .kitten); XCTAssertEqual(e.lifeStageLabel, .kitten)
+            XCTAssertEqual(e.status, .refer); XCTAssertEqual(e.reasons, [.kittenAdultWeightReached])
+            XCTAssertNil(e.startKcal); XCTAssertNil(e.equation); XCTAssertNil(e.floorKcal)
+            let trend = try TrendAnalysis.trend(c, asOf: asOf, estimate: e, series: TrendAnalysis.weightSeries(c, asOf: asOf))
+            XCTAssertEqual(trend.nextWeighInDays, 7); XCTAssertNil(trend.suggestion)
+            XCTAssertEqual(NutritionChecker.check(c, estimate: e, intake: [], kcal: 0), .notApplicable)
+        }}}
         let missing = try estimate(cat({ $0.weightKg = 4.1 }, { $0.approxAgeYears = 8.0 / 12; $0.expectedAdultWeightKg = 4; $0.neutered = .unknown; $0.bcs = nil }))
-        XCTAssertEqual(missing.status, .needsInput); XCTAssertEqual(missing.missing, [.bcs, .neutered])
-        XCTAssertEqual(try Estimator.stageOf(cat({ $0.weightKg = 3.9 }, { $0.approxAgeYears = 8.0 / 12; $0.expectedAdultWeightKg = 4 }), asOf: asOf), .kitten)
+        XCTAssertEqual(missing.status, .refer); XCTAssertEqual(missing.missing, [])
+        var below = cat({ $0.weightKg = 3.9 }, { $0.approxAgeYears = 8.0 / 12; $0.expectedAdultWeightKg = 4 })
+        XCTAssertEqual(try estimate(below).equation, .kittenNrc)
+        below.profile.approxAgeYears = 1; below.weightKg = 4
+        XCTAssertEqual(try Estimator.stageOf(below, asOf: asOf), .adult); XCTAssertEqual(try estimate(below).status, .ok)
+        let stalled = cat({ $0.weightLog = entries([(-7, 4), (0, 4)]) }, { $0.approxAgeYears = 8.0 / 12; $0.expectedAdultWeightKg = 4 })
+        XCTAssertEqual(try TrendAnalysis.stops(stalled, series: TrendAnalysis.weightSeries(stalled, asOf: asOf), stage: Estimator.stageOf(stalled, asOf: asOf)), [.kittenNotGrowing])
     }
     /// D2: W is the ideal weight whenever it is below the current weight.
     func testWeightUsedIsIdealWeightBelowCurrent() throws {

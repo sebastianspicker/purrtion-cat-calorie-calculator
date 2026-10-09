@@ -4,7 +4,7 @@ Normative specification for the schema v2 plan, the energy estimator, the food-a
 calculator, the monitoring loop and nutrient checks. Both engines (TypeScript
 `packages/core`, Swift `packages/swift-core`) implement exactly this. Evidence and sources
 for every constant are in [SCIENCE.md](SCIENCE.md); section numbers in brackets such as
-(§7.1) refer to it. The model decisions D1–D7 of the 2026-10-09 audit are explained in
+(§7.1) refer to it. The model decisions D1–D10 of the 2026-10-09 audit are explained in
 SCIENCE.md §16. Allocation arithmetic (portions, rounding, activities) is in
 [CALCULATIONS.md](CALCULATIONS.md).
 
@@ -159,13 +159,13 @@ EnergyEstimate {
 
 Code sets:
 - ReferCode: `neonate`, `end-of-life`, `acute-medical`, `bcs-low`, `mcs-severe`,
-  `rapid-weight-change`, `kitten-not-growing`, `verified-intake-below-floor`.
+  `rapid-weight-change`, `kitten-not-growing`, `kitten-adult-weight-reached`, `verified-intake-below-floor`.
 - InputCode: `age`, `neutered`, `bcs`, `mcs`, `litter-size`, `lactation-week`.
 - NoteCode: `loss-not-indicated`, `gain-not-indicated`, `senior-wider-range`,
   `overweight-consider-loss`, `clamped-high`, `recently-neutered`, `medical-vet-plan`,
   `diabetes-low-carb-info`, `kitten-adult-weight-unknown`, `kitten-weigh-weekly`,
   `kitten-transition`, `pre-breeding-weight-assumed`, `free-choice-recommended`,
-  `reproduction-vet`, `weaning-transition`, `growth-complete`.
+  `reproduction-vet`, `weaning-transition`.
 
 Status precedence: `refer` > `needs-input` > `reference-only` > `ok`. With `refer` or
 `needs-input`, every kcal field except `rerKcal` is null, and so are `idealWeight`, `equation`,
@@ -180,6 +180,7 @@ Status precedence: `refer` > `needs-input` > `reference-only` > `ok`. With `refe
    - `acute-medical`: any acute medical flag.
    - `bcs-low`: BCS ≤ 3. Use the profile BCS if it is non-null (the owner's current assessment); otherwise the BCS of the latest weight-log entry dated ≤ `asOf` that has a non-null BCS. This "effective BCS" is used everywhere below.
    - `mcs-severe`: MCS = severe.
+   - `kitten-adult-weight-reached`: stage kitten and current BW ≥ the entered expected adult weight. Refer for reassessment of growth and the weight estimate; do not infer maturity (SCIENCE.md D9).
    - Trend stops from section 6: `rapid-weight-change`, `kitten-not-growing`.
    - `verified-intake-below-floor` is evaluated later, inside the weight-loss equation (§3.3), because it needs the ideal weight. It is only reached when no other reason and no missing input exists.
 2. **Missing inputs.** Each adds a code:
@@ -192,10 +193,10 @@ Status precedence: `refer` > `needs-input` > `reference-only` > `ok`. With `refe
    - Reproduction `gestation` or `lactation` gives that stage.
    - Otherwise, with age known:
      - age in days < 56 is `neonate`;
-     - $\text{ageMonths} < 12$ is `kitten`, **except** when `expectedAdultWeightKg` is set and $\mathrm{BW} \ge$ `expectedAdultWeightKg`: then the stage is `adult` and every adult rule applies (including the `neutered` and `bcs` inputs); an `ok` or `reference-only` estimate for such a cat carries the NoteCode `growth-complete`, which explains why the BCS and neuter status are now asked for;
+     - $\text{ageMonths} < 12$ is `kitten`, even when the expected adult weight has been reached;
      - age ≥ 11 completed years is `senior`;
      - anything else is `adult`.
-   - `lifeStageLabel` always follows age in completed years: < 1 kitten, 1–6 young-adult, 7–10 mature-adult, ≥ 11 senior. A kitten that has reached its expected adult weight therefore has stage `adult` and label `kitten`.
+   - `lifeStageLabel` always follows age in completed years: < 1 kitten, 1–6 young-adult, 7–10 mature-adult, ≥ 11 senior.
 4. **Lifestyle coefficient $k$** (`lifestyleK`): the profile `lifestyle` if set; otherwise
    `neutered = yes` → `typical`, any other value (`no`, `unknown`) → `active`.
    Coefficients: sedentary $63.5$, typical $75$, active $100$. For kittens, `neutered = unknown`
@@ -239,6 +240,7 @@ $$\text{floor} = 0.6 \times \mathrm{RER}(\mathrm{IBW})$$
   note `clamped-high` when $\mathrm{MER}(k, W) > 1.4 \times \mathrm{RER}(\mathrm{BW})$ (D7). The cap
   can bind only for very small active cats: $100\,w^{0.67} > 1.4 \times 70\,w^{0.75}$ only for
   $w < 0.98^{-12.5} = 1.29$ kg.
+- The floor is applied after the maintenance cap and takes precedence if the bounds conflict (for example an unusually high stored IBW). This is an app policy, not a clinically validated maintenance/gain rule.
 - The gain row has no upper cap.
 - Maintain (the goal itself, not a fallback) with effective BCS ≥ 6 adds note `overweight-consider-loss`.
 - A neutered date ≤ 182 days before `asOf` adds note `recently-neutered`, and the trend cadence becomes 14 days.
@@ -278,7 +280,7 @@ $$\text{bandLow} = m_{\text{low}}(m) \times \mathrm{MER}(75, \mathrm{BW}) \qquad
 The band is the same in both paths below.
 
 *With `expectedAdultWeightKg` = $A$* (equation `kitten-nrc`, coefficient $100$). Here $p < 1$
-because a kitten with $\mathrm{BW} \ge A$ has stage adult:
+because kittens with $\mathrm{BW} \ge A$ refer before this equation is evaluated:
 
 $$p = \frac{\mathrm{BW}}{A} \qquad \mathrm{NRC} = \mathrm{MER}(100, \mathrm{BW}) \times 6.7 \times \big(e^{-0.189p} - 0.66\big)$$
 
@@ -303,8 +305,7 @@ $\text{high} \leftarrow \max(\text{high},\ 1.15 \times \mathrm{MER}_A)$.
 - Note `kitten-transition` when $0 < t < 1$. Note `kitten-weigh-weekly` always.
 - `weightUsedKg` = $\mathrm{BW}$; `idealWeight`, `floorKcal` and `referenceBand` are null.
 - There is no separate neutered-kitten factor; neuter status enters only through $k_A$.
-- At $m = 12$ (stage adult) or $p = 1$ (stage adult) the kitten start equals $\mathrm{MER}_A$
-  before the adult clamps, so the hand-over is continuous.
+- As $m$ approaches 12 the raw kitten start approaches $\mathrm{MER}_A$. At 12 months adult weight selection, goal rules and clamps apply; continuity is only expected for unchanged maintenance inputs. At $p \ge 1$ before 12 months the estimate refers, retaining kitten stage (D9).
 
 **Gestation, status reference-only.**
 - $W$ = `preBreedingWeightKg`, else $\mathrm{BW}$ (note `pre-breeding-weight-assumed`).

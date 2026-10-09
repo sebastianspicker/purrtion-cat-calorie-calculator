@@ -8,7 +8,7 @@ Purrtion is a local-first planner that estimates how much energy a cat needs and
 
 ## What Purrtion does
 
-- **Energy estimate.** It suggests a starting point and a range for each cat from weight, age, neuter status, body condition score (BCS), lifestyle, goal and health notes. The method is evidence-based and documented ([ENGINE.md](docs/ENGINE.md), [SCIENCE.md](docs/SCIENCE.md)).
+- **Energy estimate.** It suggests a starting point and a range for each cat from weight, age, neuter status, body condition score (BCS), lifestyle, goal and health notes. The method combines published equations with documented app assumptions ([ENGINE.md](docs/ENGINE.md), [SCIENCE.md](docs/SCIENCE.md)).
 - **Feeding portions.** Each cat has fixed meals of any food, plus one balance food that supplies whatever is left of the daily target. The result is shown per cat and for the household, with whole-gram containers and a split across feeding activities such as a puzzle feeder.
 - **Food-label analysis.** Enter the "analytical constituents" of a food (protein, fat, fibre, ash, moisture) and Purrtion computes its energy density, dry-matter values and energy shares. It warns when the declared energy and the analysis disagree.
 - **Weight log.** Record weigh-ins, see the weekly trend, and get an adjustment suggestion when the trend is off track.
@@ -119,8 +119,8 @@ There are two separate implementations of the engine (TypeScript and Swift). The
 
 ```sh
 npm ci
-npm run check      # 358 Node tests (core engine, web store and UI), plus drift and type checks
-swift test         # 55 Swift XCTest methods
+npm run check      # 359 Node tests (core engine, web store and UI), plus drift and type checks
+swift test         # 56 Swift XCTest methods
 ```
 
 Both engines run the same 117 golden cases in `shared/golden-cases.json`. After changing `shared/energy-model.json`, `shared/messages.json`, `shared/default-plan.json` or `shared/golden-cases.json`, run `npm run gen:shared` and `npm run sync:shared`; `npm run check` fails on drift.
@@ -146,7 +146,7 @@ The website has no analytics, no cookies, no remote fonts or scripts and no API.
 
 ## Science and references
 
-Every constant in the estimator has a cited source. [docs/SCIENCE.md](docs/SCIENCE.md) gives the evidence, its limits and open questions; [docs/ENGINE.md](docs/ENGINE.md) is the normative specification; [docs/CALCULATIONS.md](docs/CALCULATIONS.md) covers portion allocation. The main sources are FEDIAF Nutritional Guidelines (2025), NRC Nutrient Requirements of Dogs and Cats (2006), the AAHA nutrition and weight management guidelines (2021) and life stage guidelines (2021), the AAHA 2014 weight management guidelines, WSAVA nutrition guidance, and International Cat Care (iCatCare) material.
+The estimator separates source-backed coefficients from app choices such as interval widths and growth blending. [docs/SCIENCE.md](docs/SCIENCE.md) gives the evidence, its limits and open questions; [docs/ENGINE.md](docs/ENGINE.md) is the normative specification; [docs/CALCULATIONS.md](docs/CALCULATIONS.md) covers portion allocation. The main sources are FEDIAF Nutritional Guidelines (2025), NRC Nutrient Requirements of Dogs and Cats (2006), the AAHA nutrition and weight management guidelines (2021) and life stage guidelines (2021), the AAHA 2014 weight management guidelines, WSAVA nutrition guidance, and International Cat Care (iCatCare) material.
 
 ## Medical disclaimer
 

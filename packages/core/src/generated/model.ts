@@ -193,7 +193,7 @@ export const model = {
     ],
     "kitten-nrc": [
       2,
-      25
+      40
     ],
     "kitten-fediaf-band": [
       1

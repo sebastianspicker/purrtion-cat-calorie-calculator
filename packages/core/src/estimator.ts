@@ -28,8 +28,8 @@ export function ageInDays(profile: Profile, asOf: string): number | null {
 export function effectiveBcs(cat: Cat, asOf: string): number | null {
   return cat.profile.bcs ?? weightEntriesAsOf(cat, asOf).filter(e => e.bcs !== null).at(-1)?.bcs ?? null;
 }
-/** A kitten (under 12 months) that has reached its expected adult weight; it gets the adult stage (ENGINE.md §3.2 step 3). */
-export function isGrowthComplete(cat: Cat, asOf: string): boolean {
+/** Reaching an estimated adult weight does not establish maturity; the growth estimate needs review. */
+export function hasReachedExpectedAdultWeight(cat: Cat, asOf: string): boolean {
   const days = ageInDays(cat.profile, asOf), adult = cat.profile.expectedAdultWeightKg;
   return days !== null && days >= age.neonateMaxDays && days / units.daysPerMonth < age.kittenMaxMonths
     && adult !== null && cat.weightKg >= adult;
@@ -40,7 +40,7 @@ export function stageOf(cat: Cat, asOf: string): Stage | null {
   if (p.reproduction.status !== 'none') return p.reproduction.status;
   if (days === null) return null;
   if (days < age.neonateMaxDays) return 'neonate';
-  if (days / units.daysPerMonth < age.kittenMaxMonths) return isGrowthComplete(cat, asOf) ? 'adult' : 'kitten';
+  if (days / units.daysPerMonth < age.kittenMaxMonths) return 'kitten';
   return Math.floor(days / units.daysPerYear) >= age.seniorMinYears ? 'senior' : 'adult';
 }
 function lifeStageLabel(years: number): LifeStageLabel {
@@ -109,6 +109,7 @@ export function estimateEnergy(cat: Cat, asOf: string, trendStops: readonly Refe
   if (p.medical.some(flag => (acuteMedicalFlags as readonly string[]).includes(flag))) reasons.add('acute-medical');
   if (bcs !== null && bcs <= bcsModel.referMax) reasons.add('bcs-low');
   if (p.mcs === 'severe') reasons.add('mcs-severe');
+  if (stage === 'kitten' && hasReachedExpectedAdultWeight(cat, asOf)) reasons.add('kitten-adult-weight-reached');
   const adultLike = stage === 'adult' || stage === 'senior';
   if (days === null) missing.add('age');
   if (adultLike && p.neutered === 'unknown') missing.add('neutered');
@@ -138,7 +139,7 @@ export function estimateEnergy(cat: Cat, asOf: string, trendStops: readonly Refe
     const adult = p.expectedAdultWeightKg;
     let base: number, t: number, equation: EquationId, coefficient: number | null;
     if (adult !== null) {
-      // A kitten at or above its expected adult weight has stage adult, so ratio < 1 here.
+      // Reached/exceeded adult-weight estimates are referred above, so ratio < 1 here.
       const ratio = bw / adult;
       base = mer(kitten.nrcK, bw) * kitten.nrcFactor * (Math.exp(kitten.nrcExponent * ratio) - kitten.nrcOffset);
       t = clamp01(Math.max((ratio - kitten.transitionStartRatio) / kitten.transitionRatioWidth, ageTerm));
@@ -184,7 +185,6 @@ export function estimateEnergy(cat: Cat, asOf: string, trendStops: readonly Refe
         highKcal: start.kcal * (wider ? model.maintain.seniorHighFactor : model.maintain.highFactor) };
     };
     const w = weightUsed(bw, ibw.kg);
-    if (isGrowthComplete(cat, asOf)) notes.add('growth-complete');
     if (chronic) calc = maintain(bw);
     else if (cat.goal === 'loss') {
       if (ibw.kg < bw) {

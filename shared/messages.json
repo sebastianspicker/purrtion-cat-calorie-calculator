@@ -28,10 +28,9 @@
     "note.recently-neutered": "Neutered within the last 6 months: energy needs often drop. Weigh every 2 weeks.",
     "note.medical-vet-plan": "A medical condition is recorded. This figure is for reference only; your veterinarian’s plan takes priority.",
     "note.diabetes-low-carb-info": "For diabetic cats, veterinary guidelines favour low-carbohydrate food. Discuss the diet with your veterinarian.",
-    "note.kitten-adult-weight-unknown": "The expected adult weight is unknown, so only the FEDIAF range is shown. Ask your veterinarian for an estimate.",
+    "note.kitten-adult-weight-unknown": "The expected adult weight is unknown, so the app uses an interpolated range informed by FEDIAF. Ask your veterinarian for a growth assessment.",
     "note.kitten-weigh-weekly": "Weigh kittens weekly and adjust portions to steady growth and body condition.",
-    "note.kitten-transition": "The kitten is nearly grown (10 months or older, or at least 80 % of its expected adult weight). The estimate moves gradually from growth to adult maintenance, and the range covers both.",
-    "note.growth-complete": "The kitten has reached its expected adult weight and is now treated as an adult. That is why the body condition score and neuter status are asked for.",
+    "note.kitten-transition": "The app blends growth energy into adult maintenance from 10 months or 80 % of estimated adult weight. This unvalidated transition does not establish maturity; monitor growth with your veterinarian.",
     "note.pre-breeding-weight-assumed": "No pre-breeding weight was entered; the current weight is used instead.",
     "note.free-choice-recommended": "Free-choice feeding of a growth/reproduction food is usually recommended; needs vary widely.",
     "note.reproduction-vet": "Pregnant and nursing queens should be monitored by a veterinarian. This figure is for reference only.",
@@ -69,7 +68,7 @@
     "equation.weight-loss-aaha": "Weight loss (AAHA): 0.8 × the lower of RER and MER at ideal weight",
     "equation.adult-gain": "Weight gain: maintenance + 10–20 %",
     "equation.kitten-nrc": "Kitten growth (NRC 2006)",
-    "equation.kitten-fediaf-band": "Kitten range (FEDIAF)",
+    "equation.kitten-fediaf-band": "Kitten range (adapted from FEDIAF)",
     "equation.gestation-fediaf": "Pregnancy (FEDIAF): 140 × weight^0.67",
     "equation.lactation-fediaf": "Lactation (FEDIAF): 100 × weight^0.67 + litter allowance",
     "equation.fediaf-4-step": "FEDIAF/NRC 4-step calculation",
@@ -121,7 +120,8 @@
     "icon.star": "Star",
     "icon.heart": "Heart",
     "icon.leaf": "Leaf",
-    "icon.bow": "Bow"
+    "icon.bow": "Bow",
+    "refer.kitten-adult-weight-reached": "Your kitten has reached or exceeded the expected adult weight entered here. This does not establish maturity. Ask your veterinarian to reassess growth and the weight estimate before using a calorie estimate. Continue a complete growth diet unless your veterinarian advises otherwise."
   },
   "de": {
     "warning.estimated-energy": "Verwendet geschätzte Energiewerte. Prüfen Sie das Etikett des genauen Produkts, bevor Sie sich auf diese Portionen verlassen. Auch der deklarierte Energiegehalt kann vom gemessenen Wert abweichen; die Unsicherheit hängt vom Futter und der Schätzmethode ab.",
@@ -152,10 +152,9 @@
     "note.recently-neutered": "In den letzten 6 Monaten kastriert: Der Energiebedarf sinkt häufig. Wiegen Sie alle 2 Wochen.",
     "note.medical-vet-plan": "Eine Erkrankung ist eingetragen. Dieser Wert dient nur als Orientierung; der Plan Ihrer Tierärztin oder Ihres Tierarztes hat Vorrang.",
     "note.diabetes-low-carb-info": "Für Katzen mit Diabetes empfehlen tierärztliche Leitlinien kohlenhydratarmes Futter. Besprechen Sie die Fütterung mit Ihrer Tierärztin oder Ihrem Tierarzt.",
-    "note.kitten-adult-weight-unknown": "Das erwartete Erwachsenengewicht ist unbekannt, daher wird nur der FEDIAF-Bereich angezeigt. Fragen Sie Ihre Tierärztin oder Ihren Tierarzt nach einer Schätzung.",
+    "note.kitten-adult-weight-unknown": "Das erwartete Erwachsenengewicht ist unbekannt. Die App nutzt daher einen aus FEDIAF-Werten interpolierten Bereich. Lassen Sie das Wachstum tierärztlich beurteilen.",
     "note.kitten-weigh-weekly": "Wiegen Sie Kätzchen wöchentlich und passen Sie die Portionen an ein gleichmäßiges Wachstum und die Körperkondition an.",
-    "note.kitten-transition": "Das Kätzchen ist fast ausgewachsen (10 Monate oder älter oder mindestens 80 % des erwarteten Erwachsenengewichts). Die Schätzung geht schrittweise vom Wachstums- in den Erhaltungsbedarf über, und der Bereich umfasst beide.",
-    "note.growth-complete": "Das Kätzchen hat sein erwartetes Erwachsenengewicht erreicht und wird jetzt wie eine erwachsene Katze berechnet. Deshalb werden Body-Condition-Score und Kastrationsstatus abgefragt.",
+    "note.kitten-transition": "Die App geht ab 10 Monaten oder 80 % des geschätzten Erwachsenengewichts vom Wachstums- zum Erhaltungsbedarf über. Dieser nicht validierte Übergang belegt keine Reife; begleiten Sie das Wachstum mit Ihrer Tierarztpraxis.",
     "note.pre-breeding-weight-assumed": "Es wurde kein Gewicht vor der Trächtigkeit eingegeben; stattdessen wird das aktuelle Gewicht verwendet.",
     "note.free-choice-recommended": "Meist wird empfohlen, ein Futter für Wachstum und Reproduktion zur freien Aufnahme anzubieten; der Bedarf schwankt stark.",
     "note.reproduction-vet": "Trächtige und säugende Katzen sollten tierärztlich begleitet werden. Dieser Wert dient nur als Orientierung.",
@@ -193,7 +192,7 @@
     "equation.weight-loss-aaha": "Gewichtsabnahme (AAHA): 0,8 × der kleinere Wert aus RER und MER beim Idealgewicht",
     "equation.adult-gain": "Gewichtszunahme: Erhaltungsbedarf + 10–20 %",
     "equation.kitten-nrc": "Wachstum von Kätzchen (NRC 2006)",
-    "equation.kitten-fediaf-band": "Bereich für Kätzchen (FEDIAF)",
+    "equation.kitten-fediaf-band": "Kätzchenbereich (nach FEDIAF angepasst)",
     "equation.gestation-fediaf": "Trächtigkeit (FEDIAF): 140 × Gewicht^0,67",
     "equation.lactation-fediaf": "Laktation (FEDIAF): 100 × Gewicht^0,67 + Zuschlag für den Wurf",
     "equation.fediaf-4-step": "FEDIAF/NRC-Vier-Schritt-Berechnung",
@@ -245,6 +244,7 @@
     "icon.star": "Stern",
     "icon.heart": "Herz",
     "icon.leaf": "Blatt",
-    "icon.bow": "Schleife"
+    "icon.bow": "Schleife",
+    "refer.kitten-adult-weight-reached": "Ihr Kätzchen hat das hier eingetragene erwartete Erwachsenengewicht erreicht oder überschritten. Das belegt nicht, dass es ausgewachsen ist. Lassen Sie Wachstum und Gewichtsschätzung tierärztlich prüfen, bevor Sie eine Kalorienschätzung verwenden. Füttern Sie weiter ein Alleinfuttermittel für Wachstum, sofern Ihre Tierarztpraxis nichts anderes empfiehlt."
   }
 }

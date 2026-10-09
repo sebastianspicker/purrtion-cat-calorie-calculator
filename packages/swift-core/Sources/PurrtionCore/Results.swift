@@ -27,6 +27,7 @@ public enum ReferCode: String, Codable, CaseIterable, Sendable {
     case neonate, endOfLife = "end-of-life", acuteMedical = "acute-medical", bcsLow = "bcs-low", mcsSevere = "mcs-severe"
     case rapidWeightChange = "rapid-weight-change", kittenNotGrowing = "kitten-not-growing"
     case verifiedIntakeBelowFloor = "verified-intake-below-floor"
+    case kittenAdultWeightReached = "kitten-adult-weight-reached"
 }
 public enum InputCode: String, Codable, CaseIterable, Sendable {
     case age, neutered, bcs, mcs, litterSize = "litter-size", lactationWeek = "lactation-week"
@@ -36,7 +37,7 @@ public enum NoteCode: String, Codable, CaseIterable, Sendable {
     case overweightConsiderLoss = "overweight-consider-loss", clampedHigh = "clamped-high", recentlyNeutered = "recently-neutered"
     case medicalVetPlan = "medical-vet-plan", diabetesLowCarbInfo = "diabetes-low-carb-info"
     case kittenAdultWeightUnknown = "kitten-adult-weight-unknown", kittenWeighWeekly = "kitten-weigh-weekly"
-    case kittenTransition = "kitten-transition", growthComplete = "growth-complete"
+    case kittenTransition = "kitten-transition"
     case preBreedingWeightAssumed = "pre-breeding-weight-assumed", freeChoiceRecommended = "free-choice-recommended"
     case reproductionVet = "reproduction-vet", weaningTransition = "weaning-transition"
 }

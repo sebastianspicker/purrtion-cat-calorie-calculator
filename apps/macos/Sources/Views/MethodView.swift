@@ -53,6 +53,11 @@ struct MethodView: View {
                 section(l.t("method.limits"), formula: nil, texts: ["method.limitsText1", "method.limitsText2", "method.limitsText3"])
                 storage
                 Text(l.t("method.reading")).font(.headline)
+                Link(l.t("method.link.fediaf"), destination: URL(string: "https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025-ONLINE.pdf")!)
+                Link(l.t("method.link.kitten"), destination: URL(string: "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0264321")!)
+                Link(l.t("method.link.growth"), destination: URL(string: "https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/age-specific-and-breed-specific-diets/")!)
+                Link(l.t("method.link.foodEnergy"), destination: URL(string: "https://www.frontiersin.org/journals/veterinary-science/articles/10.3389/fvets.2023.1104695/full")!)
+                Link(l.t("method.link.portions"), destination: URL(string: "https://pubmed.ncbi.nlm.nih.gov/21039926/")!)
                 Link(l.t("method.link.merck"), destination: URL(string: "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutritional-requirements-of-small-animals")!)
                 Link(l.t("method.link.aaha"), destination: URL(string: "https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/prevention-of-obesity/")!)
                 Text(l.t("method.linksNote")).font(.caption).foregroundStyle(Theme.muted)

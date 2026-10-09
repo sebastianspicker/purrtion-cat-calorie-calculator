@@ -130,7 +130,7 @@ Per-cat warning codes (sorted, unique). Warnings never make a ration nutritional
 | `extras-over-10-percent` | extras plus the energy of complementary foods eaten exceed 10 % of $T$ |
 | `over-budget` | $r < 0$ (with a tolerance of $10^{-8}$ kcal) |
 
-Foods with zero intake raise no food warning merely by being in the library. Food-level
+Balance-food warnings use the delivered energy after rounding to whole grams. A balance portion that rounds to 0 g raises no food warning. Foods with zero intake raise no food warning merely by being in the library. Food-level
 warnings from the analysis (`assumed-moisture`, `atwater-disagreement`,
 `label-energy-mismatch`) and the estimator, trend and nutrient-check results are specified in
 ENGINE.md §3, §4, §6 and §7.

@@ -27,8 +27,8 @@ public enum Estimator {
         if let bcs = cat.profile.bcs { return bcs }
         return try weightEntries(cat, asOf: asOf).last { $0.bcs != nil }?.bcs
     }
-    /// A kitten (under 12 months) that has reached its expected adult weight; it gets the adult stage (ENGINE.md §3.2 step 3).
-    public static func isGrowthComplete(_ cat: Cat, asOf: String) throws -> Bool {
+    /// Reaching an estimated adult weight does not establish maturity; the growth estimate needs review.
+    public static func hasReachedExpectedAdultWeight(_ cat: Cat, asOf: String) throws -> Bool {
         guard let days = try ageInDays(cat.profile, asOf: asOf), let adult = cat.profile.expectedAdultWeightKg else { return false }
         return days >= M.Age.neonateMaxDays && days / M.Units.daysPerMonth < M.Age.kittenMaxMonths && cat.weightKg >= adult
     }
@@ -40,7 +40,7 @@ public enum Estimator {
         if p.reproduction.status == .lactation { return .lactation }
         guard let days else { return nil }
         if days < M.Age.neonateMaxDays { return .neonate }
-        if days / M.Units.daysPerMonth < M.Age.kittenMaxMonths { return try isGrowthComplete(cat, asOf: asOf) ? .adult : .kitten }
+        if days / M.Units.daysPerMonth < M.Age.kittenMaxMonths { return .kitten }
         return floor(days / M.Units.daysPerYear) >= M.Age.seniorMinYears ? .senior : .adult
     }
     private static func lifeStageLabel(_ years: Double) -> LifeStageLabel {
@@ -112,6 +112,7 @@ public enum Estimator {
         let p = cat.profile, bw = cat.weightKg, days = try ageInDays(p, asOf: asOf), bcs = try effectiveBcs(cat, asOf: asOf)
         let stageOpt = try stageOf(cat, asOf: asOf), years = days.map { floor($0 / M.Units.daysPerYear) }
         var reasons = Set(trendStops), missing = Set<InputCode>(), notes = Set<NoteCode>()
+        if stageOpt == .kitten, try hasReachedExpectedAdultWeight(cat, asOf: asOf) { reasons.insert(.kittenAdultWeightReached) }
         if let days, days < M.Age.neonateMaxDays { reasons.insert(.neonate) }
         if p.endOfLife { reasons.insert(.endOfLife) }
         if p.medical.contains(where: \.isAcute) { reasons.insert(.acuteMedical) }
@@ -151,7 +152,7 @@ public enum Estimator {
             let merAdult = mer(lifestyleK(p), bw), ageTerm = (months - K.transitionStartMonths) / K.transitionMonthsWidth
             let base: Double, t: Double, equation: EquationId, coefficient: Double?
             if let adult = p.expectedAdultWeightKg {
-                // A kitten at or above its expected adult weight has stage adult, so ratio < 1 here.
+                // Reached/exceeded adult-weight estimates are referred above, so ratio < 1 here.
                 let ratio = bw / adult
                 base = mer(K.nrcK, bw) * K.nrcFactor * (exp(K.nrcExponent * ratio) - K.nrcOffset)
                 t = clamp01(max((ratio - K.transitionStartRatio) / K.transitionRatioWidth, ageTerm))
@@ -198,7 +199,6 @@ public enum Estimator {
                                    highKcal: start.kcal * (wider ? M.Maintain.seniorHighFactor : M.Maintain.highFactor))
             }
             let w = weightUsed(bw, ibw.kg)
-            if try isGrowthComplete(cat, asOf: asOf) { notes.insert(.growthComplete) }
             if chronic { calc = try maintain(bw) }
             else if cat.goal == .loss {
                 if ibw.kg < bw {

@@ -56,9 +56,9 @@ function calculateCat(cat: Cat, plan: Plan, foods: Map<string, Food>, asOf: stri
   const balanceKcal = Math.max(0, remaining);
   const balanceGramsExact = balanceKcal / kcalPerGram(balance);
   const balanceGramsRounded = Math.round(balanceGramsExact);
-  inspect(balance, balanceKcal);
+  inspect(balance, balanceGramsRounded * kcalPerGram(balance));
   intake.push({ food: balance, grams: balanceGramsRounded });
-  if (balanceKcal > 0 && balance.completeness === 'complementary') warnings.add('complementary-balance-food');
+  if (balanceGramsRounded > 0 && balance.completeness === 'complementary') warnings.add('complementary-balance-food');
   if (cat.targetSource === 'provisional') warnings.add('provisional-target');
   if (complementaryKcal > cat.targetKcal * model.allocation.extrasMaxFraction + 1e-8) warnings.add('extras-over-10-percent');
   if (remaining < -1e-8) warnings.add('over-budget');

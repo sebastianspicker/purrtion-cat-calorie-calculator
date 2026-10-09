@@ -53,7 +53,7 @@ All energies are kcal ME per day. $\mathrm{BW}$ is kg.
 | Weight loss start | $0.8 \times \min\big(\mathrm{RER}(\mathrm{IBW}), \mathrm{MER}(k, \mathrm{IBW})\big)$, or $0.8 \times$ verified intake; floor $0.6 \times \mathrm{RER}(\mathrm{IBW})$ | overweight/obese, no disease | AAHA 2014 [5]; AAHA 2021 [4]; G; the $\min$ is X (section 16, D1) |
 | Reintroducing food after prolonged anorexia | start at 25-50 % of RER, reach full RER over about 3-7 days | refer to veterinarian | [28][29]; S/G |
 | ME of a food from analysis (cat, FEDIAF/NRC 4-step) | see section 10 | prepared foods | FEDIAF 2025 [1]; G |
-| ME of a food, modified Atwater | $3.5P + 8.5F + 3.5\,\mathrm{NFE}$ kcal/100 g | fallback, cross-check, carbohydrate share | [1][21][22]; G/M |
+| ME of a food, modified Atwater | $3.5P + 8.5F + 3.5\,\mathrm{NFE}$ kcal/100 g | fallback, cross-check, carbohydrate share | [1][21][22]; G/E |
 
 ---
 
@@ -71,7 +71,7 @@ The linear form $30 \times \mathrm{BW} + 70$ is quoted in the Merck Veterinary M
 under 45 kg [9]. AAHA 2014 states the linear equation is for dogs only (2-25 kg) and that the
 exponent form "can be used for patients of any weight" [5]. At 4 kg: exponent form 198.0 kcal, linear
 190 kcal (4 % lower). **Decision: use only the exponent form**, so kittens and small cats (<2 kg)
-are not mishandled and the engine has a single function.
+are not mishandled and the engine has a single function. This is not a claim that all AAHA publications exclude linear RER for cats: the 2021 feline life-stage guideline prints it too [10].
 
 ### 2.2 Adult maintenance equations compared
 
@@ -154,8 +154,7 @@ Source details:
 **Engine consequences (X, derived from the above):**
 
 1. Output = `startKcal` plus a range `[lowKcal, highKcal]`.
-2. Default range: $0.85 \times \text{start}$ to $1.15 \times \text{start}$ (about one standard deviation of the within-study
-   CV, and the same order as AAHA's ±10 % adjustment step). For cats aged 12 y or more use
+2. Default range: $0.85 \times \text{start}$ to $1.15 \times \text{start}$ (an app-selected planning band, not an estimated standard deviation, confidence interval or validated prediction interval). For cats aged 12 y or more use
    $0.85 \times$ to $1.25 \times \text{start}$, because energy per kg rises after about 12 y (section 3.4).
 3. The published "literature envelope" (52 to 100 coefficient) is shown only as an explanatory band, never
    as a target.
@@ -165,17 +164,15 @@ Source details:
 
 ## 3. Life stages
 
-Life-stage definitions follow the 2021 AAHA/AAFP Feline Life Stage Guidelines as summarised by AAFP
-(I read the AAFP summary, not the full guideline text) [10]: **Kitten** birth to 1 year; **Young adult**
+Life-stage definitions follow the 2021 AAHA/AAFP Feline Life Stage Guidelines [10] (full primary PDF checked in the D9 review): **Kitten** birth to 1 year; **Young adult**
 1-6 years; **Mature adult** 7-10 years; **Senior** older than 10 years; **End-of-life** any age. In completed
-years this is: mature adult 7-10 completed years, senior from 11 completed years (i.e. older than 10). The guideline
-summary has no separate "geriatric" stage; I could not confirm one (UNVERIFIED). Engine mapping:
+years this is: mature adult 7-10 completed years, senior from 11 completed years (i.e. older than 10). The guideline has no separate geriatric age stage, and notes that age boundaries are approximate. Engine mapping:
 
 | Engine stage | Rule | Notes |
 | --- | --- | --- |
 | `neonate` | age < 8 weeks | out of scope: refer (section 12.6) |
-| `kitten` | 8 weeks up to 12 months, and below the expected adult weight when it is known | growth equation blending into adult MER (3.1) |
-| `adult` | 1 to 10 completed years (or a kitten that has reached its expected adult weight) | maintenance equation |
+| `kitten` | 8 weeks up to 12 months; reaching an expected adult weight prompts reassessment (D9) | growth equation blending into adult MER (3.1) |
+| `adult` | 1 to 10 completed years | maintenance equation |
 | `senior` | ≥ 11 completed years | same equation; wider upper range from 12 y, monitoring emphasis |
 | `end_of_life` | user/vet flag | no calculation, comfort-feeding message only |
 
@@ -196,8 +193,7 @@ Status: **not verified from the primary NRC text** (I could not open it). Eviden
 (Vecchiato 2021, Front Vet Sci 8:707741) applied "the NRC equations proposed for growth kittens after
 weaning" and tabulated 0.85 kg → 180, 2.35 kg → 280, 3.20 kg → 292 kcal ME/day [25]. Using the expression
 above with an expected adult weight of 4.0 kg gives 180.6, 279.0 and 291.6 kcal/day for the three cases (published:
-180, 280, 292); back-solving the adult weight from each case gives 3.89-4.04 kg, i.e. all three are reproduced to
-within rounding by one adult weight of about 4 kg. That cross-check is why the formula is adopted, but it
+180, 280, 292); back-solving the adult weight from each case gives 3.89-4.04 kg, i.e. the formula gives close numerical agreement for one adult weight of about 4 kg, without proving that these were the original inputs. That cross-check is why the formula is adopted, but it
 should be confirmed against the NRC text by the reviewing veterinarian before release. The follow-up audit also
 found the same expression used explicitly in the methods of a primary kitten study [40]; this corroborates
 the transcription but does not validate the app's later transition blend.
@@ -235,7 +231,7 @@ $k_A$ the adult tier the cat would get from its neuter status and lifestyle (sec
 * In both paths the **start only** is capped at $2.5 \times \mathrm{RER}(\mathrm{BW})$ (AAHA growth factor). The range
   is $[\min(0.9 \times \text{start}, \text{bandLow}),\ \max(1.1 \times \text{start}, \text{bandHigh})]$ and is not capped;
   when $t > 0$ it also includes the adult range $[0.85, 1.15] \times \mathrm{MER}(k_A, \mathrm{BW})$.
-* The kitten stage ends at 12 months or when the kitten reaches $A$; adult rules then apply.
+* The kitten stage ends at 12 months. Reaching $A$ earlier does not establish maturity: the app refers for growth/weight reassessment without an energy estimate (D9). Growth-diet advice remains visible in the referral.
 
 Example, 4-month kitten, 2.0 kg, expected adult 4.0 kg ($p = 0.5$, $t = 0$): NRC = 266.3 kcal; interpolated
 multipliers at 4.0 months 1.889-2.278, band 225.4-362.4; cap $2.5 \times \mathrm{RER}(2\ \text{kg}) = 294.3$ does not bind.
@@ -427,8 +423,8 @@ Method B is standard arithmetic; I found no published validation of it for cats,
 treat it as **X**. $\mathrm{BF}_{\text{now}}$ comes from the table in 6.1 (use the female/male average), $\mathrm{BF}_{\text{target}}$ 31 % for BCS 5
 (Bjornvad pet-cat mean) or 21-25 % for BCS 4. Worked: 6 kg cat, BCS 8: (A) $6 / 1.3 = 4.62$ kg;
 (B) $6 \times (100 - 47) / (100 - 31) = 4.61$ kg; with a BCS 4 target (BF 21.4) B gives 4.05 kg. Error: BF% SD within a BCS class is 2-6 points, which
-alone is about ±5-8 % of IBW; with BCS inter-observer CV up to 15 %, **assume ±10 % on IBW**. The engine should
-display IBW as a rounded value with that uncertainty and compute weight goals in steps (reassess at each 10 % of loss).
+alone is about ±5-8 % of IBW; with BCS inter-observer CV up to 15 %, the app **chooses a ±10 % IBW planning band (X)**. Those observations do not establish a ±10 % error bound or coverage probability. The engine should
+display IBW as a rounded value with that assumed band and compute weight goals in steps (reassess at each 10 % of loss).
 
 Persistence (X; section 16, D3): once the owner adopts a weight-loss plan, the BCS-derived IBW is **stored** as an
 estimate and no longer re-derived from each new BCS, because a cat that is losing weight and dropping in BCS would
@@ -674,10 +670,12 @@ use $\mathrm{ME} = 4P + 8.5F + 4\,\mathrm{NFE}$ (cats; kJ $16.7P + 35.6F + 16.7\
 $$\mathrm{ME}_a\ (\text{kcal/100 g}) = 3.5P + 8.5F + 3.5\,\mathrm{NFE} \qquad (\text{cat/dog modified Atwater: 3.5 / 8.5 / 3.5 kcal per g})$$
 
 Accuracy: for cats Hall 2013 (PLoS ONE 8:e54405) found modified Atwater on average within 1.57 % and NRC within 1.80 % of measured ME, but
-mean absolute differences of 173 and 180 kcal/kg [21]. Jewell & Jackson 2023 (847 feline foods) report mean absolute error (kcal/kg): wet foods
-61 (modified Atwater), 52 (NRC); dry foods 347 (modified Atwater), 173 (NRC) – about 8 % of mean dry ME of 4199 kcal/kg vs 6 % for wet (mean
-996 kcal/kg) [22]. Conclusion: Atwater is acceptable for wet food, noticeably biased for dry food; the NRC/FEDIAF 4-step is better. No AAFCO/FEDIAF change
-to these formulas in 2023-2025 was found (not exhaustively searched).
+mean absolute differences of 173 and 180 kcal/kg [21]. In Jewell & Jackson 2023, Table 4's independent check dataset
+(859 dry and 601 wet observations from a study of 847 feline foods), mean absolute errors were dry 347 (modified Atwater)
+versus 173 (NRC), wet 61 versus 52 kcal/kg [22]. Relative to that same check dataset's means (4198 dry, 970 wet), the
+Atwater errors are 8.3 % and 6.3 %. The earlier document mixed these check-set errors with training-set means.
+Both food types had prediction errors; this does not establish universal accuracy for wet foods. The four-step method
+performed better on average in this dataset, not necessarily for every food.
 These are study-average absolute prediction errors, not a symmetric uncertainty interval for every label;
 the follow-up audit removed that overgeneralisation from the UI.
 
@@ -730,7 +728,7 @@ kcal–kJ: $\text{kcal} = \text{kJ} / 4.184$ (existing repo behaviour). Example:
 * **Treats and non-complete items ≤10 % of daily calories** (AAHA 2014: "treat allowance of up to 10 % of total calories"; AAHA 2021:
   main complete diet ≥90 % of intake, other items ≤10 %) [4][5]. Matches existing repo warning. Strength G.
 * **Weigh food, do not scoop.** Measuring cups for dry kibble: intra-subject CV 2-13 %, inter-subject 2-28 %; portion errors from −18 %
-  to +80 %, larger for small portions (German et al. 2011; summary read, not full text) [37]; cups can give portions "up to 40 % larger" [13b]. Use grams.
+  to +80 %, larger for small portions (German et al. 2011; primary abstract checked, not full text) [37]; cups can give portions "up to 40 % larger" [13b]. Use grams.
 * **Feeding programmes** (AAFP consensus statement 2018, Sadek et al.; AAFP statement, not an AAFP/ISFM joint document): several small meals across
   24 h (no specific number), multiple separated feeding stations in multi-cat homes, away from litter boxes, puzzle feeders and hidden kibble to
   increase activity; feed to BCS 4-5/9; monitor weight [11b][38]. Strength G (consensus). Hunting-based frequency "about 10-20 small meals" is folk
@@ -774,8 +772,7 @@ The normative rules are in `docs/ENGINE.md`; this section gives the model and it
 ### 12.2 Pipeline
 
 0. Validate; run the hard stops (12.6); if a stop fires, output the referral only.
-1. **Stage** from age, reproduction, medical flags and expected adult weight (a kitten that has reached its expected adult
-   weight is an adult).
+1. **Stage** from age, reproduction and end-of-life status. A kitten reaching its estimated adult weight remains a kitten and is referred for growth reassessment (D9).
 2. **Ideal weight** (D3): stored value (vet or adopted estimate) as-is; else $\mathrm{BW} / (1 + 0.10 \times (\mathrm{BCS} - 5))$
    when BCS ≥ 6; else $\mathrm{BW}$.
 3. **Base kcal** by stage:
@@ -792,7 +789,7 @@ The normative rules are in `docs/ENGINE.md`; this section gives the model and it
      or $\max(\text{floor}, 0.8 \times V)$ with a verified intake $V$; $V$ below the floor → refer (D1);
    * gain: $1.15 \times \mathrm{MER}(k, W)$ (BCS 4 only, vet-confirmed).
 6. **Clamps:** $\text{floor} = 0.6 \times \mathrm{RER}(\mathrm{IBW})$ for every adult/senior start and range low; adult maintenance start
-   $\le 1.4 \times \mathrm{RER}(\mathrm{BW})$ (D7: binds only below about 1.3 kg); kitten start $\le 2.5 \times \mathrm{RER}(\mathrm{BW})$;
+   is capped at $1.4 \times \mathrm{RER}(\mathrm{BW})$ before applying the floor, which takes precedence (D7); kitten start $\le 2.5 \times \mathrm{RER}(\mathrm{BW})$;
    round to 1 kcal for display.
 7. **Range:** maintain $[\max(\text{floor}, 0.85 \times \text{start}), 1.15 \times \text{start}]$ ($1.25$ high factor for ≥12 y); lose
    $[\max(\text{floor}, 0.875 \times \text{start}),\ 1.125 \times \text{start}]$; gain $[1.10, 1.20] \times \mathrm{MER}(k, W)$ with both endpoints floored; kitten as in 3.1.
@@ -876,7 +873,7 @@ Test vectors (to 2 decimals):
 `{ stage, startKcal, lowKcal, highKcal, basis: string[], warnings: string[], stops: string[], rerKcal, referenceBand, idealWeight }`.
 `basis` lists the equation, coefficients and sources so the UI can show "why this number". `referenceBand` is the $[52, 100]$
 coefficient range converted to kcal for adults. `idealWeight` carries its source (veterinarian, stored estimate, BCS estimate,
-current weight) and its ±10 % uncertainty for estimates.
+current weight) and its app-selected ±10 % planning band for estimates.
 
 ### 12.4 Monitoring and adjustment loop
 
@@ -981,11 +978,11 @@ Food: ≥ 4.0 kcal/g DM, protein ≥ 70 g/1000 kcal (growth), Ca:P 1:1 to 1.5:1 
 $p = 0.85$ → weight term $(0.85 - 0.8) / 0.2 = 0.25$; age term $(11 - 10) / 2 = 0.5$; $t = 0.5$. NRC 291.4; adult $\mathrm{MER}(75, 3.4) = 170.3$.
 $\text{start} = 0.5 \times 291.4 + 0.5 \times 170.3 = 230.9$ kcal/day (68 kcal/kg). Band (flat after 10.5 months, $1.5\times$) 255.4-340.6; adult range
 $[0.85, 1.15] \times 170.3$ = 144.7-195.8. Range = $[\min(207.8, 255.4, 144.7),\ \max(253.9, 340.6, 195.8)]$ = **144.7-340.6**; note `kitten-transition`.
-Without the adult weight: $\text{mid} = 298.0$, start $0.5 \times 298.0 + 0.5 \times 170.3 = 234.1$. At 12 months the start reaches 170.3, the adult value, without a step.
+Without the adult weight: $\text{mid} = 298.0$, start $0.5 \times 298.0 + 0.5 \times 170.3 = 234.1$. For unchanged maintenance inputs and BCS 5, the raw start approaches the adult value 170.3 at 12 months. Adult goal/ideal-weight rules can change the result at the age boundary.
 
 **C3. 9-month kitten, 3.6 kg, expected adult 4.0 kg, neutered (transition from weight).**
 $p = 0.9$ → $t = 0.5$ (age term 0). NRC 290.2; adult $\mathrm{MER}(75, 3.6) = 176.9$; start 233.5; band at 9 months (multipliers 1.594 and 1.688)
-282.0-398.1; range 150.4-398.1. At 4.0 kg the cat becomes an adult and gets $\mathrm{MER}(75, 4.0) = 189.9$.
+282.0-398.1; range 150.4-398.1. At 4.0 kg before 12 months the cat remains a kitten and is referred for growth/weight reassessment, with no energy estimate (D9).
 
 **D. Lactating queen, 4 kg, 4 kittens, week 4.**
 $\mathrm{ME} = 100 \times 4^{0.67} + 60 \times 4 \times 1.2 = 253.15 + 288 = 541.2$ kcal/day (135 kcal/kg). Week 6: 493; week 7: 445. AAHA $2.0\text{–}6.0 \times \mathrm{RER}$ (396-1188). Status: reference-only (not the no-number refer status); free-choice feeding of
@@ -1100,7 +1097,7 @@ an intact one $100 \times \mathrm{BW}^{0.67}$ (−11 %). Example: 3.8 kg kitten 
 The FEDIAF band also stepped at 4 and 9 months.
 *Decision:* blend the growth start into $\mathrm{MER}(k_A, \mathrm{BW})$ with $t = \operatorname{clamp}(\max((p - 0.8) / 0.2, (m - 10) / 2), 0, 1)$ (age term only when the adult
 weight is unknown); interpolate the band multipliers between band centres (2, 6.5, 10.5 months); cap the start only at $2.5 \times \mathrm{RER}(\mathrm{BW})$;
-include the adult range $[0.85, 1.15] \times \mathrm{MER}(k_A, \mathrm{BW})$ once $t > 0$; end the kitten stage at 12 months or at the expected adult weight.
+include the adult range $[0.85, 1.15] \times \mathrm{MER}(k_A, \mathrm{BW})$ once $t > 0$; end the kitten stage at 12 months. The original earlier promotion at expected adult weight is withdrawn by D9.
 No separate neutered-kitten factor: no kitten-specific evidence was found, and the adult tier inside the blend already reflects neuter status.
 The age term reflects skeletal maturity and adult weight at about 10 months [12]; the weight term mirrors the 80 % of adult size around 30 weeks [12].
 
@@ -1122,8 +1119,8 @@ otherwise $\max(62.5, 6250 / (\text{kcal} / W^{0.67}))$; no `protein-below-minim
 reference-only (otherwise not applicable); the 5 g/kg-IBW warning only for the `weight-loss-aaha` equation.
 
 **D7. Adult cap (X).**
-The adult maintenance start stays capped at $1.4 \times \mathrm{RER}(\mathrm{BW})$ (the top of AAHA's neutered range). It is a guard, not a model term:
-$100 \times w^{0.67} > 1.4 \times 70 \times w^{0.75}$ only for $w < 0.98^{-12.5} = 1.29$ kg, so it binds only for very small active cats.
+The raw adult maintenance start is capped at $1.4 \times \mathrm{RER}(\mathrm{BW})$ (the top of AAHA's neutered range). It is a guard, not a model term:
+$100 \times w^{0.67} > 1.4 \times 70 \times w^{0.75}$ only for $w < 0.98^{-12.5} = 1.29$ kg, so it binds only for very small active cats. The floor is applied afterwards and overrides this cap if they conflict; the maintenance/gain floor extension is unvalidated (section 7.1).
 
 **D8. Default weigh-in cadence (X; Claude review, 2026-10-09).**
 *Problem:* the trend window is 28 days (12.4), but the default reminder for maintenance cats was every 30 days. An owner who
@@ -1136,6 +1133,21 @@ inclusive 28-day window accepts exactly; gain plans every 2 weeks like every oth
 Kitten (7) and recently neutered (14) cadences are unchanged. No threshold and no target changes. A weigh-in later than 28 days after the
 previous one skips that one comparison; the next on-time weigh-in restores the trend. A cadence of 21 days would add slack but is not
 what the sources recommend, so it was not chosen.
+
+**D9. Expected adult weight is not maturity (X; source review, 2026-10-09).**
+AAHA defines the kitten stage through the first year [10] and recommends growth diets through skeletal maturity,
+typically about one year [41]. An owner-estimated mass cannot establish maturity. Previously an 8-month, 4 kg kitten
+with expected adult weight 4 kg became an adult; selecting loss at BCS 8 enabled the adult restriction equation.
+The stage now stays kitten until 12 months. At or above the entered expected adult weight it returns
+`refer` / `kitten-adult-weight-reached`, without a calorie estimate, adult trend suggestion or adult nutrient check.
+The referral asks for growth/weight reassessment and retains growth-diet advice. This exact referral trigger is an
+app policy, not a guideline threshold. Below that weight, the existing blend is unchanged and remains unvalidated.
+
+**D10. Food warnings use delivered energy (arithmetic contract, 2026-10-09).**
+Balance-food warning checks now use whole-gram delivered energy, matching the nutrient checks. With a 190 kcal
+target and 189.6 kcal fixed food, balance at 1 kcal/g rounds from 0.4 g to 0 g and raises no food warning.
+With a 199 kcal target and 179.4 kcal fixed food, complementary balance rounds from 19.6 g to 20 g: 20 kcal
+exceeds 10 % of the target (19.9 kcal), so the extras warning must fire. The allocation itself is unchanged.
 
 ### 16.3 Follow-up correctness audit (Codex, 2026-10-09)
 
@@ -1155,8 +1167,7 @@ what the sources recommend, so it was not chosen.
   coefficients, reproduction equations and protein scaling were cross-checked against [1].
 - The minimum-of-RER-and-MER loss rule, interpolated kitten bands and transition timing remain
   **unvalidated app choices**, not published AAHA/NRC equations. Reaching an owner-estimated adult
-  weight does not itself establish biological maturity; D4 and the resulting adult-goal eligibility
-  require veterinary review. Arithmetic tests cannot establish clinical safety.
+  weight does not itself establish biological maturity; D4 requires veterinary review; D9 above removes the early adult-goal eligibility. Arithmetic tests cannot establish clinical safety.
 
 ---
 
@@ -1173,7 +1184,7 @@ Identifier status: "opened" = I (or a subagent) read the cited page or file in t
 7. WSAVA. Calorie Needs for an Average Healthy Adult Cat in Ideal Body Condition (updated July 2020). https://wsava.org/wp-content/uploads/2020/07/Calorie-Needs-for-Healthy-Adult-Cats-updated-July-2020.pdf (opened).
 8. WSAVA Nutritional Assessment Guidelines Task Force. WSAVA Nutritional Assessment Guidelines. *J Feline Med Surg* 2011;13(7):516-525. doi:10.1016/j.jfms.2011.05.009 (relayed); also *J Small Anim Pract* 2011;52(7):385-396. https://wsava.org/global-guidelines/global-nutrition-guidelines/ (listed).
 9. Merck Veterinary Manual. Nutritional Requirements of Small Animals. https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutritional-requirements-of-small-animals (opened). 9b: Merck Veterinary Manual, nutrition in hepatic disease (relayed by subagent, secondary).
-10. Quimby J, Gowland S, Carney HC, DePorter T, Plummer P, Westropp J. 2021 AAHA/AAFP Feline Life Stage Guidelines. *J Feline Med Surg* 2021;23:211-233. doi:10.1177/1098612X21993657 (relayed; I used the AAFP summary at catvets.com, not the full guideline; author list as recalled, verify).
+10. Quimby J, Gowland S, Carney HC, DePorter T, Plummer P, Westropp J. 2021 AAHA/AAFP Feline Life Stage Guidelines. *J Feline Med Surg* 2021;23:211-233. doi:10.1177/1098612X21993657. Full primary PDF: https://www.aaha.org/aaha-guidelines/2021-aaha-aafp-feline-life-stage-guidelines/ (read in source review; printed pp. 53 and 63 for stages and kitten nutrition; author list confirmed).
 11. Bjornvad CR, Nielsen DH, Armstrong PJ, et al. Evaluation of a nine-point body condition scoring system in physically inactive pet cats. *Am J Vet Res* 2011;72:433-437. doi:10.2460/ajvr.72.4.433. 11b: Sadek T, Hamper B, Horwitz D, Rodan I, Rowe E, Sundahl E. Feline feeding programs: addressing behavioural needs to improve feline health and wellbeing. *J Feline Med Surg* 2018;20(11):1049-1055. doi:10.1177/1098612X18791877 (opened; see also ref 38).
 12. Gross KL, Becvarova I, Debraekeleer J. Feeding growing kittens: postweaning to adulthood. In: Hand MS, et al. *Small Animal Clinical Nutrition*, 5th ed., ch. 24, p. 429-. https://s3.amazonaws.com/mmi_sacn5/2019/SACN5_24.pdf (opened).
 13. Fontaine E. Food intake and nutrition during pregnancy, lactation and weaning in the dam and offspring. *Reprod Domest Anim* 2012;47(Suppl 6):326-330. doi:10.1111/rda.12102 (opened). 13b: Hoelmkjaer KM, Bjornvad CR. Management of obesity in cats. *Vet Med Res Rep* 2014;5. doi:10.2147/VMRR.S40869; also https://pmc.ncbi.nlm.nih.gov/articles/PMC7337193/ (opened; hepatic-lipidosis case at about 30 kcal/kg target BW confirmed in the 2026-10-09 audit).
@@ -1185,7 +1196,7 @@ Identifier status: "opened" = I (or a subagent) read the cited page or file in t
 19. Further subagent-read sources (all relayed, identifiers as stated): Riond JL et al. *J Anim Physiol Anim Nutr* 2003;87:221-228; Wichert B et al. *ScientificWorldJournal* 2012, https://pubmed.ncbi.nlm.nih.gov/22623906/ ; Serisier S et al. *PLoS ONE* 2014;9:e96071; Harper EJ. *J Nutr* 1998;128:2623S-2635S; Teng KT et al. *J Feline Med Surg* 2018;20:1110-1118; Michel KE et al. *Br J Nutr* 2011;106(Suppl 1):S57-S59; Freeman LM et al. *Am J Vet Res* 2020;81:254-259. 19b: Slingerland LI et al. *Vet J* 2009;179:247-253; Öhlund M et al. *J Vet Intern Med* 2017;31:29; Rothlin-Zachrisson N et al. *J Vet Intern Med* 2023;37(1):58-69; Roomp K, Rand J. *J Feline Med Surg* 2009;11(8):668-682.
 20. Hawthorne AJ, Butterwick RF. Predicting the body composition of cats: development of a zoometric measurement for estimation of percentage body fat in cats. *J Vet Intern Med* 2000;14:365 (abstract, original not opened). Formula as quoted in Iwazaki E, Mori A. *Animals* 2026;16:528. https://mdpi-res.com/d_attachment/animals/animals-16-00528/article_deploy/animals-16-00528.pdf (opened by subagent).
 21. Hall JA, Melendez LD, Jewell DE. Using gross energy improves metabolizable energy predictive equations for pet foods whether or not they contain animal byproducts. *PLoS ONE* 2013;8(1):e54405. doi:10.1371/journal.pone.0054405.
-22. Jewell DE, Jackson MI. Predictive equations for pet food energy: new equations for dry and wet foods. *Front Vet Sci* 2023;10:1104695. doi:10.3389/fvets.2023.1104695 (title as recalled, verify).
+22. Jewell DE, Jackson MI. Predictive equations for dietary energy are improved when independently developed for dry and wet food … *Front Vet Sci* 2023;10:1104695. doi:10.3389/fvets.2023.1104695. https://www.frontiersin.org/journals/veterinary-science/articles/10.3389/fvets.2023.1104695/full (primary methods and Table 4 checked; title abbreviated).
 23. Armitage-Chan E, O'Toole T, Chan DL. Management of prolonged food deprivation, hypothermia, and refeeding syndrome in a cat. *J Vet Emerg Crit Care* 2006;16(2):S34-S41. doi:10.1111/j.1476-4431.2006.00132.x (not opened).
 24. Hewson-Hughes AK et al. Geometric analysis of macronutrient selection in the adult domestic cat, *Felis catus*. *J Exp Biol* 2011;214:1039-1051. doi:10.1242/jeb.049429 (summary only).
 25. Vecchiato CG et al. Case report: a case series linked to vitamin D excess in pet food: cholecalciferol (vitamin D3) toxicity observed in five cats. *Front Vet Sci* 2021;8:707741. doi:10.3389/fvets.2021.707741 (opened; used only for numerical cross-check).
@@ -1200,8 +1211,10 @@ Identifier status: "opened" = I (or a subagent) read the cited page or file in t
 34. AAHA 2026 Diabetes Management Guidelines for Cats. https://www.aaha.org/resources/2026-aaha-diabetes-management-guidelines-for-cats/section-8-dietary-management/ (primary section opened in the follow-up audit).
 35. Forman MA, et al. ACVIM consensus statement on pancreatitis in cats. *J Vet Intern Med* 2021;35:703-723. doi:10.1111/jvim.16053 (first ~40 % read via PMC7995362).
 36. Lulich JP, et al. ACVIM small animal consensus recommendations on the treatment and prevention of uroliths in dogs and cats. *J Vet Intern Med* 2016;30(5):1564-1574. doi:10.1111/jvim.14559 (read by subagent).
-37. German AJ, Holden SL, Mason SL, Bryner C, Bouldoires C, Morris PJ, Deboise M, Biourge V. Imprecision when using measuring cups to weigh out extruded dry kibbled food. *J Anim Physiol Anim Nutr* 2011;95(3):368-373. doi:10.1111/j.1439-0396.2010.01063.x (abstract read via a summary).
+37. German AJ, Holden SL, Mason SL, Bryner C, Bouldoires C, Morris PJ, Deboise M, Biourge V. Imprecision when using measuring cups to weigh out extruded dry kibbled food. *J Anim Physiol Anim Nutr* 2011;95(3):368-373. doi:10.1111/j.1439-0396.2010.01063.x. https://pubmed.ncbi.nlm.nih.gov/21039926/ (primary abstract read; confirms 12 studies and observed portion-error range).
 38. AAFP. How to feed a cat: AAFP consensus statement on feline feeding programs and client brochure. https://catvets.com/wp-content/uploads/2024/08/2018-How-to-Feed.pdf (PDF listed; text not read). Primary paper: ref 11b.
 39. ABVP. Summary of the 2025 iCatCare feline diabetes mellitus consensus guidelines, March 2026. https://abvp.com/wp-content/uploads/2026/02/2026-03-March-Feline-icc-DM.pdf (opened in the 2026-10-09 audit; used only to confirm the ≤12 % ME carbohydrate threshold of [30]; title inferred from the file name, verify).
 
 40. Godfrey H, et al. Dietary choline in gonadectomized kittens improved food intake and body composition but not satiety, serum lipids, or energy expenditure. *PLOS ONE* 2022. https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0264321 (primary study; methods reproduce the NRC kitten energy expression; opened in the follow-up audit).
+
+41. AAHA. Age-specific and Breed-specific Diets, 2021 Nutrition and Weight Management Guidelines. https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/age-specific-and-breed-specific-diets/ (opened; growth diets through skeletal maturity, typically about one year in cats).

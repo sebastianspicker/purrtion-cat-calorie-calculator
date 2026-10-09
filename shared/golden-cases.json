@@ -19962,7 +19962,7 @@
     }
   },
   {
-    "name": "growth-complete-kitten-is-adult",
+    "name": "kitten-at-expected-weight-refers",
     "asOf": "2026-10-09",
     "plan": {
       "schemaVersion": 2,
@@ -20083,40 +20083,26 @@
           ],
           "warnings": [],
           "estimate": {
-            "status": "ok",
-            "stage": "adult",
+            "status": "refer",
+            "stage": "kitten",
             "lifeStageLabel": "kitten",
             "ageMonths": 8,
             "rerKcal": 197.9898987322333,
-            "idealWeight": {
-              "kg": 4,
-              "lowKg": 4,
-              "highKg": 4,
-              "source": "current"
-            },
-            "equation": "adult-fediaf",
-            "coefficient": 75,
-            "weightUsedKg": 4,
-            "startKcal": 189.86348909554198,
-            "lowKcal": 161.38396573121068,
-            "highKcal": 218.34301245987325,
-            "floorKcal": 118.79393923933998,
-            "referenceBand": {
-              "lowKcal": 131.63868577290913,
-              "highKcal": 253.15131879405598
-            },
-            "reasons": [],
-            "missing": [],
-            "notes": [
-              "growth-complete"
+            "idealWeight": null,
+            "equation": null,
+            "coefficient": null,
+            "weightUsedKg": null,
+            "startKcal": null,
+            "lowKcal": null,
+            "highKcal": null,
+            "floorKcal": null,
+            "referenceBand": null,
+            "reasons": [
+              "kitten-adult-weight-reached"
             ],
-            "comparison": {
-              "targetToStartRatio": 1.0007189950269444,
-              "belowRange": false,
-              "aboveRange": false,
-              "differsOver30Percent": false,
-              "belowFloor": false
-            }
+            "missing": [],
+            "notes": [],
+            "comparison": null
           },
           "trend": {
             "entries": 0,
@@ -20124,17 +20110,10 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 28
+            "nextWeighInDays": 7
           },
           "nutrition": {
-            "status": "ok",
-            "kcal": 191.2,
-            "proteinG": 18.16,
-            "proteinPer1000": 94.97907949790796,
-            "minProteinPer1000": 82.75082335056747,
-            "carbPercentME": 24.763874140725424,
-            "warnings": [],
-            "notes": []
+            "status": "not-applicable"
           }
         }
       ],
@@ -20212,7 +20191,7 @@
     }
   },
   {
-    "name": "growth-complete-needs-adult-inputs",
+    "name": "kitten-at-expected-weight-keeps-kitten-input-rules",
     "asOf": "2026-10-09",
     "plan": {
       "schemaVersion": 2,
@@ -20333,8 +20312,8 @@
           ],
           "warnings": [],
           "estimate": {
-            "status": "needs-input",
-            "stage": "adult",
+            "status": "refer",
+            "stage": "kitten",
             "lifeStageLabel": "kitten",
             "ageMonths": 8,
             "rerKcal": 201.69072753405155,
@@ -20347,11 +20326,10 @@
             "highKcal": null,
             "floorKcal": null,
             "referenceBand": null,
-            "reasons": [],
-            "missing": [
-              "bcs",
-              "neutered"
+            "reasons": [
+              "kitten-adult-weight-reached"
             ],
+            "missing": [],
             "notes": [],
             "comparison": null
           },
@@ -20361,7 +20339,7 @@
             "ratePercentPerWeek": null,
             "change28dPercent": null,
             "suggestion": null,
-            "nextWeighInDays": 28
+            "nextWeighInDays": 7
           },
           "nutrition": {
             "status": "not-applicable"

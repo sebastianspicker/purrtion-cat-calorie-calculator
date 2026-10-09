@@ -86,14 +86,27 @@ test('SCIENCE.md §12.2 kitten vectors (D4): interpolated band, transition by ag
   const bandCapped = kitten(1, 2 / 12, { neutered: 'no', lifestyle: null });
   near(bandCapped.startKcal, 2.5 * rer(1)); assert.ok(bandCapped.notes.includes('clamped-high'));
 });
-test('estimator: a kitten at its expected adult weight is an adult (growth-complete) and needs the adult inputs', () => {
-  const grown = cat({ weightKg: 4 }, { approxAgeYears: 8 / 12, expectedAdultWeightKg: 4 });
-  assert.equal(stageOf(grown, asOf), 'adult');
-  const e = estimateEnergy(grown, asOf);
-  assert.equal(e.lifeStageLabel, 'kitten'); assert.ok(e.notes.includes('growth-complete')); near(e.startKcal, mer(75, 4));
+test('reaching estimated adult weight keeps kitten protections and refers for growth assessment', () => {
+  for (const months of [2, 8, 11.9]) for (const weightKg of [4, 4.1]) for (const goal of ['maintain', 'loss', 'gain']) {
+    const c = cat({ weightKg, goal }, { approxAgeYears: months / 12, expectedAdultWeightKg: 4, bcs: 8 });
+    const before = structuredClone(c), e = estimateEnergy(c, asOf);
+    assert.equal(stageOf(c, asOf), 'kitten'); assert.equal(e.lifeStageLabel, 'kitten');
+    assert.equal(e.status, 'refer'); assert.deepEqual(e.reasons, ['kitten-adult-weight-reached']);
+    assert.equal(e.startKcal, null); assert.equal(e.equation, null); assert.equal(e.floorKcal, null);
+    assert.equal(trendFor(c, asOf, e, weightSeries(c, asOf)).nextWeighInDays, 7);
+    assert.equal(trendFor(c, asOf, e, weightSeries(c, asOf)).suggestion, null);
+    assert.deepEqual(checkNutrition(c, e, [], 0), { status: 'not-applicable' });
+    assert.deepEqual(c, before);
+  }
   const missing = estimateEnergy(cat({ weightKg: 4.1 }, { approxAgeYears: 8 / 12, expectedAdultWeightKg: 4, neutered: 'unknown', bcs: null }), asOf);
-  assert.equal(missing.status, 'needs-input'); assert.deepEqual(missing.missing, ['bcs', 'neutered']);
-  assert.equal(stageOf(cat({ weightKg: 3.9 }, { approxAgeYears: 8 / 12, expectedAdultWeightKg: 4 }), asOf), 'kitten');
+  assert.equal(missing.status, 'refer'); assert.deepEqual(missing.missing, []);
+  const below = cat({ weightKg: 3.9 }, { approxAgeYears: 8 / 12, expectedAdultWeightKg: 4 });
+  assert.equal(estimateEnergy(below, asOf).equation, 'kitten-nrc');
+  below.profile.approxAgeYears = 1; below.weightKg = 4;
+  assert.equal(stageOf(below, asOf), 'adult'); assert.equal(estimateEnergy(below, asOf).status, 'ok');
+  const stalled = cat({ weightKg: 4, weightLog: [{ id: 'a', date: day(-7), weightKg: 4, bcs: null }, { id: 'b', date: day(0), weightKg: 4, bcs: null }] },
+    { approxAgeYears: 8 / 12, expectedAdultWeightKg: 4 });
+  assert.deepEqual(trendStops(stalled, weightSeries(stalled, asOf), stageOf(stalled, asOf)), ['kitten-not-growing']);
 });
 test('SCIENCE.md §10.4 food anchors: wet ME4 99.25 / Atwater 93.25, dry ME4 379.5 / Atwater 357.0', () => {
   near(meKcalPer100g(wet), 99.2455); round2(meKcalPer100g(wet), 99.25); near(atwaterKcalPer100g(wet), 93.25);
@@ -283,7 +296,7 @@ test('dates are strict YYYY-MM-DD calendar dates', () => {
 test('messages: every locale has the same keys, and every engine code has text', () => {
   assert.deepEqual(Object.keys(messages.de).sort(), Object.keys(messages.en).sort());
   const codes = { warning: Object.keys(warningMessages), refer: ['neonate', 'end-of-life', 'acute-medical', 'bcs-low', 'mcs-severe', 'rapid-weight-change', 'kitten-not-growing',
-    'verified-intake-below-floor'], note: ['kitten-transition', 'growth-complete', 'kitten-weigh-weekly', 'clamped-high'],
+    'verified-intake-below-floor', 'kitten-adult-weight-reached'], note: ['kitten-transition', 'kitten-weigh-weekly', 'clamped-high'],
     idealWeight: ['veterinarian', 'estimate', 'bcs-estimate', 'current'], icon: [...catIcons],
     missing: ['age', 'neutered', 'bcs', 'mcs', 'litter-size', 'lactation-week'], equation: Object.keys(energyModel.references).filter(id => id !== 'rer' && id !== 'atwater'),
     food: ['assumed-moisture', 'atwater-disagreement', 'label-energy-mismatch'],

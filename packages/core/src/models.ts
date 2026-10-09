@@ -86,11 +86,11 @@ export type LifeStageLabel = 'kitten' | 'young-adult' | 'mature-adult' | 'senior
 export type EquationId = 'adult-fediaf' | 'weight-loss-aaha' | 'adult-gain' | 'kitten-nrc' | 'kitten-fediaf-band'
   | 'gestation-fediaf' | 'lactation-fediaf';
 export type ReferCode = 'neonate' | 'end-of-life' | 'acute-medical' | 'bcs-low' | 'mcs-severe'
-  | 'rapid-weight-change' | 'kitten-not-growing' | 'verified-intake-below-floor';
+  | 'rapid-weight-change' | 'kitten-not-growing' | 'kitten-adult-weight-reached' | 'verified-intake-below-floor';
 export type InputCode = 'age' | 'neutered' | 'bcs' | 'mcs' | 'litter-size' | 'lactation-week';
 export type NoteCode = 'loss-not-indicated' | 'gain-not-indicated' | 'senior-wider-range' | 'overweight-consider-loss'
   | 'clamped-high' | 'recently-neutered' | 'medical-vet-plan' | 'diabetes-low-carb-info' | 'kitten-adult-weight-unknown'
-  | 'kitten-weigh-weekly' | 'kitten-transition' | 'growth-complete' | 'pre-breeding-weight-assumed' | 'free-choice-recommended' | 'reproduction-vet' | 'weaning-transition';
+  | 'kitten-weigh-weekly' | 'kitten-transition' | 'pre-breeding-weight-assumed' | 'free-choice-recommended' | 'reproduction-vet' | 'weaning-transition';
 export interface IdealWeight { kg: number; lowKg: number; highKg: number; source: 'veterinarian' | 'estimate' | 'bcs-estimate' | 'current' }
 export interface EstimateComparison {
   targetToStartRatio: number; belowRange: boolean; aboveRange: boolean; differsOver30Percent: boolean; belowFloor: boolean;

@@ -238,6 +238,22 @@ def main() -> None:
             import_plan(fixture)
             expect(page.get_by_test_id("total-dry")).to_have_text("89 g")
 
+            # Reaching an estimated adult weight must not unlock adult restriction for a kitten.
+            kitten_plan = fixture_plan()
+            kitten_plan["cats"] = [kitten_plan["cats"][0]]
+            kitten = kitten_plan["cats"][0]
+            kitten.update(weightKg=4, goal="loss")
+            kitten["profile"].update(approxAgeYears=0.67, expectedAdultWeightKg=4, bcs=8, neutered="yes")
+            import_plan(json.dumps(kitten_plan).encode())
+            page.get_by_role("button", name="Cat 1", exact=True).click()
+            expect(page.locator(".estimate-view")).to_contain_text("does not establish maturity")
+            expect(page.locator(".estimate-view")).to_contain_text("complete growth diet")
+            expect(page.get_by_test_id("estimate-start")).to_have_count(0)
+            expect(page.locator(".use-estimate button")).to_be_disabled()
+            expect(page.locator('[name="cat-target"]')).to_have_value("220")
+            shoot("kitten-growth-referral")
+            import_plan(fixture)
+
             # Unit changes must not change the calorie density; food analysis computes ME.
             page.get_by_role("button", name="Food library", exact=True).click()
             dry = page.locator("form.food-editor").filter(has=page.locator('[name="dry-energy"]'))
@@ -375,6 +391,9 @@ def main() -> None:
             expect(page.locator("form.food-editor").first).to_contain_text("Rohprotein")
             page.get_by_role("button", name="So wird gerechnet", exact=True).click()
             assert page.locator(".method-card math").count() >= 10, "Method formulas were not rendered"
+            expect(page.get_by_role("link", name=re.compile("FEDIAF 2025"))).to_have_attribute("href", re.compile("FEDIAF-Nutritional-Guidelines_2025"))
+            expect(page.get_by_role("link", name=re.compile("Godfrey"))).to_have_attribute("href", re.compile("0264321"))
+
             assert page.locator(".math-fallback").count() == 0, "A German formula failed to render"
             shoot("desktop-light-method-de")
             page.get_by_role("button", name="English", exact=True).click()
