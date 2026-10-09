@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="t">
+  <title id="t">Purrtion</title>
+  <defs>
+    <g id="silhouette">
+      <path d="M17 26 L18.2 12 L29.5 18 Z M47 26 L45.8 12 L34.5 18 Z"/>
+      <ellipse cx="32" cy="30.5" rx="16" ry="13.5"/>
+      <rect x="7" y="33" width="50" height="5.5" rx="2.75"/>
+      <path d="M9.6 36 H54.4 C53.4 47 46 54.5 32 54.5 C18 54.5 10.6 47 9.6 36 Z"/>
+    </g>
+  </defs>
+  <!-- die-cut sticker edge -->
+  <use href="#silhouette" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+  <g stroke="#2B2541" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round">
+    <!-- ears + head -->
+    <path d="M17 26 L18.2 12 L29.5 18 Z M47 26 L45.8 12 L34.5 18 Z" fill="#FFFFFF"/>
+    <path d="M20.4 16.4 L20.9 21.6 L25.8 18.9 Z M43.6 16.4 L43.1 21.6 L38.2 18.9 Z" fill="#F4A9C2" stroke="none"/>
+    <ellipse cx="32" cy="30.5" rx="16" ry="13.5" fill="#FFFFFF"/>
+    <!-- bowl body: a graduated beaker in disguise -->
+    <path d="M9.6 36 H54.4 C53.4 47 46 54.5 32 54.5 C18 54.5 10.6 47 9.6 36 Z" fill="#E8779E"/>
+    <rect x="7" y="33" width="50" height="5.5" rx="2.75" fill="#F4A9C2"/>
+  </g>
+  <!-- face -->
+  <circle cx="25.6" cy="26.8" r="2.6" fill="#2B2541"/>
+  <circle cx="38.4" cy="26.8" r="2.6" fill="#2B2541"/>
+  <!-- measuring graduations -->
+  <g stroke="#2B2541" stroke-width="2.6" stroke-linecap="round">
+    <line x1="41" y1="42" x2="48" y2="42"/>
+    <line x1="41" y1="49" x2="46" y2="49"/>
+  </g>
+</svg>
