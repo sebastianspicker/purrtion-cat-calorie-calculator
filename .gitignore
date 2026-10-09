@@ -1,0 +1,88 @@
+# ---- Dependencies and build output ----
+node_modules/
+dist/
+.build/
+.swiftpm/
+DerivedData/
+*.app
+*.xcarchive
+*.zip
+*.tsbuildinfo
+
+# ---- Xcode / SwiftPM user state ----
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+
+# ---- Secrets and credentials ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.p8
+*.mobileprovision
+*.provisionprofile
+*.keychain
+*.keychain-db
+.netrc
+.npmrc
+
+# ---- Private notes, ledgers and agent working state ----
+private/
+*.private.*
+ledger/
+*.ledger
+*.ledger.*
+LEDGER*.md
+.agents/
+**/.claude/settings.local.json
+**/.claude/.cc-writes/
+CLAUDE.local.md
+AGENTS.local.md
+.codex/*
+!.codex/environments/
+scratch/
+tmp/
+
+# ---- Personal cat data (exports, backups, recovery dumps) ----
+# Real feeding plans and weight logs are health data about someone's pet; keep them local.
+purrtion-plan*.json
+purrtion-portions*.csv
+purrtion-recovery*.json
+plan-backup-*.json
+plan-v1-backup*.json
+plan.json
+*.plan.json
+
+# ---- Test runs and QA artefacts (test *sources* stay tracked) ----
+playwright-results/
+test-results/
+playwright-report/
+coverage/
+.nyc_output/
+.pytest_cache/
+junit*.xml
+*.lcov
+screenshots/
+*.trace.zip
+*.log
+npm-debug.log*
+
+# ---- Python / tooling ----
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# ---- OS and editor clutter ----
+.DS_Store
+._*
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

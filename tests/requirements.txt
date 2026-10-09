@@ -1,0 +1,2 @@
+# Optional browser verification only; not an application dependency.
+playwright==1.57.0

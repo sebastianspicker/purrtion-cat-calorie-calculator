@@ -1,0 +1,26 @@
+{
+  "name": "purrtion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-first cat calorie and wet/dry portion planner \u2014 TypeScript web + native SwiftUI macOS.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node script/dev.mjs",
+    "build": "node script/build.mjs",
+    "preview": "node script/serve.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test packages/core/test/*.test.mjs apps/web/test/*.test.mjs",
+    "check": "node script/gen_shared.mjs --check && sh script/sync_shared.sh --check && npm run typecheck && npm test",
+    "sync:shared": "sh script/sync_shared.sh",
+    "gen:shared": "node script/gen_shared.mjs",
+    "test:swift": "swift test",
+    "mac": "./script/build_and_run.sh",
+    "package:source": "python3 script/package_source.py"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3"
+  }
+}
