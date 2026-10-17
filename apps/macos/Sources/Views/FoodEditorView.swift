@@ -65,10 +65,11 @@ struct FoodEditorView: View {
 
     private var energy: some View {
         Section(l.t("food.energy")) {
-            Picker(l.t("food.energySource"), selection: Binding(get: { draft.energySource }, set: setSource)) {
+            // Closures, not method references: Swift 6.1 (Xcode 16.4) crashes in IRGen on a method passed as `set:`.
+            Picker(l.t("food.energySource"), selection: Binding(get: { draft.energySource }, set: { setSource($0) })) {
                 ForEach(EnergySource.allCases, id: \.self) { Text(l.energySource($0)).tag($0) }
             }
-            Picker(l.t("food.unit"), selection: Binding(get: { draft.energyUnit }, set: setUnit)) {
+            Picker(l.t("food.unit"), selection: Binding(get: { draft.energyUnit }, set: { setUnit($0) })) {
                 ForEach(EnergyUnit.allCases, id: \.self) { Text($0.rawValue).tag($0) }
             }
             if draft.energySource == .analysis {

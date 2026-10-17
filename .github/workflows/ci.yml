@@ -20,8 +20,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r tests/requirements.txt
-      - run: python -m playwright install --with-deps chromium
+      - run: python -m playwright install --with-deps chromium webkit firefox
       - run: python tests/browser_smoke.py
+      # WebKit is Safari's engine; testers on Macs default to Safari.
+      - run: python tests/browser_smoke.py --engine webkit
+      - run: python tests/browser_smoke.py --engine firefox
   macos:
     runs-on: macos-15
     steps:

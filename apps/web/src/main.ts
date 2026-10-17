@@ -10,6 +10,7 @@ import { methodPage } from './pages/method.js';
 import { openWizard } from './wizard.js';
 import { avatar, wizardHat } from './mascot.js';
 import { s } from './dom.js';
+import { buildInfo, reportUrl } from './build-info.js';
 
 const THEME_KEY = 'purrtion.theme';
 type Theme = 'system' | 'light' | 'dark';
@@ -109,7 +110,8 @@ async function boot(): Promise<void> {
     const main = h('main', { id: 'main-content', tabindex: '-1', class: 'main-content' },
       h('div', { id: 'app-notices', 'aria-live': 'polite' }, storeNotice, shown ? notice(shown.text, shown.kind) : null),
       h('div', { id: 'import-error' }, appError ? notice(appError, 'error') : null), content,
-      h('footer', { class: 'page-footer' }, h('p', null, t('app.footer'))));
+      h('footer', { class: 'page-footer' }, h('p', null, t('app.footer')),
+        h('p', null, t('app.build', buildInfo), ' · ', h('a', { href: reportUrl, target: '_blank', rel: 'noopener noreferrer' }, t('app.report')))));
     root.replaceChildren(h('div', { class: 'app-shell' }, sidebar, h('div', { class: 'workspace' }, toolbar, main)));
   }
   // Cross-tab sync: reload when nothing is being edited; otherwise warn that saving overwrites the other tab's change.

@@ -53,6 +53,11 @@ enum L10nStrings {
         "settings.local": "Local by design",
         "settings.localText": "No account, cloud sync, analytics or external service. Move plans between Mac and web with JSON export and import.",
         "settings.dataPath": "Local data: {path}",
+        "settings.about": "About this build",
+        "settings.version": "Version {version}, build {build}",
+        "settings.devBuild": "Development build, not packaged by script/build_and_run.sh",
+        "settings.report": "Report a problem",
+        "menu.reportProblem": "Report a Problem…",
 
         // Household
         "household.intro": "Fixed meals first. The rest of each cat’s budget is their measured balance food.",
@@ -480,6 +485,11 @@ enum L10nStrings {
         "settings.local": "Bewusst lokal",
         "settings.localText": "Kein Konto, keine Cloud-Synchronisierung, keine Analyse und kein externer Dienst. Übertragen Sie Pläne zwischen Mac und Web per JSON-Export und -Import.",
         "settings.dataPath": "Lokale Daten: {path}",
+        "settings.about": "Über diesen Build",
+        "settings.version": "Version {version}, Build {build}",
+        "settings.devBuild": "Entwicklungs-Build, nicht mit script/build_and_run.sh paketiert",
+        "settings.report": "Problem melden",
+        "menu.reportProblem": "Problem melden …",
 
         // Household
         "household.intro": "Zuerst die festen Mahlzeiten. Der Rest des Tagesbudgets jeder Katze ist ihr abgewogenes Ausgleichsfutter.",

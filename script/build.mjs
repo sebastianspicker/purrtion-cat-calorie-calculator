@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, copyFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, copyFileSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 export const root = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -25,9 +25,22 @@ export function copyStatic() {
   // GitHub Pages: serve the files as they are, without Jekyll processing.
   writeFileSync(join(root, 'dist/web/.nojekyll'), '');
 }
+/** Stamps the compiled build-info module with package.json's version and the git commit ("-dirty" for local edits). */
+function stampBuildInfo() {
+  const { version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  let build = 'unknown';
+  try {
+    const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    build = git(['rev-parse', '--short=7', 'HEAD']) + (git(['status', '--porcelain', '--untracked-files=no']) ? '-dirty' : '');
+  } catch { /* not a git checkout, for example the source ZIP */ }
+  const file = join(root, 'dist/web/apps/web/src/build-info.js');
+  const unstamped = "{ version: 'dev', build: 'unknown' }", source = readFileSync(file, 'utf8');
+  if (!source.includes(unstamped)) throw new Error(`build-info.js no longer contains ${unstamped}`);
+  writeFileSync(file, source.replace(unstamped, JSON.stringify({ version, build })));
+}
 export function build() {
   rmSync(join(root, 'dist/web'), { recursive: true, force: true });
   execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc')], { cwd: root, stdio: 'inherit' });
-  copyStatic(); console.log('Website built in dist/web (static files; no runtime dependencies).');
+  stampBuildInfo(); copyStatic(); console.log('Website built in dist/web (static files; no runtime dependencies).');
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) build();

@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { decimal, decimalPattern } from '../../../dist/web/apps/web/src/dom.js';
 import { detectLocale, translate, ui, setLocale } from '../../../dist/web/apps/web/src/i18n.js';
+import { buildInfo, reportUrl } from '../../../dist/web/apps/web/src/build-info.js';
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 
 test('decimal: accepts point or comma, leading and trailing separators', () => {
   setLocale('en');
@@ -48,4 +51,13 @@ test('i18n: German and English tables have the same keys, no empty texts, and fi
     assert.deepEqual(ui.de[key].match(/\{\w+\}/g)?.sort() ?? [], names, `placeholders of ${key}`);
   }
   assert.equal(translate('de', 'wizard.progress', { n: '2', total: '9' }), 'Schritt 2 von 9');
+});
+test('build info: the built site names the package version, the git commit it was built from, and where to report bugs', () => {
+  const pkg = JSON.parse(readFileSync(new URL('../../../package.json', import.meta.url), 'utf8'));
+  assert.equal(buildInfo.version, pkg.version);
+  let head = null;
+  try { head = execFileSync('git', ['rev-parse', '--short=7', 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); } catch { /* not a git checkout */ }
+  if (head) assert.match(buildInfo.build, new RegExp(`^${head}(-dirty)?$`));
+  else assert.equal(buildInfo.build, 'unknown');
+  assert.match(reportUrl, /^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/issues$/);
 });

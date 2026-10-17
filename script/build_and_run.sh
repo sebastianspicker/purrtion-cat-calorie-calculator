@@ -15,6 +15,10 @@ pkill -x "$APP_NAME" >/dev/null 2>&1 || true
 ./script/sync_shared.sh
 swift build -c "$CONFIG" --product "$APP_NAME"
 BIN_DIR="$(swift build -c "$CONFIG" --show-bin-path)"
+VERSION="$(/usr/bin/plutil -extract version raw -o - "$ROOT/package.json")"
+# Shown in Settings so testers can say which build they used; "-dirty" marks uncommitted edits to tracked files.
+BUILD="$(git -C "$ROOT" rev-parse --short=7 HEAD 2>/dev/null || echo unknown)"
+if [[ "$BUILD" != unknown && -n "$(git -C "$ROOT" status --porcelain --untracked-files=no)" ]]; then BUILD="$BUILD-dirty"; fi
 rm -rf "$APP"
 mkdir -p "$CONTENTS/MacOS" "$CONTENTS/Resources"
 cp "$BIN_DIR/$APP_NAME" "$CONTENTS/MacOS/$APP_NAME"
@@ -35,7 +39,8 @@ cat > "$CONTENTS/Info.plist" <<PLIST
 <key>CFBundleIconFile</key><string>Purrtion</string>
 <key>CFBundleIdentifier</key><string>$BUNDLE_ID</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>0.1.0</string>
+<key>CFBundleShortVersionString</key><string>$VERSION</string>
+<key>PurrtionBuild</key><string>$BUILD</string>
 <key>CFBundleVersion</key><string>1</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>NSPrincipalClass</key><string>NSApplication</string>

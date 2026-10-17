@@ -84,6 +84,25 @@ swift test                                # the Swift core tests
 
 The script stages a locally ad-hoc-signed app for your machine's architecture. It is not notarised, not universal and not an App Store or Developer ID release. The package also opens in Xcode through `Package.swift`.
 
+#### Share the app with testers
+
+Without a Developer ID certificate the app can only be ad-hoc signed, so macOS blocks it on any other Mac until the tester allows it once.
+
+1. Build a release copy and zip it with `ditto`, which keeps the signature intact:
+
+   ```sh
+   CONFIGURATION=release ./script/build_and_run.sh --build-only
+   ditto -c -k --keepParent dist/Purrtion.app "Purrtion-$(uname -m).zip"
+   ```
+
+   The build runs only on the architecture it was made on (`arm64` for Apple silicon, `x86_64` for Intel). Build on each kind of Mac your testers use, and name the zip after it.
+2. The tester unzips the file, moves `Purrtion.app` to Applications and opens it. macOS 15 and later says that Apple could not verify the app is free of malware; choose **Done**. (Control-clicking and choosing **Open** no longer bypasses this on macOS 15. On macOS 14 the message says the developer cannot be verified; the next step works there too.)
+3. The tester opens **System Settings → Privacy & Security**, scrolls to **Security**, chooses **Open Anyway** next to the message about Purrtion, and confirms with their password. From then on the app opens normally.
+
+   Alternatively, in Terminal: `xattr -dr com.apple.quarantine /Applications/Purrtion.app`, then open the app.
+
+Settings (⌘,) shows the version and build the tester is running, and **Help → Report a Problem…** opens the issue tracker.
+
 The SwiftUI executable has been built and linked by SwiftPM; the native GUI and staged app bundle have not been run. See [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ## Repository layout
@@ -136,7 +155,7 @@ npm run build
 python tests/browser_smoke.py
 ```
 
-Options: `--screenshots <dir>` saves screenshots, `--browser <path>` uses an existing Chromium, and `--isolated` loads the built assets without a local HTTP origin (it does not test real storage persistence). CI runs the default mode. What has and has not been verified is listed in [docs/VERIFICATION.md](docs/VERIFICATION.md).
+Options: `--engine webkit` or `--engine firefox` runs the same steps in Safari's engine or Firefox (install it with `python -m playwright install webkit` or `firefox`), `--screenshots <dir>` saves screenshots, `--browser <path>` uses an existing browser executable, and `--isolated` loads the built assets without a local HTTP origin (it does not test real storage persistence). CI runs the default mode. What has and has not been verified is listed in [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ## Data and privacy
 

@@ -75,6 +75,8 @@ struct AddCatWizard: View {
         guard invalidFields.isEmpty else { return false }
         switch step {
         case .name: return !draft.name.trimmingCharacters(in: .whitespaces).isEmpty
+        // Like the web wizard, a date of birth must be picked explicitly; nothing is pre-filled.
+        case .age: return ageMode != .birthDate || draft.profile.birthDate != nil
         case .weight: return weightValid
         case .foods: return store.plan.food(draft.balanceFoodId) != nil
         default: return true
@@ -197,7 +199,7 @@ struct AddCatWizard: View {
             }
             .pickerStyle(.radioGroup)
             .onChange(of: ageMode) { _, mode in
-                if mode == .birthDate { draft.profile.approxAgeYears = nil; if draft.profile.birthDate == nil { draft.profile.birthDate = ISODate.adding(days: -365, to: asOf) } }
+                if mode == .birthDate { draft.profile.approxAgeYears = nil }
                 if mode == .approximate { draft.profile.birthDate = nil }
                 if mode == .unknown { draft.profile.birthDate = nil; draft.profile.approxAgeYears = nil }
             }
@@ -205,6 +207,7 @@ struct AddCatWizard: View {
                 DatePicker(l.t("field.birthDate"), selection: Binding(
                     get: { draft.profile.birthDate.flatMap(ISODate.date) ?? ISODate.today() },
                     set: { draft.profile.birthDate = ISODate.string($0) }), in: ...Date(), displayedComponents: .date)
+                if draft.profile.birthDate == nil { Text(l.t("age.pickDate")).font(.caption).foregroundStyle(Theme.muted) }
             } else if ageMode == .approximate {
                 OptionalNumberEntry(label: l.t("field.approxAge"), key: "approx-age", value: $draft.profile.approxAgeYears, invalidFields: $invalidFields)
             }

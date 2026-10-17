@@ -59,7 +59,9 @@ def fixture_plan() -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--isolated", action="store_true")
-    parser.add_argument("--browser", help="Optional Chromium executable path")
+    parser.add_argument("--engine", choices=("chromium", "webkit", "firefox"), default="chromium",
+                        help="Browser engine; webkit is the engine of Safari")
+    parser.add_argument("--browser", help="Optional executable path for the chosen engine")
     parser.add_argument("--screenshots", type=Path)
     args = parser.parse_args()
     if not (BUILD / "index.html").is_file():
@@ -86,7 +88,7 @@ def main() -> None:
             kwargs = {"headless": True}
             if args.browser:
                 kwargs["executable_path"] = args.browser
-            browser = playwright.chromium.launch(**kwargs)
+            browser = getattr(playwright, args.engine).launch(**kwargs)
             page = browser.new_page(viewport={"width": 1440, "height": 1080}, color_scheme="light", locale="en-GB")
             errors: list[str] = []
             page.on("pageerror", lambda error: errors.append(str(error)))
@@ -142,6 +144,9 @@ def main() -> None:
             # The bundled sample loads, whatever it contains.
             expect(page.get_by_test_id("total-dry")).to_have_text(re.compile(r"^\d+ g$"))
             expect(page.locator("html")).to_have_attribute("lang", "en")
+            # Testers can say which build they used and find where to report it.
+            expect(page.locator(".page-footer")).to_contain_text(re.compile(r"Version \d+\.\d+\.\d+, build [0-9a-f]{7}"))
+            expect(page.get_by_role("link", name="Report a problem")).to_have_attribute("href", re.compile(r"^https://github\.com/.+/issues$"))
 
             # Work on the test's own plan.
             import_plan(fixture)
