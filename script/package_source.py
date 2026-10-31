@@ -12,7 +12,8 @@ EXCLUDE = {".git", "node_modules", "dist", ".build", ".swiftpm", "DerivedData", 
            "private", "ledger", ".ruff_cache", ".mypy_cache", ".agents", ".cc-writes", "scratch", "tmp", ".idea", ".vscode", "xcuserdata"}
 # Personal data, secrets and local-only files, matched against the file name (mirrors .gitignore).
 EXCLUDE_NAMES = (".env*", "*.pem", "*.key", "*.p12", "*.p8", "*.mobileprovision", "*.provisionprofile", "*.keychain*", ".netrc", ".npmrc",
-                 "*.private.*", "*.ledger", "*.ledger.*", "LEDGER*.md", "settings.local.json", "CLAUDE.local.md", "AGENTS.local.md",
+                 "*.private.*", "*.ledger", "*.ledger.*", "LEDGER*.md", "ALPHA_AUDIT_*.md", "ALPHA_IMPLEMENTATION_LEDGER.md",
+                 "settings.local.json", "CLAUDE.local.md", "AGENTS.local.md",
                  "purrtion-plan*.json", "purrtion-portions*.csv", "purrtion-recovery*.json", "plan-backup-*.json", "plan-v1-backup*.json", "plan.json",
                  "*.plan.json", "*.log", "junit*.xml", "*.lcov", "*.xcuserstate", "*.zip", "._*", "Thumbs.db")
 def excluded(relative: Path) -> bool:

@@ -253,8 +253,12 @@ final class EngineTests: XCTestCase {
             WeightEntry(id: "b", date: day(-14), weightKg: 3.9), WeightEntry(id: "c", date: day(0), weightKg: 3.85), WeightEntry(id: "future", date: day(1), weightKg: 9)] })
         let s = try TrendAnalysis.weightSeries(c, asOf: asOf)
         XCTAssertEqual(s.entries.count, 4); XCTAssertEqual(s.window.count, 3); XCTAssertEqual(s.spanDays, 28)
-        let ys = [4, 3.9, 3.85], my = ys.reduce(0, +) / 3
-        let slope = ([0.0, 14, 28].enumerated().reduce(0) { $0 + ($1.element - 14) * (ys[$1.offset] - my) }) / (14 * 14 * 2)
+        // Explicit types: Swift 6.1 times out type-checking the untyped one-line form (F-28).
+        let xs: [Double] = [0, 14, 28], ys: [Double] = [4, 3.9, 3.85]
+        let my: Double = ys.reduce(0, +) / 3
+        var sxy: Double = 0
+        for (x, y) in zip(xs, ys) { sxy += (x - 14) * (y - my) }
+        let slope: Double = sxy / (14 * 14 * 2)
         near(s.ratePercentPerWeek, slope * 7 / my * 100); near(s.change28dPercent, -3.75)
         XCTAssertEqual(try TrendAnalysis.stops(c, series: s, stage: .adult), [])
         let short = try TrendAnalysis.weightSeries(cat({ $0.weightLog = entries([(-6, 4), (0, 4.1)]) }), asOf: asOf)

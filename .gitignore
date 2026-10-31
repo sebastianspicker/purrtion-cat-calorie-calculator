@@ -36,6 +36,8 @@ ledger/
 *.ledger
 *.ledger.*
 LEDGER*.md
+ALPHA_AUDIT_*.md
+ALPHA_IMPLEMENTATION_LEDGER.md
 .agents/
 **/.claude/settings.local.json
 **/.claude/.cc-writes/
