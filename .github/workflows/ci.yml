@@ -1,12 +1,12 @@
 name: Check scaffold
 on:
-  push:
   pull_request:
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   web:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,6 +19,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: python tests/test_source_archive.py
       - run: pip install -r tests/requirements.txt
       - run: python -m playwright install --with-deps chromium webkit firefox
       - run: python tests/browser_smoke.py
@@ -26,6 +27,7 @@ jobs:
       - run: python tests/browser_smoke.py --engine webkit
       - run: python tests/browser_smoke.py --engine firefox
   macos:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]')
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4

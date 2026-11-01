@@ -6,7 +6,33 @@
 
 Purrtion is a local-first planner that estimates how much energy a cat needs and turns your chosen calorie target into measured daily portions, as a website and a native Mac app.
 
+<details>
+<summary>Status and limitations</summary>
+
+Purrtion is an independent experimental project for exploring cat-energy estimates and turning
+chosen calorie targets into measured portions. Developed independently alongside my main
+professional work. The planner is a work in progress and a starting point for adaptation, rather
+than a finished clinical product. Review the documented equations, assumptions and verification
+limits, test changes, and keep backups of your plans.
+
+**Disclaimer.** This is not veterinary advice, diagnosis or a therapeutic feeding prescription.
+Arithmetic verification does not establish clinical suitability for an individual cat. You
+remain responsible for feeding decisions; discuss health, diet and weight-management needs with
+a veterinarian.
+
+</details>
+
 ## What Purrtion does
+
+You choose the calorie target; an estimate is never applied automatically:
+
+```mermaid
+flowchart LR
+  A[Enter cat and food data] --> B[Review energy estimate]
+  B --> C[Choose a calorie target]
+  C --> D[Measure daily portions]
+  D --> E[Review weight trend]
+```
 
 - **Energy estimate.** It suggests a starting point and a range for each cat from weight, age, neuter status, body condition score (BCS), lifestyle, goal and health notes. The method combines published equations with documented app assumptions ([ENGINE.md](docs/ENGINE.md), [SCIENCE.md](docs/SCIENCE.md)).
 - **Feeding portions.** Each cat has fixed meals of any food, plus one balance food that supplies whatever is left of the daily target. The result is shown per cat and for the household, with whole-gram containers and a split across feeding activities such as a puzzle feeder.
@@ -67,7 +93,7 @@ npm run preview    # serve that build locally
 ### Publish on GitHub Pages
 
 1. In the repository settings, open **Pages** and set the source to **GitHub Actions**.
-2. Push to `main`. The workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) runs `npm run check` and deploys `dist/web/`.
+2. In **Actions**, select **Deploy website to GitHub Pages**, choose **Run workflow** and select `main`. The workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) runs `npm run check` and deploys `dist/web/`. Pushes and pull requests do not deploy the site.
 3. The site is served at `https://<user>.github.io/<repository>/`. All URLs in the site are relative, so it works under that path prefix. The build adds `.nojekyll`.
 
 Browser data belongs to the site's origin. Changing the domain or repository name starts with an empty plan; export JSON first. Any other static host works too: deploy the whole `dist/web/` directory.
@@ -155,7 +181,7 @@ npm run build
 python tests/browser_smoke.py
 ```
 
-Options: `--engine webkit` or `--engine firefox` runs the same steps in Safari's engine or Firefox (install it with `python -m playwright install webkit` or `firefox`), `--screenshots <dir>` saves screenshots, `--browser <path>` uses an existing browser executable, and `--isolated` loads the built assets without a local HTTP origin (it does not test real storage persistence). CI runs the default mode. What has and has not been verified is listed in [docs/VERIFICATION.md](docs/VERIFICATION.md).
+Options: `--engine webkit` or `--engine firefox` runs the same steps in Safari's engine or Firefox (install it with `python -m playwright install webkit` or `firefox`), `--screenshots <dir>` saves screenshots, `--browser <path>` uses an existing browser executable, and `--isolated` loads the built assets without a local HTTP origin (it does not test real storage persistence). CI runs the default, WebKit and Firefox modes for Dependabot-authored pull requests or explicit manual runs. What has and has not been verified is listed in [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ## Data and privacy
 

@@ -132,3 +132,31 @@ specification and that the specification's arithmetic is right; they do not show
 specification is clinically appropriate. The evidence, its weaknesses and the unverified points
 are listed in [SCIENCE.md](SCIENCE.md) sections 15 and 16. Food values in the example
 household are illustrative.
+
+## Repository maintenance verification — 2026-11-01
+
+The historical results above remain dated records. The latest inspected GitHub
+`Check scaffold` run (39149846526, October 18) passed its web and three-browser
+jobs but failed Swift 6.1 type-checking in `EngineTests.swift`. The existing local
+alpha follow-up `4f2c262` adds explicit intermediate types for that expression.
+
+Current local checks pass: Node 22 `npm ci --ignore-scripts` and `npm run check`
+(360 tests); Swift 6.4.2 `swift test` (56 XCTest methods); and
+`./script/build_and_run.sh --build-only` (local ad-hoc-signed macOS app, not
+launched). This is local evidence, not a successful rerun on GitHub's Swift 6.1
+runner. Browser smoke was not repeated for this packaging/workflow/documentation
+change; the inspected remote web job passed Chromium, WebKit and Firefox.
+
+A new synthetic archive regression (`python3 tests/test_source_archive.py`)
+verifies that source ZIPs omit private agent guides/state and task/audit ledgers,
+including nested/case-varied names and an outside-file symlink. Public source,
+CI tests/workflows, documentation, licenses, known-issues notes and `.env.example`
+remain included. The same bounded reproduction exported four private canary
+files before the fix and none afterward. No real private document was used.
+
+CI now runs automatically only for Dependabot-authored pull requests, or by
+manual dispatch. Pages deployment is manual-only on `main`. Workflow lint,
+parsed trigger/job guards, source-archive regression, README links and default
+ignore checks pass. No push, hosted workflow run, deployment or veterinary
+validation was performed. GitHub security alerts were disabled/unavailable at
+the inventory snapshot, so their unavailable result is not a clean scan.
