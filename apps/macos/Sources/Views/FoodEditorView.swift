@@ -53,6 +53,7 @@ struct FoodEditorView: View {
         Section(existing ? l.t("food.edit") : l.t("food.new")) {
             TextField(l.t("food.name"), text: $draft.name)
             Picker(l.t("food.type"), selection: $draft.type) { ForEach(FoodType.allCases, id: \.self) { Text(l.foodType($0)).tag($0) } }
+                .onChange(of: draft.type) { _, type in if type == .dry, draft.analysis?.moisture == 0 { draft.analysis?.moisture = nil } }
             Picker(l.t("food.completeness"), selection: $draft.completeness) {
                 ForEach(Completeness.allCases, id: \.self) { Text(l.completeness($0)).tag($0) }
             }

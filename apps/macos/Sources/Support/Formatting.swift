@@ -5,7 +5,8 @@ import PurrtionCore
 func newId(_ prefix: String) -> String { "\(prefix)-\(UUID().uuidString)" }
 
 /// Whole kcal for a target, inside the validator's 1–3000 range.
-func targetKcal(from value: Double) -> Double { min(3000, max(1, value.rounded(.toNearestOrAwayFromZero))) }
+/// Rounds up so a target taken from an estimate stays at or above the engine's floor (140.435 would otherwise become 140).
+func targetKcal(from value: Double) -> Double { min(3000, max(1, value.rounded(.up))) }
 
 /// A binding to the element with `id`, looked up on every access so a row that has just been removed neither crashes nor writes back.
 func elementBinding<Element: Identifiable & Sendable>(_ list: Binding<[Element]>, id: Element.ID, fallback: Element) -> Binding<Element>
@@ -40,26 +41,10 @@ typealias IdealWeightSourceChoice = ProfileIdealWeightSource
 /// Access to `Profile.idealWeightSource` (veterinarian | estimate | nil, ENGINE.md §1 D3).
 /// A stored ideal weight without a source counts as the veterinarian's, as in the decoder.
 enum ProfileAdapter {
-    static let hasIdealWeightSource = true
     static func idealWeightSource(_ profile: Profile) -> IdealWeightSourceChoice? {
         profile.idealWeightKg == nil ? nil : profile.idealWeightSource ?? .veterinarian
     }
     static func setIdealWeightSource(_ profile: inout Profile, _ source: IdealWeightSourceChoice?) {
         profile.idealWeightSource = source
-    }
-}
-
-extension Cat {
-    /// Adds a weigh-in (ENGINE.md "Current weight"): when its date is on or after the date of every other entry,
-    /// it also sets the current weight and, if it has a BCS, the profile BCS. The engine uses `weightKg` as the current weight.
-    /// An existing entry on the same date is replaced rather than duplicated.
-    mutating func addWeighIn(date: String, weightKg weight: Double, bcs: Int?) {
-        weightLog.removeAll { $0.date == date }
-        let isNewest = weightLog.allSatisfy { $0.date <= date }
-        weightLog.append(WeightEntry(id: newId("weight"), date: date, weightKg: weight, bcs: bcs))
-        if isNewest {
-            weightKg = weight
-            if let bcs { profile.bcs = bcs }
-        }
     }
 }

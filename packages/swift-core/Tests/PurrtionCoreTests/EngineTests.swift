@@ -162,6 +162,13 @@ final class EngineTests: XCTestCase {
              1.15 * Estimator.mer(75, 4.8))
         near(try estimate(cat({ _ in }, { $0.idealWeightKg = 4.5; $0.idealWeightSource = .veterinarian })).weightUsedKg, 4)
     }
+    func testTodayLocalIsGregorian() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        var gregorian = Calendar(identifier: .gregorian); gregorian.timeZone = .current
+        let c = gregorian.dateComponents([.year, .month, .day], from: now)
+        XCTAssertEqual(Dates.todayLocal(now), String(format: "%04d-%02d-%02d", c.year!, c.month!, c.day!))
+        XCTAssertEqual(Dates.calendar.identifier, .gregorian)
+    }
     func testFoodAnchors() {
         near(FoodAnalysis.meKcalPer100g(wet), 99.2455); round2(FoodAnalysis.meKcalPer100g(wet), 99.25)
         near(FoodAnalysis.atwaterKcalPer100g(wet), 93.25)

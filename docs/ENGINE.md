@@ -70,7 +70,9 @@ As v1, but `foodId` may reference **any** food (wet or dry). Grams are the amoun
 weight log for the current weight. The UI keeps `weightKg` in sync with the newest weigh-in:
 when the owner adds or edits a weight-log entry whose date is on or after the date of every
 other entry, the UI sets `weightKg` to that entry's `weightKg`. Editing `weightKg` directly does
-not create a log entry.
+not create a log entry. Removing the newest weigh-in makes the newest remaining entry current
+again (its weight, and its BCS when it has one); removing the last entry leaves the current
+weight unchanged.
 
 Profile:
 

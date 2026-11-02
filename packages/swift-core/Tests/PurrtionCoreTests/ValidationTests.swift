@@ -151,6 +151,24 @@ final class ValidationTests: XCTestCase {
         XCTAssertThrowsError(try PlanCodec.decode(Data("{".utf8)))
         XCTAssertThrowsError(try PlanCodec.decode(Data(repeating: 32, count: PlanCodec.maximumImportBytes + 1)))
     }
+    /// A plan the app can save must load again: 10 cats with 1000 weigh-ins each is over the old 1 MiB limit.
+    func testSavedPlanOverOldLimitLoadsAgain() throws {
+        var plan = try PlanCodec.sample()
+        let day = 86_400.0, start = Date(timeIntervalSince1970: 1_577_836_800) // 2020-01-01T00:00:00Z
+        var utc = Calendar(identifier: .gregorian); utc.timeZone = TimeZone(identifier: "UTC")!
+        let dates = (0..<1000).map { n -> String in
+            let c = utc.dateComponents([.year, .month, .day], from: start.addingTimeInterval(Double(n) * day))
+            return String(format: "%04d-%02d-%02d", c.year!, c.month!, c.day!)
+        }
+        plan.cats = (0..<10).map { i in
+            var cat = plan.cats[0]; cat.id = "cat-\(i)"; cat.name = "Cat \(i)"
+            cat.weightLog = dates.enumerated().map { WeightEntry(id: "w-\($0.offset)", date: $0.element, weightKg: 4.05) }
+            return cat
+        }
+        let data = try PlanCodec.encode(plan)
+        XCTAssertGreaterThan(data.count, 1_048_576)
+        XCTAssertEqual(try PlanCodec.decode(data).cats[9].weightLog.count, 1000)
+    }
 
     func testV2Rejects() throws {
         let tooMany = (0..<1001).map { ["id": "w\($0)", "date": "2026-02-01", "weightKg": 4.0, "bcs": NSNull()] as JSON }

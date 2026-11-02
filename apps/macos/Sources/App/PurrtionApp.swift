@@ -13,6 +13,7 @@ struct PurrtionApp: App {
     var body: some Scene {
         WindowGroup("Purrtion") {
             ContentView(store: store)
+                .onAppear { delegate.store = store }
                 .frame(minWidth: 1000, minHeight: 680)
                 .environment(\.l10n, l)
                 .environment(\.locale, l.locale)
@@ -73,8 +74,22 @@ struct SettingsView: View {
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    weak var store: PlanStore?
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard let store, store.unsaved.hasChanges else { return .terminateNow }
+        let l = L10n.resolve(UserDefaults.standard.string(forKey: L10n.storageKey) ?? AppLanguage.system.rawValue)
+        let alert = NSAlert()
+        alert.messageText = l.t("unsaved.title"); alert.informativeText = l.t("unsaved.message")
+        alert.addButton(withTitle: l.t("unsaved.save")); alert.addButton(withTitle: l.t("unsaved.discard")); alert.addButton(withTitle: l.t("common.cancel"))
+        switch alert.runModal() {
+        case .alertFirstButtonReturn: return store.unsaved.save() ? .terminateNow : .terminateCancel
+        case .alertSecondButtonReturn: return .terminateNow
+        default: return .terminateCancel
+        }
     }
 }

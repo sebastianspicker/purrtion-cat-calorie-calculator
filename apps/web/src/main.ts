@@ -33,7 +33,9 @@ async function boot(): Promise<void> {
   let flash: { text: string; kind: NoticeKind } | null = null;
   let hatOn = false; const brandClicks: number[] = [];
   const isDirty = () => Boolean(root.querySelector('form[data-dirty="true"]'));
-  function canLeave(): boolean { return !isDirty() || confirm(t('app.discardConfirm')); }
+  window.addEventListener('beforeunload', event => { if (isDirty() || document.querySelector('dialog[open]')) { event.preventDefault(); event.returnValue = ''; } });
+  // Discarding after another tab saved shows that tab's plan at once, so no stale form or missing banner survives behind a dialog.
+  function canLeave(): boolean { const ok = !isDirty() || confirm(t('app.discardConfirm')); if (ok && store.discardEdits()) render(); return ok; }
   function navigate(next: Page): void { if (canLeave()) { page = next; render(); document.querySelector<HTMLElement>('#main-content')?.focus(); window.scrollTo(0, 0); } }
   const ctx: AppContext = { store, navigate, render, canLeave, notify: (text, kind = 'success') => { flash = { text, kind }; } };
   async function importFile(): Promise<void> {

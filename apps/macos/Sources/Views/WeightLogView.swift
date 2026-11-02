@@ -40,7 +40,7 @@ struct WeightLogView: View {
     private var replacesEntry: Bool { cat.weightLog.contains { $0.date == ISODate.string(newDate) } }
     private func addWeighIn() {
         guard let weight = newWeight, weightIsValid else { return }
-        cat.addWeighIn(date: ISODate.string(newDate), weightKg: weight, bcs: newBcs)
+        cat.addWeighIn(id: newId("weight"), date: ISODate.string(newDate), weightKg: weight, bcs: newBcs)
         newWeight = nil; newBcs = nil
     }
 
@@ -139,7 +139,7 @@ struct WeightLogView: View {
                 Text(l.msg("action.\(s.action.rawValue)")).font(.headline).fontDesign(.rounded)
                 Text(l.msg("reason.\(s.reason.rawValue)")).font(.callout)
                 if let kcal = s.suggestedKcal {
-                    Text(l.t("trend.suggested", ["kcal": l.int(kcal)])).font(.callout).monospacedDigit()
+                    Text(l.t("trend.suggested", ["kcal": l.int(targetKcal(from: kcal))])).font(.callout).monospacedDigit()
                     Button(l.t("trend.apply"), systemImage: "pawprint") { onApplySuggestion(s) }
                         .buttonStyle(.borderedProminent).tint(Theme.sakuraInk)
                         .disabled(targetKcal(from: kcal) == cat.targetKcal && !(s.action == .switchToMaintenance && cat.goal != .maintain))
@@ -178,7 +178,7 @@ struct WeightLogView: View {
                             Text(l.date(entry.date))
                             Text(l.kg(entry.weightKg)).monospacedDigit()
                             Text(entry.bcs.map { l.int($0) } ?? "–").monospacedDigit()
-                            Button(l.t("common.remove"), role: .destructive) { cat.weightLog.removeAll { $0.id == entry.id } }
+                            Button(l.t("common.remove"), role: .destructive) { cat.removeWeighIn(id: entry.id) }
                                 .buttonStyle(.borderless).font(.caption)
                         }
                     }

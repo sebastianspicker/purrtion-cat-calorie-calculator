@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { calculatePlan, estimateEnergy, rer, mer, meKcalPer100g, atwaterKcalPer100g, analyseFood, nfe, weightSeries, trendStops, trendFor,
   checkNutrition, idealWeightOf, ageInDays, effectiveBcs, stageOf, kittenBandMultiplier, weightLossStartKcal, isISODate, daysBetween, todayLocalISO, kcalPerGram, defaultProfile,
-  messageFor, messages, warningMessages, energyModel, catIcons } from '../../../dist/web/packages/core/src/index.js';
+  messageFor, messages, energyModel, catIcons } from '../../../dist/web/packages/core/src/index.js';
 const asOf = '2026-10-09';
 const near = (actual, expected, tolerance = 1e-9) => assert.ok(Math.abs(actual - expected) <= tolerance * Math.max(1, Math.abs(expected)), `${actual} ≠ ${expected}`);
 const round2 = (actual, expected) => assert.equal(Math.round(actual * 100) / 100, expected, `${actual} does not round to ${expected}`);
@@ -295,7 +295,7 @@ test('dates are strict YYYY-MM-DD calendar dates', () => {
 });
 test('messages: every locale has the same keys, and every engine code has text', () => {
   assert.deepEqual(Object.keys(messages.de).sort(), Object.keys(messages.en).sort());
-  const codes = { warning: Object.keys(warningMessages), refer: ['neonate', 'end-of-life', 'acute-medical', 'bcs-low', 'mcs-severe', 'rapid-weight-change', 'kitten-not-growing',
+  const codes = { warning: ['estimated-energy', 'provisional-target', 'unknown-completeness', 'complementary-balance-food', 'extras-over-10-percent', 'over-budget'], refer: ['neonate', 'end-of-life', 'acute-medical', 'bcs-low', 'mcs-severe', 'rapid-weight-change', 'kitten-not-growing',
     'verified-intake-below-floor', 'kitten-adult-weight-reached'], note: ['kitten-transition', 'kitten-weigh-weekly', 'clamped-high'],
     idealWeight: ['veterinarian', 'estimate', 'bcs-estimate', 'current'], icon: [...catIcons],
     missing: ['age', 'neutered', 'bcs', 'mcs', 'litter-size', 'lactation-week'], equation: Object.keys(energyModel.references).filter(id => id !== 'rer' && id !== 'atwater'),

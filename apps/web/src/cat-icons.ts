@@ -1,4 +1,4 @@
-import { catIcons, type CatIcon } from '../../../packages/core/src/index.js';
+import type { CatIcon } from '../../../packages/core/src/index.js';
 import { s } from './dom.js';
 /**
  * The 12 cat profile icons as inline SVG, 24 x 24. Path data is copied from brand/cat-icons.svg, which is the source of truth;
@@ -66,4 +66,3 @@ export function iconBadge(icon: CatIcon, avatarSize: number): SVGElement {
   const inner = catIconSvg(icon, size - 2 * inset); inner.setAttribute('x', String(inset)); inner.setAttribute('y', String(inset));
   badge.append(inner); return badge;
 }
-export function isCatIcon(value: string): value is CatIcon { return (catIcons as readonly string[]).includes(value); }

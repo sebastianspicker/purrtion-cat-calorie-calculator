@@ -220,4 +220,25 @@ final class CalculatorTests: XCTestCase {
             }
         }
     }
+    /// CSV rounding matches JavaScript toFixed on exact halves (101.125 -> "101.13").
+    func testCSVRoundsHalvesAwayFromZero() throws {
+        var plan = try PlanCodec.sample()
+        plan.foods = [Food(id: "w", name: "Wet", type: .wet, energyPerUnit: 62.5, energyUnit: .kcalPer100g, energySource: .label, completeness: .complete, lifeStageClaim: .adult),
+                      Food(id: "d", name: "Dry", type: .dry, energyPerUnit: 350, energyUnit: .kcalPer100g, energySource: .label, completeness: .complete, lifeStageClaim: .adult)]
+        var cat = plan.cats[0]
+        cat.targetKcal = 100; cat.extraKcal = 0; cat.balanceFoodId = "d"; cat.meals = [Meal(id: "m", label: "Wet", foodId: "w", grams: 5)]
+        plan.cats = [cat]
+        let result = try CalorieCalculator.calculate(plan, asOf: Self.asOf)
+        XCTAssertEqual(result.cats[0].roundedDailyKcal, 101.125)
+        let row = try PlanCodec.csv(plan, asOf: Self.asOf).components(separatedBy: "\r\n")[1]
+        XCTAssertTrue(row.contains(",\"101.13\","), row)
+    }
+    /// Reference outputs of JavaScript `toFixed`: exact halves round up, values stored just below a half round down.
+    func testFixedMatchesJavaScriptToFixed() {
+        for (value, digits, js) in [(101.125, 2, "101.13"), (0.125, 2, "0.13"), (2.5, 0, "3"), (12.03125, 4, "12.0313"), (10.545, 2, "10.54"),
+                                    (25.305, 2, "25.30"), (3.045, 2, "3.04"), (1.005, 2, "1.00"), (0.015, 2, "0.01"), (140.43546404504863, 0, "140"),
+                                    (0, 4, "0.0000")] {
+            XCTAssertEqual(PlanCodec.fixed(value, digits), js, "\(value) to \(digits) digits")
+        }
+    }
 }

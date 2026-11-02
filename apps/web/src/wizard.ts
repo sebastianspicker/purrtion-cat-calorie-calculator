@@ -1,6 +1,6 @@
 import { calculatePlan, defaultProfile, todayLocalISO, daysBetween, energyModel,
   type Cat, type CatIcon, type CatResult, type Goal, type Lifestyle, type MedicalFlag, type Neutered, type Plan, type ReproductionStatus, type Sex, type TargetSource } from '../../../packages/core/src/index.js';
-import { h, fill, button, field, selectField, radioGroup, checkbox, decimal, errorText, newId, notice, formText } from './dom.js';
+import { h, fill, button, field, selectField, radioGroup, checkbox, decimal, wholeKcal, errorText, newId, notice, formText } from './dom.js';
 import { t, num, type UiKey } from './i18n.js';
 import { avatar, catFace, type Expression } from './mascot.js';
 import { createEstimateView } from './estimate.js';
@@ -34,9 +34,11 @@ function ageMonths(a: Answers, asOf: string): number | null {
   return null;
 }
 const isKitten = (a: Answers, asOf: string) => { const months = ageMonths(a, asOf); return months !== null && months < energyModel.age.kittenMaxMonths; };
-const reproRelevant = (a: Answers, asOf: string) => a.sex === 'female' && a.neutered !== 'yes' && !isKitten(a, asOf);
+const reproRelevant = (a: Answers) => a.sex !== 'male' && a.neutered !== 'yes';
+/** Answers of a skipped step are never used. */
+const reproStatus = (a: Answers): ReproductionStatus => reproRelevant(a) ? a.repro : 'none';
 function allowedGoals(a: Answers, asOf: string): Goal[] {
-  if (isKitten(a, asOf) || a.repro !== 'none' || !a.bcs) return ['maintain'];
+  if (isKitten(a, asOf) || reproStatus(a) !== 'none' || !a.bcs) return ['maintain'];
   const bcs = Number(a.bcs);
   return bcs >= energyModel.bcs.overweightMin ? ['loss', 'maintain'] : bcs === energyModel.bcs.gainOnly ? ['gain', 'maintain'] : ['maintain'];
 }
@@ -109,11 +111,11 @@ export function openWizard(ctx: AppContext): void {
       render: () => h('div', null, bcsPicker('wiz-bcs', a.bcs ? Number(a.bcs) : null), h('p', { class: 'caption' }, t('wizard.bcs.help'))),
       read: root => { a.bcs = formText(root, 'wiz-bcs'); } },
     { id: 'stage', title: 'wizard.stage.title', bubble: 'wizard.stage.bubble', expression: 'curious',
-      skip: x => !isKitten(x, asOf) && !reproRelevant(x, asOf),
+      skip: x => !isKitten(x, asOf) && !reproRelevant(x),
       render: () => {
         const box = h('div');
         if (isKitten(a, asOf)) box.append(field(t('weights.expectedAdult'), 'wiz-adult', a.expectedAdult, { numeric: true, maxDecimals: 3, required: false, unit: 'kg', help: t('weights.expectedAdult.help') }));
-        if (reproRelevant(a, asOf)) {
+        if (reproRelevant(a)) {
           const litter = field(t('repro.litter'), 'wiz-litter', a.litter, { numeric: true, maxDecimals: 0, required: false });
           const week = field(t('repro.week'), 'wiz-week', a.week, { numeric: true, maxDecimals: 0, required: false });
           const group = radioGroup(t('repro.status'), 'wiz-repro', a.repro, [['none', t('repro.none')], ['gestation', t('repro.gestation')], ['lactation', t('repro.lactation')]]);
@@ -141,7 +143,7 @@ export function openWizard(ctx: AppContext): void {
       render: () => {
         const goals = allowedGoals(a, asOf);
         if (!goals.includes(a.goal)) a.goal = 'maintain';
-        const why = isKitten(a, asOf) ? t('wizard.goal.kitten') : a.repro !== 'none' ? t('wizard.goal.repro') : !a.bcs ? t('wizard.goal.noBcs')
+        const why = isKitten(a, asOf) ? t('wizard.goal.kitten') : reproStatus(a) !== 'none' ? t('wizard.goal.repro') : !a.bcs ? t('wizard.goal.noBcs')
           : goals.length === 1 ? t('wizard.goal.ideal') : goals.includes('loss') ? t('wizard.goal.over') : t('wizard.goal.under');
         return h('div', null, radioGroup(t('profile.goal'), 'wiz-goal', a.goal, goals.map(g => [g, t(`goal.${g}`), t(`wizard.goal.${g}.help`)] as [string, string, string])),
           h('p', { class: 'caption' }, why));
@@ -159,7 +161,7 @@ export function openWizard(ctx: AppContext): void {
       read: root => {
         a.balanceFoodId = formText(root, 'wiz-balance'); a.mealFoodId = formText(root, 'wiz-meal-food'); a.mealGrams = formText(root, 'wiz-meal-grams');
         if (!a.balanceFoodId) throw new Error(t('meal.noFood'));
-        if (a.mealFoodId) { const g = decimal(a.mealGrams, t('meal.grams'), 1); if (g < 0 || g > 1000) throw new Error(t('wizard.foods.gramsRange')); }
+        if (a.mealFoodId) { const g = decimal(a.mealGrams, t('meal.grams'), 2); if (g < 0 || g > 1000) throw new Error(t('wizard.foods.gramsRange')); }
       } },
     { id: 'summary', title: 'wizard.summary.title', bubble: 'wizard.summary.bubble', expression: 'happy',
       render: () => summary(), read: root => readOutcome(root) },
@@ -172,13 +174,13 @@ export function openWizard(ctx: AppContext): void {
       approxAgeYears: a.ageMode === 'approx' && months !== null ? Math.round(months / 12 * 100) / 100 : null,
       lifestyle: a.lifestyle || null, bcs: a.bcs ? Number(a.bcs) : null,
       expectedAdultWeightKg: isKitten(a, asOf) && a.expectedAdult ? decimal(a.expectedAdult, t('weights.expectedAdult'), 3) : null,
-      reproduction: { status: reproRelevant(a, asOf) ? a.repro : 'none' as ReproductionStatus,
-        litterSize: a.repro === 'lactation' && a.litter ? wholeNumber(a.litter, t('repro.litter'), 1, 12) : null,
-        lactationWeek: a.repro === 'lactation' && a.week ? wholeNumber(a.week, t('repro.week'), 1, 12) : null, preBreedingWeightKg: null },
+      reproduction: { status: reproStatus(a),
+        litterSize: reproStatus(a) === 'lactation' && a.litter ? wholeNumber(a.litter, t('repro.litter'), 1, 12) : null,
+        lactationWeek: reproStatus(a) === 'lactation' && a.week ? wholeNumber(a.week, t('repro.week'), 1, 12) : null, preBreedingWeightKg: null },
       medical: [...a.medical], endOfLife: a.endOfLife };
     return { id: catId, name: a.name, icon: a.icon, weightKg: decimal(a.weight, t('profile.weight'), 3), goal: a.goal, targetKcal, targetSource, extraKcal: 0,
       balanceFoodId: a.balanceFoodId, profile, weightLog: [],
-      meals: a.mealFoodId ? [{ id: newId('meal'), label: t('wizard.foods.mealLabel'), foodId: a.mealFoodId, grams: decimal(a.mealGrams, t('meal.grams'), 1) }] : [] };
+      meals: a.mealFoodId ? [{ id: newId('meal'), label: t('wizard.foods.mealLabel'), foodId: a.mealFoodId, grams: decimal(a.mealGrams, t('meal.grams'), 2) }] : [] };
   }
   const catId = newId('cat');
   const candidate = (cat: Cat): Plan => ({ ...plan, cats: [...plan.cats, cat] });
@@ -190,10 +192,10 @@ export function openWizard(ctx: AppContext): void {
   const probe = () => compute(Math.round(energyModel.mer.typical), 'provisional');
   // Only an ok estimate is offered as the starting target (parity with the Mac app).
   const usableStart = (r: CatResult) => r.estimate.status === 'ok' && r.estimate.startKcal !== null
-    ? Math.round(r.estimate.startKcal) : null;
+    ? wholeKcal(r.estimate.startKcal) : null;
   function chosenTarget(start: number | null): { kcal: number; source: TargetSource } | null {
     if (a.outcome === 'estimate' && start !== null) return { kcal: start, source: 'provisional' };
-    if (a.outcome === 'own' && a.ownKcal) { const kcal = decimal(a.ownKcal, t('target.kcal'), 1); if (kcal >= 1 && kcal <= 3000) return { kcal, source: a.ownSource }; }
+    if (a.outcome === 'own' && a.ownKcal) { const kcal = decimal(a.ownKcal, t('target.kcal'), 2); if (kcal >= 1 && kcal <= 3000) return { kcal, source: a.ownSource }; }
     return null;
   }
   function summary(): HTMLElement {
@@ -235,7 +237,7 @@ export function openWizard(ctx: AppContext): void {
     const start = usableStart(probe().result);
     if (a.outcome === 'own') {
       if (!a.ownKcal) throw new Error(t('wizard.outcome.kcalRange'));
-      const kcal = decimal(a.ownKcal, t('target.kcal'), 1);
+      const kcal = decimal(a.ownKcal, t('target.kcal'), 2);
       if (kcal < 1 || kcal > 3000) throw new Error(t('wizard.outcome.kcalRange'));
     } else if (start === null) throw new Error(t('wizard.outcome.ownOnly'));
   }
@@ -280,7 +282,7 @@ export function openWizard(ctx: AppContext): void {
     const id = step.id; const after = visible(); const position = after.findIndex(s => s.id === id);
     const previous = index, wasSerious = serious;
     try {
-      index = Math.max(0, Math.min(after.length - 1, (position < 0 ? index : position) + delta));
+      index = Math.max(0, Math.min(after.length - 1, position < 0 ? index + Math.min(delta, 0) : position + delta));
       show();
     } catch (err) {
       // The new step could not be built: stay on the current one, which is still on screen, and say why.
@@ -292,12 +294,13 @@ export function openWizard(ctx: AppContext): void {
       const start = usableStart(probe().result);
       const target = chosenTarget(start); if (!target) throw new Error(t('wizard.outcome.needTarget'));
       const cat = buildCat(target.kcal, target.source);
-      ctx.store.commit(candidate(cat));
-      close(); ctx.notify(t('wizard.created', { name: cat.name }), 'success'); ctx.navigate({ kind: 'cat', id: cat.id });
+      const persisted = ctx.store.commit(candidate(cat));
+      document.querySelectorAll<HTMLFormElement>('form[data-dirty]').forEach(f => { f.dataset.dirty = 'false'; });
+      close(); if (persisted) ctx.notify(t('wizard.created', { name: cat.name }), 'success'); ctx.navigate({ kind: 'cat', id: cat.id });
     } catch (err) { error.textContent = errorText(err); }
   }
   function close(): void { dialog.close(); dialog.remove(); }
-  function tryClose(): void { if (!touched || confirm(t('wizard.cancelConfirm'))) close(); }
+  function tryClose(): void { if (!touched || confirm(t('wizard.cancelConfirm'))) { close(); if (ctx.store.discardEdits()) ctx.render(); } }
   dialog.addEventListener('cancel', event => { event.preventDefault(); tryClose(); });
   dialog.append(h('header', { class: 'wizard-head' }, progress, title), guide, content);
   document.body.append(dialog); dialog.showModal(); show();

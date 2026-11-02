@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { decimal, decimalPattern } from '../../../dist/web/apps/web/src/dom.js';
-import { detectLocale, translate, ui, setLocale } from '../../../dist/web/apps/web/src/i18n.js';
+import { decimal, decimalPattern, wholeKcal } from '../../../dist/web/apps/web/src/dom.js';
+import { detectLocale, translate, ui, setLocale, num } from '../../../dist/web/apps/web/src/i18n.js';
+import { parsePlanJSON, calculatePlan } from '../../../dist/web/packages/core/src/index.js';
 import { buildInfo, reportUrl } from '../../../dist/web/apps/web/src/build-info.js';
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -60,4 +61,18 @@ test('build info: the built site names the package version, the git commit it wa
   if (head) assert.match(buildInfo.build, new RegExp(`^${head}(-dirty)?$`));
   else assert.equal(buildInfo.build, 'unknown');
   assert.match(reportUrl, /^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/issues$/);
+});
+test('wholeKcal rounds an estimate up so the saved target is not below the floor', () => {
+  const plan = parsePlanJSON(readFileSync(new URL('../../../shared/default-plan.json', import.meta.url), 'utf8'));
+  Object.assign(plan.cats[0], { weightKg: 6, goal: 'loss', targetSource: 'owner', profile: { ...plan.cats[0].profile, birthDate: '2020-01-01', approxAgeYears: null, neutered: 'yes',
+    bcs: 7, mcs: 'normal', medical: [], endOfLife: false, idealWeightKg: 5, idealWeightSource: 'veterinarian', verifiedIntakeKcal: 150 } });
+  const run = () => calculatePlan(plan, { asOf: '2026-11-02' }).cats[0];
+  const { estimate } = run();
+  assert.equal(estimate.startKcal, estimate.floorKcal); assert.ok(Math.abs(estimate.startKcal - 140.435) < 0.01);
+  plan.cats[0].targetKcal = wholeKcal(estimate.startKcal);
+  assert.equal(plan.cats[0].targetKcal, 141); assert.equal(run().estimate.comparison.belowFloor, false);
+});
+test('num prints values that round to zero as 0, not -0', () => {
+  setLocale('en');
+  assert.equal(num(-0.004, 2), '0'); assert.equal(num(-0.006, 2), '-0.01');
 });

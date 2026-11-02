@@ -11,6 +11,8 @@ struct ContentView: View {
     @State private var showQuickAdd = false
     @State private var showActivities = false
     @State private var pendingSelection: String?
+    /// A cat just created in a sheet; selected once the sheet is gone, so the unsaved-edits dialog is not lost behind it.
+    @State private var createdCatId: String?
     @Environment(\.l10n) private var l
 
     private var selection: Binding<String?> {
@@ -80,16 +82,19 @@ struct ContentView: View {
             }
             Button(l.t("common.cancel"), role: .cancel) { pendingSelection = nil }
         } message: { Text(l.t("unsaved.message")) }
-        .sheet(isPresented: $showWizard) {
-            AddCatWizard(store: store) { id in selected = "cat:\(id)" }
+        .sheet(isPresented: $showWizard, onDismiss: selectCreatedCat) {
+            AddCatWizard(store: store) { id in createdCatId = id }
         }
-        .sheet(isPresented: $showQuickAdd) {
-            QuickAddCatView(store: store) { id in selected = "cat:\(id)" }
+        .sheet(isPresented: $showQuickAdd, onDismiss: selectCreatedCat) {
+            QuickAddCatView(store: store) { id in createdCatId = id }
         }
         .sheet(isPresented: $showActivities) { ActivityEditorView(store: store) }
     }
 
     /// Leaving a cat with unsaved edits asks first: Save, Discard or Cancel (Cancel keeps the current selection).
+    private func selectCreatedCat() {
+        if let id = createdCatId { createdCatId = nil; requestSelection("cat:\(id)") }
+    }
     private func requestSelection(_ new: String) {
         guard new != selected else { return }
         if store.unsaved.hasChanges { pendingSelection = new } else { selected = new }

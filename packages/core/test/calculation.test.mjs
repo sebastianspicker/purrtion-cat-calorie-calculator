@@ -138,7 +138,7 @@ for (const [name, mutate] of [
 ]) test(`rejects invalid input: ${name}`, () => { const p = clone(); mutate(p); assert.throws(() => parsePlan(p), PlanError); });
 test('invalid JSON and oversized files are rejected', () => {
   assert.throws(() => parsePlanJSON('{'), /invalid JSON/);
-  assert.throws(() => parsePlanJSON(' '.repeat(1_048_577)), /maximum size/);
+  assert.throws(() => parsePlanJSON(' '.repeat(10 * 1_048_576 + 1)), /maximum size/);
 });
 test('RER rejects invalid weights', () => { for (const n of [0, -1, NaN, Infinity]) assert.throws(() => rer(n)); });
 test('invalid allocation arguments are rejected', () => { assert.throws(() => allocateRounded(-1, seed.activities)); assert.throws(() => allocateRounded(5, [])); });
@@ -173,4 +173,11 @@ test('calculatePlan never changes targetKcal, whatever the profile, estimate or 
     r.cats.forEach((c, index) => close(c.fixedKcal + c.extraKcal + c.balanceKcal, before[index] + c.overBudgetKcal));
     assert.equal(r.totals.targetKcal, before.reduce((a, b) => a + b, 0));
   }
+});
+test('CSV "Calories after rounding" cell shows 101.125 as 101.13 (half rounds up)', () => {
+  const food = (id, type, energyPerUnit) => ({ id, name: id, type, energyPerUnit, energyUnit: 'kcal/100g', energySource: 'label', completeness: 'complete', lifeStageClaim: 'adult', analysis: null, note: '' });
+  const p = clone(); p.foods = [food('wet', 'wet', 62.5), food('dry', 'dry', 350)]; p.cats = [p.cats[0]];
+  Object.assign(p.cats[0], { targetKcal: 100, extraKcal: 0, balanceFoodId: 'dry', meals: [{ id: 'm1', label: 'Wet', foodId: 'wet', grams: 5 }] });
+  assert.equal(calculatePlan(p, opts).cats[0].roundedDailyKcal, 101.125);
+  assert.ok(planToCSV(p, opts).split('\r\n')[1].includes('"101.13"'));
 });

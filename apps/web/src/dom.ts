@@ -1,4 +1,4 @@
-import { t, num, getLocale } from './i18n.js';
+import { t, getLocale } from './i18n.js';
 export type Child = Node | string | number | null | undefined | false;
 export function h<K extends keyof HTMLElementTagNameMap>(tag: K,
   attributes: Record<string, string | number | boolean> | null = null, ...children: Child[]): HTMLElementTagNameMap[K] {
@@ -26,8 +26,6 @@ export function button(label: string, action: () => void, className = 'button'):
   const result = h('button', { type: 'button', class: className }, label);
   result.addEventListener('click', action); return result;
 }
-/** Locale-aware number formatting; see i18n.num. */
-export function format(value: number, digits = 1): string { return num(value, digits); }
 /** Accepts `5`, `5.5`, `5,5`, `.5` and `5.`; one decimal separator, no sign, no grouping, at most `maxDecimals` decimals. */
 export function decimalPattern(maxDecimals: number): string {
   if (maxDecimals < 1) return '[0-9]+[.,]?';
@@ -78,6 +76,8 @@ export function decimal(value: string, label: string, maxDecimals: number): numb
   if (!Number.isFinite(number)) throw new Error(t('error.finite', { label }));
   return number;
 }
+/** Rounding up keeps a target taken from an estimate at or above the engine's floor. */
+export const wholeKcal = (kcal: number): number => Math.min(3000, Math.max(1, Math.ceil(kcal)));
 export function formNumber(form: HTMLFormElement | HTMLElement, name: string, label: string, maxDecimals: number): number { return decimal(formText(form, name), label, maxDecimals); }
 /** Blank means "not entered" (null). */
 export function optionalNumber(form: HTMLFormElement | HTMLElement, name: string, label: string, maxDecimals: number): number | null {

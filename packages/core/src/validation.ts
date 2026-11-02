@@ -243,9 +243,9 @@ export function parsePlan(value: unknown): Plan {
   }
   return { schemaVersion: 2, name: text(o.name, 'name'), foods, cats, activities: acts };
 }
-export const MAX_IMPORT_BYTES = 1_048_576;
+export const MAX_IMPORT_BYTES = 10 * 1_048_576;
 export function parsePlanJSON(json: string): Plan {
-  if (new TextEncoder().encode(json).byteLength > MAX_IMPORT_BYTES) throw new PlanError('file', 'maximum size is 1 MiB');
+  if (new TextEncoder().encode(json).byteLength > MAX_IMPORT_BYTES) throw new PlanError('file', 'maximum size is 10 MiB');
   let value: unknown;
   try { value = JSON.parse(json); } catch { throw new PlanError('file', 'invalid JSON'); }
   return parsePlan(value);

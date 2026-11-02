@@ -185,7 +185,7 @@ Options: `--engine webkit` or `--engine firefox` runs the same steps in Safari's
 
 ## Data and privacy
 
-The website stores the plan in your browser (`localStorage`, key `purrtion.plan.v2`) and the language choice in `purrtion.locale`. The Mac app stores `~/Library/Application Support/Purrtion/plan.json`. Neither is encrypted by the app. Keep exported backups; clearing site data or using private browsing can remove the browser copy.
+The website stores the plan in your browser (`localStorage`, key `purrtion.plan.v2`) and the language choice in `purrtion.locale`. The Mac app stores `~/Library/Application Support/Purrtion/plan.json`. When an import or reset replaces a saved plan, the replaced text is kept (`purrtion.plan.v2.previous`, or `purrtion.plan.v2.recovery` for unreadable data) and can be exported from the Method page. Neither is encrypted by the app. Keep exported backups; clearing site data or using private browsing can remove the browser copy.
 
 The website has no analytics, no cookies, no remote fonts or scripts and no API. GitHub Pages, like any host, logs requests. The website and the Mac app do not synchronise with each other: export JSON from one and import it in the other. See [SECURITY.md](SECURITY.md).
 

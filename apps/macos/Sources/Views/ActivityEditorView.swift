@@ -10,6 +10,7 @@ struct ActivityEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.l10n) private var l
     init(store: PlanStore) { self.store = store; _activities = State(initialValue: store.plan.activities) }
+    private var total: Double { activities.reduce(0) { $0 + $1.sharePercent } }
     var body: some View {
         Form {
             Section(l.t("activities.title")) {
@@ -25,7 +26,7 @@ struct ActivityEditorView: View {
                 Button(l.t("activities.add"), systemImage: "plus") {
                     activities.append(Activity(id: newId("activity"), label: l.t("activities.new"), sharePercent: 0))
                 }.disabled(activities.count >= 12)
-                Text(l.t("activities.total", ["percent": l.percent(activities.reduce(0) { $0 + $1.sharePercent })])).monospacedDigit()
+                Text(l.t("activities.total", ["percent": l.percent(total, digits: 2)])).monospacedDigit()
             }
             Section {
                 if !error.isEmpty { Text(error).font(.caption).foregroundStyle(Theme.alert) }
@@ -33,7 +34,7 @@ struct ActivityEditorView: View {
                     Button(l.t("activities.save")) {
                         var plan = store.plan; plan.activities = activities
                         do { try store.save(plan); dismiss() } catch { self.error = error.localizedDescription }
-                    }.buttonStyle(.borderedProminent).tint(Theme.sakuraInk).disabled(!invalidFields.isEmpty)
+                    }.buttonStyle(.borderedProminent).tint(Theme.sakuraInk).disabled(!invalidFields.isEmpty || abs(total - 100) > 1e-6)
                     Button(l.t("common.cancel")) { dismiss() }
                 }
             }

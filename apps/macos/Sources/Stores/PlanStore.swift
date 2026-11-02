@@ -77,7 +77,7 @@ final class PlanStore {
 
     static func readPlan(at url: URL) throws -> Plan {
         let size = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-        guard size <= PlanCodec.maximumImportBytes else { throw PlanError("Maximum import size is 1 MiB") }
+        guard size <= PlanCodec.maximumImportBytes else { throw PlanError("Maximum import size is 10 MiB") }
         return try PlanCodec.decode(Data(contentsOf: url))
     }
     /// The `schemaVersion` of a JSON file, read independently of full decoding (also works for damaged plans).
@@ -130,17 +130,6 @@ final class PlanStore {
         try FileManager.default.copyItem(at: storageURL, to: target)
     }
 
-    /// A backup file name exactly of the form `plan-backup-*.json` (letters, digits, `-`, `_` in the middle).
-    nonisolated static func isBackupName(_ name: String) -> Bool {
-        name.range(of: "^plan-backup-[A-Za-z0-9_-]+\\.json$", options: .regularExpression) != nil
-    }
-    /// Allowlist guard for pruning: a regular file (not a directory or symlink) with a backup name,
-    /// directly inside the app's own storage directory.
-    nonisolated static func isPrunable(_ url: URL, isRegularFile: Bool, isSymbolicLink: Bool, directory: URL) -> Bool {
-        isRegularFile && !isSymbolicLink && isBackupName(url.lastPathComponent)
-            && url.deletingLastPathComponent().standardizedFileURL.path == directory.standardizedFileURL.path
-            && directory.lastPathComponent == "Purrtion"
-    }
     /// Keeps the `maximumBackups` newest backups. Deletes individual files only; never directories, never recursively.
     private func pruneBackups() {
         let keys: [URLResourceKey] = [.isRegularFileKey, .isSymbolicLinkKey, .contentModificationDateKey]
@@ -149,7 +138,7 @@ final class PlanStore {
         var backups: [(url: URL, date: Date)] = []
         for url in urls {
             guard let values = try? url.resourceValues(forKeys: Set(keys)),
-                  Self.isPrunable(url, isRegularFile: values.isRegularFile ?? false, isSymbolicLink: values.isSymbolicLink ?? true,
+                  BackupFiles.isPrunable(url, isRegularFile: values.isRegularFile ?? false, isSymbolicLink: values.isSymbolicLink ?? true,
                                   directory: directory) else { continue }
             backups.append((url, values.contentModificationDate ?? .distantPast))
         }

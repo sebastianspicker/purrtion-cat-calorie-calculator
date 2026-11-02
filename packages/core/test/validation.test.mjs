@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parsePlan, parsePlanJSON, migrateV1, defaultProfile, calculatePlan, planToJSON, PlanError } from '../../../dist/web/packages/core/src/index.js';
+import { parsePlan, parsePlanJSON, migrateV1, defaultProfile, calculatePlan, planToJSON, MAX_IMPORT_BYTES, PlanError } from '../../../dist/web/packages/core/src/index.js';
 const seed = JSON.parse(readFileSync(new URL('../../../shared/default-plan.json', import.meta.url), 'utf8'));
 const v1 = JSON.parse(readFileSync(new URL('./fixtures/golden-cases-v1.json', import.meta.url), 'utf8'))[0].plan;
 const clone = () => structuredClone(seed);
@@ -146,4 +146,12 @@ test('golden vector: a name containing U+202E (right-to-left override) is reject
   assert.throws(() => parsePlan(p), error => error instanceof PlanError && error.path === 'cats[0].name');
   assert.throws(() => parsePlanJSON(JSON.stringify(p)), PlanError);
   assert.throws(() => parsePlanJSON('{"schemaVersion":2,"name":"x\\u202Ey","foods":[],"cats":[],"activities":[]}'), PlanError);
+});
+test('a saved plan over the old 1 MiB limit (10 cats with 1000 weigh-ins each) loads again; one byte over the limit is rejected', () => {
+  const p = clone(); p.cats = Array.from({ length: 10 }, (_, i) => ({ ...structuredClone(p.cats[0]), id: `cat-${i}`, name: `Cat ${i}`,
+    weightLog: Array.from({ length: 1000 }, (_, n) => ({ id: `w-${n}`, date: new Date(Date.UTC(2020, 0, 1 + n)).toISOString().slice(0, 10), weightKg: 4.05, bcs: null })) }));
+  const json = planToJSON(p);
+  assert.ok(json.length > 1_048_576, 'the fixture must exceed the old limit');
+  assert.equal(parsePlanJSON(json).cats[9].weightLog.length, 1000);
+  assert.throws(() => parsePlanJSON(' '.repeat(MAX_IMPORT_BYTES + 1)), /10 MiB/);
 });

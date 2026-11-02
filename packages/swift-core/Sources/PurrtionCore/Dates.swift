@@ -30,9 +30,11 @@ public enum Dates {
         }
         return Double(b - a)
     }
+    /// Always Gregorian: `Calendar.current` follows the user's calendar setting (e.g. a Japanese era year) and would break YYYY-MM-DD.
+    public static var calendar: Calendar { var c = Calendar(identifier: .gregorian); c.timeZone = .current; return c }
     /// Today's date in the user's local time zone; the UI passes this as `asOf`.
     public static func todayLocal(_ now: Date = Date()) -> String {
-        let c = Calendar.current.dateComponents([.year, .month, .day], from: now)
+        let c = calendar.dateComponents([.year, .month, .day], from: now)
         return String(format: "%04d-%02d-%02d", c.year ?? 1970, c.month ?? 1, c.day ?? 1)
     }
 }

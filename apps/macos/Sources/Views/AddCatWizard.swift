@@ -37,6 +37,7 @@ struct AddCatWizard: View {
     private func cat(target: Double, source: TargetSource) -> Cat {
         var cat = draft
         cat.weightKg = weight ?? 0; cat.targetKcal = target; cat.targetSource = source
+        if !reproductionRelevant { cat.profile.reproduction = Reproduction() }
         return cat
     }
     private func result(for cat: Cat) -> CatResult? {
@@ -49,7 +50,7 @@ struct AddCatWizard: View {
     private var ageYears: Double? {
         ((try? Estimator.ageInDays(draft.profile, asOf: asOf)) ?? nil).map { floor($0 / EnergyModel.Units.daysPerYear) }
     }
-    private var reproductionRelevant: Bool { draft.profile.sex == .female && draft.profile.neutered != .yes }
+    private var reproductionRelevant: Bool { draft.profile.sex != .male && draft.profile.neutered != .yes }
     private var steps: [Step] {
         Step.allCases.filter { $0 != .details || stage == .kitten || reproductionRelevant }
     }
@@ -368,7 +369,7 @@ struct AddCatWizard: View {
                     Text(l.t("wizard.targetTitle")).roundedHeading(.headline)
                     Picker(l.t("wizard.targetTitle"), selection: $choice) {
                         if canUseEstimate, let start = e.startKcal {
-                            Text(l.t("wizard.useEstimate", ["kcal": l.int(start)])).tag(TargetChoice.estimate)
+                            Text(l.t("wizard.useEstimate", ["kcal": l.int(targetKcal(from: start))])).tag(TargetChoice.estimate)
                         }
                         Text(l.t("wizard.ownTarget")).tag(TargetChoice.manual)
                     }

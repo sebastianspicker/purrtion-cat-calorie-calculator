@@ -105,11 +105,11 @@ enum ISODate {
         guard Dates.isISODate(iso) else { return nil }
         let parts = iso.split(separator: "-").compactMap { Int($0) }
         guard parts.count == 3 else { return nil }
-        return Calendar.current.date(from: DateComponents(year: parts[0], month: parts[1], day: parts[2], hour: 12))
+        return Dates.calendar.date(from: DateComponents(year: parts[0], month: parts[1], day: parts[2], hour: 12))
     }
     static func string(_ date: Date) -> String { Dates.todayLocal(date) }
     static func adding(days: Int, to iso: String) -> String? {
-        guard let date = date(iso), let result = Calendar.current.date(byAdding: .day, value: days, to: date) else { return nil }
+        guard let date = date(iso), let result = Dates.calendar.date(byAdding: .day, value: days, to: date) else { return nil }
         return string(result)
     }
     static func today() -> Date { date(Dates.todayLocal()) ?? Date() }

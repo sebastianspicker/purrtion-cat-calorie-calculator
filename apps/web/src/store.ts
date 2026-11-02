@@ -39,7 +39,11 @@ export class PlanStore {
     this.plan = next;
     if (this.recoveryMode && !replaceDamaged) return false;
     try {
-      if (replaceDamaged && this.damagedData !== null) localStorage.setItem(`${KEY}.recovery`, this.damagedData);
+      // An explicit replace keeps what it replaces. Unreadable data and a readable plan use separate keys, so a later import never erases the only copy of damaged data.
+      if (replaceDamaged) {
+        const old = this.damagedData ?? localStorage.getItem(KEY);
+        if (old !== null) localStorage.setItem(`${KEY}.${this.damagedData !== null ? 'recovery' : 'previous'}`, old);
+      }
       localStorage.setItem(KEY, planToJSON(next));
       this.recoveryMode = false; this.damagedData = null; this.notice = '';
       return true;
@@ -61,5 +65,9 @@ export class PlanStore {
     if (this.notice === 'external-conflict' || this.notice === 'external-unreadable' || this.notice === 'saved-unreadable') this.notice = '';
     return 'reloaded';
   }
+  /** Throwing away unsaved edits after another tab saved: show that tab's plan. Returns whether it reloaded. */
+  discardEdits(): boolean { if (this.notice !== 'external-conflict') return false; this.reload(); return true; }
   damagedJSON(): string | null { return this.damagedData; }
+  /** Text kept by an explicit replace (import, reset): `recovery` for unreadable data, `previous` for the readable plan before it. */
+  backupJSON(kind: 'recovery' | 'previous'): string | null { try { return localStorage.getItem(`${KEY}.${kind}`); } catch { return null; } }
 }

@@ -32,7 +32,7 @@ that publishes nothing else, and export a backup regularly.
 
 ## Current safeguards
 
-- Versioned JSON is validated before use: size limit (1 MiB), list lengths, text lengths, finite
+- Versioned JSON is validated before use: size limit (10 MiB), list lengths, text lengths, finite
   numeric ranges, references and ID uniqueness. Unknown schema versions are rejected. Invalid
   imports do not replace the saved plan or unsaved fields.
 - Rendering uses DOM text nodes and native SwiftUI text, not user-supplied HTML. LaTeX for

@@ -26,7 +26,6 @@ enum Theme {
     static let ink = Color.dynamic(light: 0x2B2541, dark: 0xEEEAF8)
     static let muted = Color.dynamic(light: 0x5E5878, dark: 0xB7B0D0)
     static let sakura = Color(hex: 0xE8779E)
-    static let sakuraLight = Color(hex: 0xF4A9C2)
     static let sakuraInk = Color.dynamic(light: 0xB3365F, dark: 0xF4A9C2)
     static let matcha = Color(hex: 0x7CC49A)
     static let matchaInk = Color.dynamic(light: 0x2D7550, dark: 0x9FD8B5)

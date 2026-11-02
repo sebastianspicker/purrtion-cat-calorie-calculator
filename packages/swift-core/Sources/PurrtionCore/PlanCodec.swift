@@ -1,10 +1,10 @@
 import Foundation
 
 public enum PlanCodec {
-    public static let maximumImportBytes = 1_048_576
+    public static let maximumImportBytes = 10 * 1_048_576
     /// Decodes a v1 or v2 document (v1 is migrated, ENGINE.md §9) and validates it.
     public static func decode(_ data: Data) throws -> Plan {
-        guard data.count <= maximumImportBytes else { throw PlanError("file: maximum size is 1 MiB") }
+        guard data.count <= maximumImportBytes else { throw PlanError("file: maximum size is 10 MiB") }
         let plan: Plan
         do { plan = try JSONDecoder().decode(Plan.self, from: data) }
         catch let error as PlanError { throw error }
@@ -43,8 +43,19 @@ public enum PlanCodec {
     private static func number(_ value: Double) -> String {
         value == value.rounded() && abs(value) < 1e15 ? String(Int64(value)) : String(value)
     }
-    private static func fixed(_ value: Double, _ digits: Int) -> String {
-        String(format: "%.\(digits)f", locale: Locale(identifier: "en_US_POSIX"), value)
+    /// C `printf`, which formats the exact binary value. Foundation's `String(format:)` does not (0.015 → "0.02", C gives "0.01").
+    private static func cFormat(_ format: String, _ value: Double) -> String {
+        var buffer = [CChar](repeating: 0, count: 512)
+        _ = withVaList([value]) { vsnprintf(&buffer, buffer.count, format, $0) }
+        return String(cString: buffer).replacingOccurrences(of: ",", with: ".")
+    }
+    /// JavaScript `toFixed`: rounds the exact binary value, and an exact half away from zero, where C rounds it to even
+    /// (101.125 → "101.13", not "101.12"; 10.545, stored as 10.54499…, stays "10.54"). Matched toFixed on a 400,000-value grid.
+    static func fixed(_ value: Double, _ digits: Int) -> String {
+        let exact = cFormat("%.60f", value) // the exact expansion at plan magnitudes
+        let rest = exact[exact.index(after: exact.firstIndex(of: ".")!)...].dropFirst(digits)
+        let tie = rest.first == "5" && rest.dropFirst().allSatisfy { $0 == "0" }
+        return cFormat("%.\(digits)f", tie ? (value < 0 ? value.nextDown : value.nextUp) : value)
     }
     /// Same columns as the TypeScript `planToCSV`.
     public static func csv(_ plan: Plan, asOf: String) throws -> String {
@@ -57,8 +68,8 @@ public enum PlanCodec {
             rows.append([cat.name, number(cat.weightKg), cat.goal.rawValue, number(cat.targetKcal), number(r.fixedGrams), number(r.fixedKcal),
                 number(cat.extraKcal), plan.foods.first { $0.id == cat.balanceFoodId }!.name, fixed(r.balanceGramsExact, 4),
                 String(r.balanceGramsRounded), fixed(r.roundedDailyKcal, 2), e.status.rawValue,
-                e.startKcal.map { fixed($0.rounded(.toNearestOrAwayFromZero), 0) } ?? "",
-                e.lowKcal.flatMap { low in e.highKcal.map { "\(fixed(low.rounded(.toNearestOrAwayFromZero), 0))–\(fixed($0.rounded(.toNearestOrAwayFromZero), 0))" } } ?? "",
+                e.startKcal.map { fixed($0, 0) } ?? "",
+                e.lowKcal.flatMap { low in e.highKcal.map { "\(fixed(low, 0))–\(fixed($0, 0))" } } ?? "",
                 r.warnings.map(\.rawValue).joined(separator: "; ")])
         }
         return rows.map { $0.map(csvCell).joined(separator: ",") }.joined(separator: "\r\n") + "\r\n"

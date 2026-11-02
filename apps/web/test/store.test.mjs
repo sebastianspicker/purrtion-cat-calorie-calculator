@@ -150,3 +150,26 @@ test('browser store: reload with unavailable storage keeps the in-memory plan an
   Object.defineProperty(globalThis, 'localStorage', {configurable: true, get() { throw new Error('Denied'); }});
   store.reload(); assert.equal(store.plan.cats[0].extraKcal, 20); assert.equal(store.notice, 'storage-unavailable');
 });
+test('browser store: discardEdits after a conflict shows the other tab’s plan; without a conflict it keeps memory', () => {
+  const map = storage(); const store = new PlanStore(sample);
+  assert.equal(store.discardEdits(), false); assert.deepEqual(store.plan, sample);
+  const other = structuredClone(sample); other.cats[0].name = 'Renamed elsewhere';
+  map.set(KEY, JSON.stringify(other));
+  assert.equal(store.external(KEY, JSON.stringify(other), true), 'conflict');
+  assert.equal(store.discardEdits(), true);
+  assert.equal(store.plan.cats[0].name, 'Renamed elsewhere'); assert.equal(store.notice, '');
+});
+test('browser store: replacing a readable saved plan keeps it in .previous; a plain commit keeps nothing', () => {
+  const old = JSON.stringify(sample); const map = storage({ [KEY]: old }); const store = new PlanStore(sample);
+  const next = structuredClone(sample); next.cats[0].extraKcal = 20;
+  store.commit(next); assert.equal(map.has(`${KEY}.previous`), false); assert.equal(store.backupJSON('previous'), null);
+  const saved = map.get(KEY); store.commit(sample, true);
+  assert.equal(map.get(`${KEY}.previous`), saved); assert.equal(store.backupJSON('previous'), saved); assert.equal(map.has(`${KEY}.recovery`), false);
+});
+test('browser store: later imports never erase the kept copy of unreadable data', () => {
+  const map = storage({[KEY]: 'broken'}); const store = new PlanStore(sample);
+  const first = structuredClone(sample); first.cats[0].extraKcal = 20;
+  store.commit(first, true); assert.equal(map.get(`${KEY}.recovery`), 'broken');
+  const firstSaved = map.get(KEY); store.commit(sample, true);
+  assert.equal(store.backupJSON('recovery'), 'broken'); assert.equal(store.backupJSON('previous'), firstSaved);
+});

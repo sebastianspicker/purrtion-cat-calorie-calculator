@@ -120,7 +120,7 @@ struct EstimateSection: View {
         if let equation = e.equation { EquationChips(equation: equation.rawValue) }
         if showsComparison, let comparison = e.comparison { comparisonView(comparison) }
         if let useEstimate, e.status == .ok, let start = e.startKcal, targetKcal(from: start) != cat.targetKcal {
-            Button(l.t("estimate.useAsTarget", ["kcal": l.int(start)]), systemImage: "pawprint", action: useEstimate)
+            Button(l.t("estimate.useAsTarget", ["kcal": l.int(targetKcal(from: start))]), systemImage: "pawprint", action: useEstimate)
                 .buttonStyle(.borderedProminent).tint(Theme.sakuraInk)
         }
         if !e.notes.isEmpty {

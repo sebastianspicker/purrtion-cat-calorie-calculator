@@ -32,7 +32,7 @@ const en = {
   'toolbar.exportJson': 'Export JSON',
   'toolbar.exportCsv': 'Export CSV',
   'toolbar.print': 'Print plan',
-  'import.tooLarge': 'The maximum import size is 1 MiB.',
+  'import.tooLarge': 'The maximum import size is 10 MiB.',
   'import.confirm': 'Import “{name}” with {count} cats? This replaces the current plan and unsaved edits.',
   'store.storage-unavailable': 'Browser storage is unavailable. Changes work in memory only; export JSON before closing.',
   'store.saved-unreadable': 'Your saved data could not be read. It has not been overwritten. You are seeing the sample plan; export the saved data before resetting or importing.',
@@ -435,6 +435,7 @@ const en = {
   'method.storage.text': 'The website saves in this browser’s local storage; the Mac app saves a local JSON file. They do not synchronise. Export JSON in one and import it in the other to move a plan.',
   'method.storage.tabs': 'Open tabs pick up saved changes from each other. If you are editing when another tab saves, Purrtion warns you before your save overwrites it. Keep an exported backup: browser storage can be cleared.',
   'method.exportDamaged': 'Export unreadable saved data',
+  'method.exportPrevious': 'Export the plan before the last import or reset',
   'method.reset': 'Reset to the sample plan',
   'method.resetConfirm': 'Replace the current plan with the sample plan? Export a backup first.',
   'method.reading': 'Further reading',
@@ -550,7 +551,7 @@ const de: Record<UiKey, string> = {
   'toolbar.exportJson': 'JSON exportieren',
   'toolbar.exportCsv': 'CSV exportieren',
   'toolbar.print': 'Plan drucken',
-  'import.tooLarge': 'Eine Importdatei darf höchstens 1 MiB groß sein.',
+  'import.tooLarge': 'Eine Importdatei darf höchstens 10 MiB groß sein.',
   'import.confirm': '„{name}“ mit {count} Katzen importieren? Der aktuelle Plan und ungespeicherte Änderungen werden ersetzt.',
   'store.storage-unavailable': 'Der Browserspeicher ist nicht verfügbar. Änderungen bleiben nur im Arbeitsspeicher; exportieren Sie JSON, bevor Sie die Seite schließen.',
   'store.saved-unreadable': 'Ihre gespeicherten Daten konnten nicht gelesen werden. Sie wurden nicht überschrieben. Angezeigt wird der Beispielplan; exportieren Sie die gespeicherten Daten, bevor Sie zurücksetzen oder importieren.',
@@ -953,6 +954,7 @@ const de: Record<UiKey, string> = {
   'method.storage.text': 'Die Website speichert im lokalen Speicher dieses Browsers, die Mac-App in einer lokalen JSON-Datei. Beide synchronisieren sich nicht. Exportieren Sie JSON in der einen und importieren Sie es in der anderen, um einen Plan zu übertragen.',
   'method.storage.tabs': 'Geöffnete Tabs übernehmen gespeicherte Änderungen voneinander. Wenn Sie gerade bearbeiten, während ein anderer Tab speichert, warnt Purrtion Sie, bevor Ihr Speichern das überschreibt. Bewahren Sie einen Export als Sicherung auf: Der Browserspeicher kann gelöscht werden.',
   'method.exportDamaged': 'Nicht lesbare Daten exportieren',
+  'method.exportPrevious': 'Plan vor dem letzten Import oder Zurücksetzen exportieren',
   'method.reset': 'Auf den Beispielplan zurücksetzen',
   'method.resetConfirm': 'Den aktuellen Plan durch den Beispielplan ersetzen? Exportieren Sie vorher eine Sicherung.',
   'method.reading': 'Weiterlesen',
@@ -1068,7 +1070,8 @@ export function msg(code: MessageKey | `${string}.${string}`): string {
   return table[code] ?? english[code] ?? code;
 }
 export function num(value: number, digits = 1, minimumDigits = 0): string {
-  return new Intl.NumberFormat(current, { maximumFractionDigits: digits, minimumFractionDigits: minimumDigits }).format(value);
+  // Values that round to zero print as 0, not -0.
+  return new Intl.NumberFormat(current, { maximumFractionDigits: digits, minimumFractionDigits: minimumDigits }).format(Math.abs(value) < 0.5 * 10 ** -digits ? 0 : value);
 }
 /** A calendar date (YYYY-MM-DD) in the active locale; parsed and shown in UTC so the day never shifts. */
 export function dateText(iso: string): string {

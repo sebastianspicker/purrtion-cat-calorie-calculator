@@ -86,7 +86,8 @@ A future schema needs an explicit migration and new golden cases, not field gues
 | Where | Key or path | Notes |
 | --- | --- | --- |
 | Browser plan | `localStorage` `purrtion.plan.v2` | If absent, `purrtion.plan.v1` is read and migrated in memory. The v1 key is never deleted. |
-| Browser recovery | `purrtion.plan.v2.recovery` | Written only when the user explicitly replaces unreadable data. |
+| Browser recovery | `purrtion.plan.v2.recovery` | Unreadable saved data, written only when the user explicitly replaces it (import or reset); the Method page exports it. |
+| Browser previous plan | `purrtion.plan.v2.previous` | The readable plan that the last import or reset replaced; the Method page exports it. Never overwrites `.recovery`. |
 | Browser language | `purrtion.locale` | `en` or `de`; otherwise the browser language, German if it starts with "de". |
 | Mac plan | `~/Library/Application Support/Purrtion/plan.json` | Before the first v2 write over a v1 file it is copied to `plan-v1-backup.json`. Explicitly replacing a saved plan keeps a timestamped backup. |
 

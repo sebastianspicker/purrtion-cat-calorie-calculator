@@ -1,7 +1,7 @@
 import { calculatePlan, defaultProfile, catIcons, todayLocalISO, daysBetween, chronicMedicalFlags, acuteMedicalFlags, medicalFlags,
   type Cat, type CatResult, type Goal, type TargetSource, type Meal, type WeightEntry, type Profile, type MedicalFlag,
   type CatIcon, type Sex, type Neutered, type Lifestyle, type MuscleCondition, type ReproductionStatus, type Stage, type IdealWeightSource } from '../../../../packages/core/src/index.js';
-import { h, fill, button, field, selectField, radioGroup, checkbox, formNumber, optionalNumber, formText, newId, markDirty, errorText,
+import { h, fill, button, field, selectField, radioGroup, checkbox, formNumber, optionalNumber, wholeKcal, formText, newId, markDirty, errorText,
   notice, chip, table, setValue, decimal, inputNumber, type Child } from '../dom.js';
 import { t, msg, num, dateText, type UiKey } from '../i18n.js';
 import { createEstimateView } from '../estimate.js';
@@ -165,12 +165,22 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
       logError.textContent = ''; dirty(); renderLog(); update();
     } catch (err) { logError.textContent = errorText(err); }
   }
+  function dropEntry(e: WeightEntry): void {
+    const wasNewest = log.every(x => x.date <= e.date);
+    log = log.filter(x => x.id !== e.id);
+    const newest = [...log].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : a.id < b.id ? 1 : -1)[0];
+    if (wasNewest && newest) {
+      setValue(form, 'cat-weight', inputNumber(newest.weightKg));
+      if (newest.bcs !== null) setValue(form, 'cat-bcs', String(newest.bcs));
+    }
+    dirty(); renderLog(); update();
+  }
   logWeight.querySelector('input')!.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); addEntry(); } });
   function renderLog(): void {
     const sorted = [...log].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : a.id < b.id ? 1 : -1);
     fill(logTable, sorted.length ? table([t('log.date'), t('log.weight'), t('log.bcs'), ''], sorted.map(e => [dateText(e.date), `${num(e.weightKg, 2)} kg`,
       e.bcs === null ? t('log.bcsNone') : String(e.bcs),
-      button(t('ui.remove'), () => { log = log.filter(x => x.id !== e.id); dirty(); renderLog(); update(); }, 'button subtle')]), t('log.title'))
+      button(t('ui.remove'), () => dropEntry(e), 'button subtle')]), t('log.title'))
       : h('p', { class: 'caption' }, t('log.empty')));
     const ideal = optionalIdeal();
     fill(chartBox, weightChart(log.filter(e => daysBetween(e.date, asOf) >= 0), ideal));
@@ -185,8 +195,7 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
     button(t('cat.discard'), () => {
       if (!confirm(t('cat.discardConfirm'))) return;
       form.dataset.dirty = 'false';
-      // After a change in another tab, discarding means showing that saved version, not the stale in-memory plan.
-      if (ctx.store.notice === 'external-conflict') ctx.store.reload();
+      ctx.store.discardEdits();
       ctx.render();
     }, 'button'),
     button(t('cat.remove'), () => {
@@ -216,15 +225,15 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
         preBreedingWeightKg: status === 'gestation' ? optionalNumber(form, 'repro-preweight', t('repro.preWeight'), 3) : null },
       medical: readMedical(form, 'medical-'),
       endOfLife: form.querySelector<HTMLInputElement>('[name="cat-eol"]')!.checked,
-      verifiedIntakeKcal: optionalNumber(form, 'cat-verified', t('health.verified'), 1),
+      verifiedIntakeKcal: optionalNumber(form, 'cat-verified', t('health.verified'), 2),
     };
     return { ...cat, name: formText(form, 'cat-name'), icon: (formText(form, 'cat-icon') || null) as CatIcon | null, weightKg: formNumber(form, 'cat-weight', t('profile.weight'), 3),
-      goal: formText(form, 'cat-goal') as Goal, targetKcal: formNumber(form, 'cat-target', t('target.kcal'), 1),
-      targetSource: formText(form, 'cat-target-source') as TargetSource, extraKcal: formNumber(form, 'cat-extras', t('target.extras'), 1),
+      goal: formText(form, 'cat-goal') as Goal, targetKcal: formNumber(form, 'cat-target', t('target.kcal'), 2),
+      targetSource: formText(form, 'cat-target-source') as TargetSource, extraKcal: formNumber(form, 'cat-extras', t('target.extras'), 2),
       balanceFoodId: formText(form, 'cat-balance'), profile, weightLog: log.map(e => ({ ...e })),
       meals: [...meals.querySelectorAll<HTMLElement>('[data-meal-id]')].map(row => {
         const mealId = row.dataset.mealId!;
-        return { id: mealId, label: formText(form, `${mealId}-label`), foodId: formText(form, `${mealId}-food`), grams: formNumber(form, `${mealId}-grams`, t('meal.grams'), 1) };
+        return { id: mealId, label: formText(form, `${mealId}-label`), foodId: formText(form, `${mealId}-food`), grams: formNumber(form, `${mealId}-grams`, t('meal.grams'), 2) };
       }),
     };
   }
@@ -247,7 +256,7 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
   }
   function useEstimate(): void {
     const e = current?.result.estimate; if (!e || e.startKcal === null || !current) return;
-    const kcal = Math.round(e.startKcal);
+    const kcal = wholeKcal(e.startKcal);
     const vet = vetTarget();
     // With the weight-loss equation on a BCS-estimated ideal weight, that ideal weight is stored too (source: estimate).
     const storeIbw = e.equation === 'weight-loss-aaha' && e.idealWeight?.source === 'bcs-estimate' ? Math.round(e.idealWeight.kg * 100) / 100 : null;
@@ -262,7 +271,7 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
   function applySuggestion(): void {
     const s = current?.result.trend.suggestion; if (!s || !current) return;
     const vet = vetTarget();
-    const kcal = s.suggestedKcal === null ? null : Math.round(s.suggestedKcal);
+    const kcal = s.suggestedKcal === null ? null : wholeKcal(s.suggestedKcal);
     const what = s.action === 'switch-to-maintenance'
       ? kcal === null ? t('suggest.toMaintainOnly') : t('suggest.toMaintain', { kcal: num(kcal, 0) })
       : t('suggest.newTarget', { kcal: num(kcal ?? 0, 0) });
@@ -284,7 +293,7 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
         h('dt', null, t('trend.cadence')), h('dd', null, t('trend.every', { days: String(tr.nextWeighInDays) })),
         h('dt', null, t('trend.next')), h('dd', { 'data-testid': 'next-weigh-in' }, due === null ? t('trend.nextNow') : due <= 0 ? t('trend.due') : t('trend.inDays', { days: String(due) }))),
       s ? h('div', { class: `suggestion action-${s.action}` }, h('p', null, h('strong', null, msg(`action.${s.action}`)), ' ', msg(`reason.${s.reason}`)),
-        s.suggestedKcal !== null ? h('p', null, t('suggest.kcal', { kcal: num(s.suggestedKcal, 0) })) : null,
+        s.suggestedKcal !== null ? h('p', null, t('suggest.kcal', { kcal: num(wholeKcal(s.suggestedKcal), 0) })) : null,
         applicable ? button(t('suggest.apply'), applySuggestion, 'button') : null)
         : h('p', { class: 'caption' }, result.estimate.status === 'ok' ? t('trend.noSuggestionData') : t('trend.noSuggestionStatus')));
   }
@@ -342,7 +351,7 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
       // Only an ok estimate is offered as a target; reference-only figures stay with the veterinarian (parity with the Mac app).
       const e = result.estimate, usable = e.status === 'ok' && e.startKcal !== null;
       useButton.disabled = !usable;
-      useButton.textContent = usable ? t('use.buttonKcal', { kcal: num(Math.round(e.startKcal!), 0) }) : t('use.button');
+      useButton.textContent = usable ? t('use.buttonKcal', { kcal: num(wholeKcal(e.startKcal!), 0) }) : t('use.button');
       useButton.title = usable ? '' : t('use.disabled');
       renderPortions(c, result); renderNutrition(result); renderTrend(result);
     } catch (err) {
@@ -385,15 +394,16 @@ export function defaultBalanceFood(ctx: AppContext): string | undefined {
 export function addCatDialog(ctx: AppContext): void {
   const dialog = h('dialog', { class: 'modal', 'aria-labelledby': 'quick-add-title' }); const form = h('form'); const error = h('p', { class: 'form-error', role: 'alert' });
   const close = () => { dialog.close(); dialog.remove(); };
-  dialog.addEventListener('cancel', close);
+  const cancel = () => { close(); if (ctx.store.discardEdits()) ctx.render(); };
+  dialog.addEventListener('cancel', cancel);
   form.append(h('h2', { id: 'quick-add-title' }, t('quick.title')), h('p', { class: 'caption' }, t('quick.help')),
     field(t('profile.name'), 'new-cat-name', ''), field(t('profile.weight'), 'new-cat-weight', '', { numeric: true, maxDecimals: 3, unit: 'kg' }),
     field(t('target.kcal'), 'new-cat-target', '', { numeric: true, maxDecimals: 2, unit: t('unit.kcalPerDay') }), error,
-    h('div', { class: 'form-actions' }, button(t('ui.cancel'), close), h('button', { type: 'submit', class: 'button primary' }, t('quick.create'))));
+    h('div', { class: 'form-actions' }, button(t('ui.cancel'), cancel), h('button', { type: 'submit', class: 'button primary' }, t('quick.create'))));
   form.addEventListener('submit', event => { event.preventDefault(); try {
     const balance = defaultBalanceFood(ctx); if (!balance) throw new Error(t('meal.noFood'));
     const cat: Cat = { id: newId('cat'), name: formText(form, 'new-cat-name'), icon: null, weightKg: formNumber(form, 'new-cat-weight', t('profile.weight'), 3),
-      targetKcal: formNumber(form, 'new-cat-target', t('target.kcal'), 1), goal: 'maintain', targetSource: 'owner', extraKcal: 0, balanceFoodId: balance, meals: [], profile: defaultProfile(), weightLog: [] };
+      targetKcal: formNumber(form, 'new-cat-target', t('target.kcal'), 2), goal: 'maintain', targetSource: 'owner', extraKcal: 0, balanceFoodId: balance, meals: [], profile: defaultProfile(), weightLog: [] };
     ctx.store.commit({ ...ctx.store.plan, cats: [...ctx.store.plan.cats, cat] });
     document.querySelectorAll<HTMLFormElement>('form[data-dirty]').forEach(f => { f.dataset.dirty = 'false'; });
     close(); ctx.navigate({ kind: 'cat', id: cat.id });

@@ -68,8 +68,8 @@ struct CatEditorView: View {
         .confirmationDialog(l.t("confirm.useEstimate.title"), isPresented: Binding(
             get: { pendingEstimate != nil }, set: { if !$0 { pendingEstimate = nil } }), titleVisibility: .visible) {
             if let e = pendingEstimate, let start = e.startKcal {
-                Button(targetIsVeterinarian ? l.t("confirm.vetDiscussed", ["kcal": l.int(start)])
-                       : l.t("confirm.useEstimate.button", ["kcal": l.int(start)])) { applyEstimate(e) }
+                Button(targetIsVeterinarian ? l.t("confirm.vetDiscussed", ["kcal": l.int(targetKcal(from: start))])
+                       : l.t("confirm.useEstimate.button", ["kcal": l.int(targetKcal(from: start))])) { applyEstimate(e) }
             }
             Button(l.t("common.cancel"), role: .cancel) { pendingEstimate = nil }
         } message: { Text(useEstimateMessage) }
@@ -77,8 +77,8 @@ struct CatEditorView: View {
             get: { pendingSuggestion != nil }, set: { if !$0 { pendingSuggestion = nil } }), titleVisibility: .visible) {
             if let s = pendingSuggestion {
                 if let kcal = s.suggestedKcal {
-                    Button(targetIsVeterinarian ? l.t("confirm.vetDiscussed", ["kcal": l.int(kcal)])
-                           : l.t("confirm.suggestion.button", ["kcal": l.int(kcal)])) { applySuggestion(s) }
+                    Button(targetIsVeterinarian ? l.t("confirm.vetDiscussed", ["kcal": l.int(targetKcal(from: kcal))])
+                           : l.t("confirm.suggestion.button", ["kcal": l.int(targetKcal(from: kcal))])) { applySuggestion(s) }
                 } else if s.action == .switchToMaintenance {
                     Button(l.t("trend.switchGoal")) { applySuggestion(s) }
                 }
@@ -121,7 +121,7 @@ struct CatEditorView: View {
     }
     /// Adopting a weight-loss estimate based on a BCS-estimated ideal weight also stores that ideal weight as "my estimate".
     private func storesEstimatedIdealWeight(_ e: EnergyEstimate) -> Bool {
-        ProfileAdapter.hasIdealWeightSource && e.equation == .weightLossAaha && e.idealWeight?.source == .bcsEstimate
+        e.equation == .weightLossAaha && e.idealWeight?.source == .bcsEstimate
     }
     private func applyEstimate(_ e: EnergyEstimate) {
         guard let start = e.startKcal else { return }
@@ -325,14 +325,14 @@ struct CatProfileForm: View {
 
     private var weights: some View {
         Section(l.t("editor.section.weights")) {
-            OptionalNumberEntry(label: ProfileAdapter.hasIdealWeightSource ? l.t("field.idealWeight") : l.t("field.idealWeightVet"),
+            OptionalNumberEntry(label: l.t("field.idealWeight"),
                                 key: "ideal", value: $draft.profile.idealWeightKg, invalidFields: $invalidFields, maxDecimals: 3)
                 .onChange(of: draft.profile.idealWeightKg) { _, kg in
                     // Entering an ideal weight by hand means it comes from the veterinarian; clearing it clears the source.
                     if kg == nil { ProfileAdapter.setIdealWeightSource(&draft.profile, nil) }
                     else if ProfileAdapter.idealWeightSource(draft.profile) == nil { ProfileAdapter.setIdealWeightSource(&draft.profile, .veterinarian) }
                 }
-            if ProfileAdapter.hasIdealWeightSource, profile.idealWeightKg != nil {
+            if profile.idealWeightKg != nil {
                 Picker(l.t("field.idealWeightSource"), selection: Binding(
                     get: { ProfileAdapter.idealWeightSource(draft.profile) ?? .veterinarian },
                     set: { ProfileAdapter.setIdealWeightSource(&draft.profile, $0) })) {

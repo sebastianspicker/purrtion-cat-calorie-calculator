@@ -145,7 +145,7 @@ Plan:
 - Activity shares 0–100 %, total 100 % within $10^{-6}$ percentage points.
 - Unique IDs within each list; every `balanceFoodId` and meal `foodId` must reference a food in
   the library (any type in v2).
-- JSON import up to 1 MiB. `schemaVersion` must be 1 or 2; v1 is migrated (ARCHITECTURE.md).
+- JSON import up to 10 MiB. `schemaVersion` must be 1 or 2; v1 is migrated (ARCHITECTURE.md).
 
 Cat and meal:
 - Body weight 0.1–40 kg, `targetKcal` 1–3000, `extraKcal` 0–3000.

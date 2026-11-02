@@ -16,6 +16,7 @@ function card(title: string, formulas: string[], strength: Strength[], refs: str
 }
 export function methodPage(ctx: AppContext): HTMLElement {
   const k = m.kitten;
+  const unreadable = ctx.store.damagedJSON() ?? ctx.store.backupJSON('recovery'), previous = ctx.store.backupJSON('previous');
   const bandRows = k.bandCentreMonths.map((months, i) => [t('method.kittenBand.at', { months: num(months, 1) }),
     num(k.bandLow[i]!, 2), num(k.bandHigh[i]!, 2)]);
   const strengths: Strength[] = ['G', 'M', 'E', 'O', 'X', 'S'];
@@ -57,7 +58,8 @@ export function methodPage(ctx: AppContext): HTMLElement {
     h('section', { class: 'section' }, h('h2', null, t('method.storage')),
       h('p', null, t('method.storage.text')), h('p', null, t('method.storage.tabs')),
       h('div', { class: 'form-actions' },
-        ctx.store.damagedJSON() ? button(t('method.exportDamaged'), () => download('purrtion-recovery.json', ctx.store.damagedJSON()!, 'application/json')) : null,
+        unreadable !== null ? button(t('method.exportDamaged'), () => download('purrtion-recovery.json', unreadable, 'application/json')) : null,
+        previous !== null ? button(t('method.exportPrevious'), () => download('purrtion-plan-previous.json', previous, 'application/json')) : null,
         button(t('method.reset'), () => {
           if (confirm(t('method.resetConfirm'))) { ctx.store.commit(ctx.store.sample, true); ctx.render(); }
         }, 'button danger'))),
