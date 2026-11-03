@@ -21,6 +21,6 @@
     "package:source": "python3 script/package_source.py"
   },
   "devDependencies": {
-    "typescript": "5.8.3"
+    "typescript": "7.0.2"
   }
 }
