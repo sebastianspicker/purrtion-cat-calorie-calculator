@@ -6,6 +6,8 @@
 
 Purrtion is a local-first planner that estimates how much energy a cat needs and turns your chosen calorie target into measured daily portions, as a website and a native Mac app.
 
+> _Claude was used to polish and proof-read the code and documentation of this repository._
+
 <details>
 <summary>Status and limitations</summary>
 
