@@ -37,4 +37,28 @@ public enum Dates {
         let c = calendar.dateComponents([.year, .month, .day], from: now)
         return String(format: "%04d-%02d-%02d", c.year ?? 1970, c.month ?? 1, c.day ?? 1)
     }
+    /// The estimated birth date of a cat that is `years` old on `asOf`; same as the TypeScript `birthDateFromAge`.
+    /// Days round up, so the age on `asOf` is never below the entered one (1 year must not become 365 days, i.e. 11.99 months).
+    public static func birthDate(fromAgeYears years: Double, asOf: String) -> String? {
+        guard years.isFinite, years >= 0, let today = dayNumber(asOf) else { return nil }
+        // Inverse of `dayNumber` (proleptic Gregorian civil date from a day count).
+        let z = today - Int((years * EnergyModel.Units.daysPerYear).rounded(.up)) + 719_468
+        let era = (z >= 0 ? z : z - 146_096) / 146_097, doe = z - era * 146_097
+        let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365
+        let doy = doe - (365 * yoe + yoe / 4 - yoe / 100), mp = (5 * doy + 2) / 153
+        let day = doy - (153 * mp + 2) / 5 + 1, month = mp < 10 ? mp + 3 : mp - 9
+        return String(format: "%04d-%02d-%02d", yoe + era * 400 + (month <= 2 ? 1 : 0), month, day)
+    }
+}
+
+extension Profile {
+    /// An approximate age becomes an estimated birth date, so the age keeps growing after the day it was entered.
+    public func approximateAgeAsBirthDate(asOf: String) -> Profile {
+        // An age outside 0–30 years stays as it is, so the validator still rejects it.
+        guard birthDate == nil, let years = approxAgeYears, (0...30).contains(years),
+              let date = Dates.birthDate(fromAgeYears: years, asOf: asOf) else { return self }
+        var profile = self
+        profile.birthDate = date; profile.approxAgeYears = nil
+        return profile
+    }
 }

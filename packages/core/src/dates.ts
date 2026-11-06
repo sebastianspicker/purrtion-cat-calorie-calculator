@@ -1,4 +1,5 @@
 /** Calendar dates are strict `YYYY-MM-DD` strings, parsed as UTC midnight (ENGINE.md §2). */
+import { model } from './generated/model.js';
 const MS_PER_DAY = 86_400_000;
 export function isISODate(value: unknown): value is string {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
@@ -18,4 +19,9 @@ export function daysBetween(from: string, to: string): number {
 export function todayLocalISO(now: Date = new Date()): string {
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+/** The estimated birth date of a cat that is `years` old on `asOf`. The apps store an approximate age this way so it keeps growing (ENGINE.md §1).
+ * Days round up, so the age on `asOf` is never below the entered one (1 year must not become 365 days, which the engine reads as 11.99 months). */
+export function birthDateFromAge(years: number, asOf: string): string {
+  return new Date(parseISODate(asOf) - Math.ceil(years * model.units.daysPerYear) * MS_PER_DAY).toISOString().slice(0, 10);
 }

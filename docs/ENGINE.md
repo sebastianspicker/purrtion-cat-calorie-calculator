@@ -72,14 +72,15 @@ when the owner adds or edits a weight-log entry whose date is on or after the da
 other entry, the UI sets `weightKg` to that entry's `weightKg`. Editing `weightKg` directly does
 not create a log entry. Removing the newest weigh-in makes the newest remaining entry current
 again (its weight, and its BCS when it has one); removing the last entry leaves the current
-weight unchanged.
+weight unchanged. Both apps take these rules from the core
+(`packages/core/src/weight-log.ts`, `WeightLog.swift`).
 
 Profile:
 
 | Field | Type | Rules |
 | --- | --- | --- |
 | `birthDate` | `YYYY-MM-DD` \| null | valid calendar date |
-| `approxAgeYears` | number \| null | 0–30; used only when `birthDate` is null, as age on the `asOf` date |
+| `approxAgeYears` | number \| null | 0–30; used only when `birthDate` is null, as age on the `asOf` date. The apps no longer write it: an approximate age is saved as an estimated `birthDate` ($\text{asOf} - \lceil \text{years} \times 365.25 \rceil$ days, so the age is never below the entered one) so the cat keeps ageing. Older files are still read |
 | `sex` | `female` \| `male` \| `unknown` | |
 | `neutered` | `yes` \| `no` \| `unknown` | |
 | `neuteredDate` | date \| null | |

@@ -1,4 +1,4 @@
-import { calculatePlan, defaultProfile, catIcons, todayLocalISO, daysBetween, chronicMedicalFlags, acuteMedicalFlags, medicalFlags,
+import { calculatePlan, defaultProfile, catIcons, todayLocalISO, daysBetween, birthDateFromAge, addWeighIn, removeWeighIn, byDateThenId, chronicMedicalFlags, acuteMedicalFlags, medicalFlags,
   type Cat, type CatResult, type Goal, type TargetSource, type Meal, type WeightEntry, type Profile, type MedicalFlag,
   type CatIcon, type Sex, type Neutered, type Lifestyle, type MuscleCondition, type ReproductionStatus, type Stage, type IdealWeightSource } from '../../../../packages/core/src/index.js';
 import { h, fill, button, field, selectField, radioGroup, checkbox, formNumber, optionalNumber, wholeKcal, formText, newId, markDirty, errorText,
@@ -153,31 +153,24 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
       const others = log.filter(e => e.date !== date);
       if (others.length < log.length && !confirm(t('log.replaceConfirm', { date: dateText(date) }))) return;
       if (others.length >= 1000) throw new Error(t('log.max'));
-      const bcsText = formText(form, 'log-bcs'); const bcs = bcsText ? Number(bcsText) : null;
-      log = [...others, { id: newId('weigh'), date, weightKg, bcs }];
-      // Only a weigh-in dated on or after every other entry is the current one (ENGINE.md "Current weight"); an older entry never changes the profile.
-      if (others.every(e => e.date <= date)) {
-        setValue(form, 'cat-weight', inputNumber(weightKg));
-        // The newest assessment also becomes the profile BCS (ENGINE.md §3.2 effective BCS).
-        if (bcs !== null) setValue(form, 'cat-bcs', String(bcs));
-      }
+      const bcsText = formText(form, 'log-bcs');
+      applyLogRule(c => addWeighIn(c, { id: newId('weigh'), date, weightKg, bcs: bcsText ? Number(bcsText) : null }));
       setValue(form, 'log-weight', ''); setValue(form, 'log-bcs', '');
       logError.textContent = ''; dirty(); renderLog(); update();
     } catch (err) { logError.textContent = errorText(err); }
   }
-  function dropEntry(e: WeightEntry): void {
-    const wasNewest = log.every(x => x.date <= e.date);
-    log = log.filter(x => x.id !== e.id);
-    const newest = [...log].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : a.id < b.id ? 1 : -1)[0];
-    if (wasNewest && newest) {
-      setValue(form, 'cat-weight', inputNumber(newest.weightKg));
-      if (newest.bcs !== null) setValue(form, 'cat-bcs', String(newest.bcs));
-    }
-    dirty(); renderLog(); update();
+  function dropEntry(e: WeightEntry): void { applyLogRule(c => removeWeighIn(c, e.id)); dirty(); renderLog(); update(); }
+  /** Runs a core weigh-in rule (ENGINE.md "Current weight") on the log. The form's weight and BCS change only when the rule sets them,
+   * which the NaN and null placeholders reveal (the form fields may hold unfinished text). */
+  function applyLogRule(rule: (c: Cat) => Cat): void {
+    const next = rule({ ...cat, weightLog: log, weightKg: Number.NaN, profile: { ...cat.profile, bcs: null } });
+    log = next.weightLog;
+    if (!Number.isNaN(next.weightKg)) setValue(form, 'cat-weight', inputNumber(next.weightKg));
+    if (next.profile.bcs !== null) setValue(form, 'cat-bcs', String(next.profile.bcs));
   }
   logWeight.querySelector('input')!.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); addEntry(); } });
   function renderLog(): void {
-    const sorted = [...log].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : a.id < b.id ? 1 : -1);
+    const sorted = [...log].sort(byDateThenId).reverse();
     fill(logTable, sorted.length ? table([t('log.date'), t('log.weight'), t('log.bcs'), ''], sorted.map(e => [dateText(e.date), `${num(e.weightKg, 2)} kg`,
       e.bcs === null ? t('log.bcsNone') : String(e.bcs),
       button(t('ui.remove'), () => dropEntry(e), 'button subtle')]), t('log.title'))
@@ -212,9 +205,12 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
     const status = (reproRelevant ? formText(form, 'repro-status') : 'none') as ReproductionStatus;
     const int = (name: string) => { const v = formText(form, name); return v ? Number(v) : null; };
     const ideal = optionalNumber(form, 'cat-ideal', t('weights.ideal'), 3);
+    // An approximate age is stored as an estimated birth date so the cat keeps ageing.
+    const years = mode === 'approx' ? optionalNumber(form, 'cat-age-years', t('profile.approxAge'), 2) : null;
+    if (years !== null && years > 30) throw new Error(t('error.approxAgeRange'));
     const profile: Profile = {
-      birthDate: mode === 'birth' ? formText(form, 'cat-birth') || null : null,
-      approxAgeYears: mode === 'approx' ? optionalNumber(form, 'cat-age-years', t('profile.approxAge'), 2) : null,
+      birthDate: mode === 'birth' ? formText(form, 'cat-birth') || null : years === null ? null : birthDateFromAge(years, asOf),
+      approxAgeYears: null,
       sex, neutered, neuteredDate: neutered === 'yes' ? formText(form, 'cat-neutered-date') || null : null,
       lifestyle: (formText(form, 'cat-lifestyle') || null) as Lifestyle | null,
       bcs: int('cat-bcs'), mcs: (formText(form, 'cat-mcs') || null) as MuscleCondition | null,
@@ -283,7 +279,7 @@ export function catPage(ctx: AppContext, id: string): HTMLElement {
 
   function renderTrend(result: CatResult): void {
     const tr = result.trend, s = tr.suggestion;
-    const latest = [...log].filter(e => daysBetween(e.date, asOf) >= 0).sort((a, b) => a.date < b.date ? -1 : 1).at(-1);
+    const latest = log.filter(e => daysBetween(e.date, asOf) >= 0).sort(byDateThenId).at(-1);
     const due = latest ? tr.nextWeighInDays - daysBetween(latest.date, asOf) : null;
     const applicable = s !== null && ((s.action === 'increase' || s.action === 'decrease') && s.suggestedKcal !== null || s.action === 'switch-to-maintenance');
     fill(trendBox, h('h3', null, t('trend.title')),

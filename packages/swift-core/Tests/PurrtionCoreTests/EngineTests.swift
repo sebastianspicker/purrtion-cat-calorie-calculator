@@ -406,4 +406,26 @@ final class EngineTests: XCTestCase {
             XCTAssertFalse(EnergyModel.references[id]?.isEmpty ?? true, id)
         }
     }
+
+    /// Audit B-1: same dates as the TypeScript `birthDateFromAge` test, and the stored date keeps ageing.
+    func testApproximateAgeBecomesBirthDate() throws {
+        XCTAssertEqual(Dates.birthDate(fromAgeYears: 0.33, asOf: "2026-11-06"), "2026-07-08")
+        XCTAssertEqual(Dates.birthDate(fromAgeYears: 2, asOf: "2026-11-06"), "2024-11-05")
+        XCTAssertEqual(Dates.birthDate(fromAgeYears: 1, asOf: "2028-02-29"), "2027-02-28")
+        for years in [1.0, 5, 9, 11] {
+            var p = try PlanCodec.sample().cats[0].profile; p.approxAgeYears = nil
+            p.birthDate = Dates.birthDate(fromAgeYears: years, asOf: "2026-11-06")
+            let days = try XCTUnwrap(try Estimator.ageInDays(p, asOf: "2026-11-06"))
+            XCTAssertEqual(floor(days / EnergyModel.Units.daysPerYear), years, "\(years) years")
+        }
+        XCTAssertEqual(Dates.birthDate(fromAgeYears: 0, asOf: "2026-11-06"), "2026-11-06")
+        var cat = try PlanCodec.sample().cats[0]
+        cat.weightKg = 2.5; cat.profile.birthDate = nil; cat.profile.approxAgeYears = 0.33
+        cat.profile = cat.profile.approximateAgeAsBirthDate(asOf: "2026-11-06")
+        XCTAssertEqual(cat.profile.birthDate, "2026-07-08"); XCTAssertNil(cat.profile.approxAgeYears)
+        XCTAssertEqual(try Estimator.stageOf(cat, asOf: "2026-11-06"), .kitten)
+        XCTAssertEqual(try Estimator.stageOf(cat, asOf: "2027-11-06"), .adult)
+        var old = cat.profile; old.birthDate = nil; old.approxAgeYears = 31
+        XCTAssertEqual(old.approximateAgeAsBirthDate(asOf: "2026-11-06"), old, "out-of-range ages stay for the validator to reject")
+    }
 }

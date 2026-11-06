@@ -1,4 +1,4 @@
-import { calculatePlan, defaultProfile, todayLocalISO, daysBetween, energyModel,
+import { calculatePlan, defaultProfile, todayLocalISO, daysBetween, birthDateFromAge, energyModel,
   type Cat, type CatIcon, type CatResult, type Goal, type Lifestyle, type MedicalFlag, type Neutered, type Plan, type ReproductionStatus, type Sex, type TargetSource } from '../../../packages/core/src/index.js';
 import { h, fill, button, field, selectField, radioGroup, checkbox, decimal, wholeKcal, errorText, newId, notice, formText } from './dom.js';
 import { t, num, type UiKey } from './i18n.js';
@@ -90,6 +90,7 @@ export function openWizard(ctx: AppContext): void {
           if (!a.years && !a.months) throw new Error(t('wizard.age.approxRequired'));
           if (a.years) wholeNumber(a.years, t('wizard.age.years'), 0, 30);
           if (a.months) wholeNumber(a.months, t('wizard.age.months'), 0, 11);
+          if ((ageMonths(a, asOf) ?? 0) > 30 * 12) throw new Error(t('error.approxAgeRange'));
         }
       } },
     { id: 'weight', title: 'wizard.weight.title', bubble: 'wizard.weight.bubble', expression: 'thinking',
@@ -170,8 +171,8 @@ export function openWizard(ctx: AppContext): void {
   function buildCat(targetKcal: number, targetSource: TargetSource): Cat {
     const months = ageMonths(a, asOf);
     const profile = { ...defaultProfile(), sex: a.sex, neutered: a.neutered,
-      birthDate: a.ageMode === 'birth' && a.birthDate ? a.birthDate : null,
-      approxAgeYears: a.ageMode === 'approx' && months !== null ? Math.round(months / 12 * 100) / 100 : null,
+      // An approximate age is stored as an estimated birth date so the cat keeps ageing.
+      birthDate: a.ageMode === 'birth' && a.birthDate ? a.birthDate : a.ageMode === 'approx' && months !== null ? birthDateFromAge(months / 12, asOf) : null,
       lifestyle: a.lifestyle || null, bcs: a.bcs ? Number(a.bcs) : null,
       expectedAdultWeightKg: isKitten(a, asOf) && a.expectedAdult ? decimal(a.expectedAdult, t('weights.expectedAdult'), 3) : null,
       reproduction: { status: reproStatus(a),

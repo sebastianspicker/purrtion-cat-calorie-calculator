@@ -28,7 +28,16 @@ struct CatEditorView: View {
     }
 
     private var asOf: String { store.asOf }
-    private var candidate: Plan { store.plan.with(draft) }
+    /// The draft as it is saved: an approximate age becomes an estimated birth date, so the cat keeps ageing.
+    private var savedDraft: Cat { var cat = draft; cat.profile = cat.profile.approximateAgeAsBirthDate(asOf: asOf); return cat }
+    private var candidate: Plan { store.plan.with(savedDraft) }
+    /// Saves the draft and shows what was stored (a converted age appears as a birth date).
+    private func commit() throws {
+        let cat = savedDraft
+        try store.save(store.plan.with(cat))
+        draft = cat; error = ""
+        if cat.profile.birthDate != nil { ageMode = .birthDate }
+    }
     private var preview: CatResult? {
         guard invalidFields.isEmpty else { return nil }
         return store.calculate(candidate)?.cats.first { $0.id == draft.id }
@@ -98,7 +107,7 @@ struct CatEditorView: View {
     private func syncUnsaved() {
         store.unsaved.register(owner: draft.id, hasChanges: hasChanges) {
             guard invalidFields.isEmpty else { error = l.t("entry.invalidNumber"); return false }
-            do { try store.save(candidate); error = ""; return true } catch { self.error = error.localizedDescription; return false }
+            do { try commit(); return true } catch { self.error = error.localizedDescription; return false }
         }
     }
 
@@ -153,7 +162,7 @@ struct CatEditorView: View {
             }
             HStack {
                 Button(l.t("editor.save")) {
-                    do { try store.save(candidate); error = "" } catch { self.error = error.localizedDescription }
+                    do { try commit() } catch { self.error = error.localizedDescription }
                 }
                 .buttonStyle(.borderedProminent).tint(Theme.sakuraInk)
                 .keyboardShortcut("s", modifiers: .command)

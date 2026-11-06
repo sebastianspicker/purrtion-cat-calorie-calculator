@@ -38,6 +38,8 @@ struct AddCatWizard: View {
         var cat = draft
         cat.weightKg = weight ?? 0; cat.targetKcal = target; cat.targetSource = source
         if !reproductionRelevant { cat.profile.reproduction = Reproduction() }
+        // An approximate age is stored as an estimated birth date, so the cat keeps ageing.
+        cat.profile = cat.profile.approximateAgeAsBirthDate(asOf: asOf)
         return cat
     }
     private func result(for cat: Cat) -> CatResult? {

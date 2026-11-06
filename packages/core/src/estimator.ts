@@ -12,7 +12,7 @@ export function rer(weightKg: number): number {
 /** MER(k, w) = k × w^0.67 */
 export function mer(k: number, weightKg: number): number { return k * Math.pow(weightKg, model.mer.exponent); }
 
-const byDateThenId = (a: WeightEntry, b: WeightEntry): number =>
+export const byDateThenId = (a: WeightEntry, b: WeightEntry): number =>
   a.date < b.date ? -1 : a.date > b.date ? 1 : a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
 /** Weight-log entries dated on or before `asOf`, sorted by date then id. */
 export function weightEntriesAsOf(cat: Cat, asOf: string): WeightEntry[] {

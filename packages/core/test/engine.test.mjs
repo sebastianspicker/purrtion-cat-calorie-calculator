@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { calculatePlan, estimateEnergy, rer, mer, meKcalPer100g, atwaterKcalPer100g, analyseFood, nfe, weightSeries, trendStops, trendFor,
   checkNutrition, idealWeightOf, ageInDays, effectiveBcs, stageOf, kittenBandMultiplier, weightLossStartKcal, isISODate, daysBetween, todayLocalISO, kcalPerGram, defaultProfile,
-  messageFor, messages, energyModel, catIcons } from '../../../dist/web/packages/core/src/index.js';
+  messageFor, messages, energyModel, catIcons, birthDateFromAge } from '../../../dist/web/packages/core/src/index.js';
 const asOf = '2026-10-09';
 const near = (actual, expected, tolerance = 1e-9) => assert.ok(Math.abs(actual - expected) <= tolerance * Math.max(1, Math.abs(expected)), `${actual} ≠ ${expected}`);
 const round2 = (actual, expected) => assert.equal(Math.round(actual * 100) / 100, expected, `${actual} does not round to ${expected}`);
@@ -311,4 +311,20 @@ test('energy model is versioned and every equation has SCIENCE.md references', (
   assert.equal(energyModel.version, 2);
   for (const id of ['adult-fediaf', 'weight-loss-aaha', 'adult-gain', 'kitten-nrc', 'kitten-fediaf-band', 'gestation-fediaf', 'lactation-fediaf'])
     assert.ok(energyModel.references[id].length > 0, id);
+});
+
+test('an approximate age stored as an estimated birth date keeps ageing (audit B-1)', () => {
+  assert.equal(birthDateFromAge(0.33, '2026-11-06'), '2026-07-08'); // 120.53 days round to 121
+  assert.equal(birthDateFromAge(2, '2026-11-06'), '2024-11-05');    // 730.5 days round up to 731
+  assert.equal(birthDateFromAge(1, '2028-02-29'), '2027-02-28');    // 365.25 days round up to 366
+  // Whole years must keep their stage and completed years: 1 year is not 365 days (11.99 months, a kitten).
+  for (const years of [1, 5, 9, 11]) {
+    const c = cat({}, { approxAgeYears: null, birthDate: birthDateFromAge(years, '2026-11-06') });
+    assert.equal(Math.floor(ageInDays(c.profile, '2026-11-06') / energyModel.units.daysPerYear), years, `${years} years`);
+  }
+  assert.equal(stageOf(cat({}, { approxAgeYears: null, birthDate: birthDateFromAge(1, '2026-11-06') }), '2026-11-06'), 'adult');
+  assert.equal(birthDateFromAge(0, '2026-11-06'), '2026-11-06');
+  const kitten = cat({ weightKg: 2.5 }, { approxAgeYears: null, birthDate: birthDateFromAge(0.33, '2026-11-06') });
+  assert.equal(stageOf(kitten, '2026-11-06'), 'kitten');
+  assert.equal(stageOf(kitten, '2027-11-06'), 'adult');
 });

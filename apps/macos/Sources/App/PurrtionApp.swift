@@ -81,13 +81,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        guard let store, store.unsaved.hasChanges else { return .terminateNow }
+        guard let store else { return .terminateNow }
+        // A plan that is in memory but failed to reach the disk counts as unsaved too.
+        let failure: String? = switch store.storageIssue { case .saveFailed(let detail), .v1BackupFailed(let detail): detail; default: nil }
+        let unwritten = failure != nil
+        guard store.unsaved.hasChanges || unwritten else { return .terminateNow }
         let l = L10n.resolve(UserDefaults.standard.string(forKey: L10n.storageKey) ?? AppLanguage.system.rawValue)
         let alert = NSAlert()
-        alert.messageText = l.t("unsaved.title"); alert.informativeText = l.t("unsaved.message")
+        alert.messageText = l.t("unsaved.title")
+        alert.informativeText = store.unsaved.hasChanges ? l.t("unsaved.message") : l.t("storage.saveFailed", ["detail": failure ?? ""])
         alert.addButton(withTitle: l.t("unsaved.save")); alert.addButton(withTitle: l.t("unsaved.discard")); alert.addButton(withTitle: l.t("common.cancel"))
         switch alert.runModal() {
-        case .alertFirstButtonReturn: return store.unsaved.save() ? .terminateNow : .terminateCancel
+        case .alertFirstButtonReturn:
+            guard store.unsaved.save() else { return .terminateCancel }
+            if unwritten && !store.recoveryMode { try? store.save(store.plan) } // retry the failed write once
+            // Quit only when the plan really reached the disk; in recovery mode nothing is written, so the app stays open.
+            return store.storageIssue == nil ? .terminateNow : .terminateCancel
         case .alertSecondButtonReturn: return .terminateNow
         default: return .terminateCancel
         }
