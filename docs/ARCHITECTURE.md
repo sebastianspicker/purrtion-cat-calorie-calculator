@@ -208,7 +208,8 @@ into HTML. New cats go through a guided setup (`apps/web/src/wizard.ts`, with th
 "Professor Purr" in `mascot.ts`; `AddCatWizard.swift` on the Mac) and nothing is saved until the
 last step.
 
-Persistence is in `apps/web/src/store.ts` and `apps/macos/Sources/Stores/PlanStore.swift`. On
+Persistence is in `apps/web/src/store.ts` and `apps/macos/Sources/Stores/PlanStore.swift`; the Mac
+file rules (recovery mode, v1 copy, backups) are in `PurrtionCore/PlanFileStore.swift`, where they are tested. On
 failure the UI says that the view is a sample or in-memory state rather than claiming a save.
 Unreadable saved data is never silently overwritten. Exports are plain UTF-8 files; there is no
 hidden sync.
@@ -379,6 +380,7 @@ In the order a newcomer would read it:
 | [packages/core/src/calculation.ts](../packages/core/src/calculation.ts) | `calculatePlan`: balance food, rounding, activity split, warnings. |
 | [packages/core/src/estimator.ts](../packages/core/src/estimator.ts) | Energy estimate (RER, MER, stages, refer reasons). |
 | [packages/core/src/trend.ts](../packages/core/src/trend.ts), [nutrition.ts](../packages/core/src/nutrition.ts), [food-analysis.ts](../packages/core/src/food-analysis.ts) | Weight trend, nutrient checks, label analysis. |
+| [packages/core/src/weight-log.ts](../packages/core/src/weight-log.ts) | Adding and removing weigh-ins (current weight and BCS). |
 | [packages/core/src/export.ts](../packages/core/src/export.ts) | JSON and CSV export. |
 | [apps/web/src/main.ts](../apps/web/src/main.ts) | Website boot, navigation, import/export, cross-tab sync. |
 | [apps/web/src/store.ts](../apps/web/src/store.ts) | `PlanStore`: `localStorage`, recovery and backup keys. |

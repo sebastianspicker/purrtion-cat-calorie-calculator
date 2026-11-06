@@ -48,7 +48,7 @@ struct ContentView: View {
                 let url = try result.get()
                 let accessing = url.startAccessingSecurityScopedResource()
                 defer { if accessing { url.stopAccessingSecurityScopedResource() } }
-                pendingImport = try PlanStore.readPlan(at: url)
+                pendingImport = try PlanFileStore.readPlan(at: url)
             } catch { store.errorMessage = error.localizedDescription }
         }
         .confirmationDialog(l.t("import.title"), isPresented: Binding(

@@ -346,6 +346,9 @@ def main() -> None:
             created = saved()["cats"][-1]
             assert created["icon"] == "fish", created
             assert created["profile"]["bcs"] == 5 and created["targetSource"] == "provisional", created
+            # An approximate age is stored as an estimated birth date, so the cat keeps ageing.
+            assert created["profile"]["approxAgeYears"] is None and created["profile"]["birthDate"], created
+            expect(page.locator('[name="cat-birth"]')).to_have_value(created["profile"]["birthDate"])
             page.get_by_role("button", name="Remove cat", exact=True).click()
 
             # Guided setup, referral path: no numbers, no guide, manual target only.

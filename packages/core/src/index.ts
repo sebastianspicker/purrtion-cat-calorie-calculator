@@ -4,6 +4,7 @@ export * from './validation.js';
 export * from './food-analysis.js';
 export * from './estimator.js';
 export * from './trend.js';
+export * from './weight-log.js';
 export * from './nutrition.js';
 export * from './calculation.js';
 export * from './messages.js';
