@@ -86,7 +86,7 @@ public enum CalorieCalculator {
         let estimate = try Estimator.estimate(cat, asOf: asOf, trendStops: TrendAnalysis.stops(cat, series: series, stage: Estimator.stageOf(cat, asOf: asOf)))
         return CatResult(id: cat.id, fixedGrams: fixedGrams, fixedKcal: fixedKcal, extraKcal: cat.extraKcal, balanceFoodId: balance.id,
             balanceKcal: balanceKcal, balanceGramsExact: exact, balanceGramsRounded: rounded,
-            overBudgetKcal: max(0, -remaining), roundedDailyKcal: roundedDailyKcal,
+            overBudgetKcal: remaining < -1e-8 ? -remaining : 0, roundedDailyKcal: roundedDailyKcal,
             rerKcal: try rer(cat.weightKg), warnings: warnings.sorted { $0.rawValue < $1.rawValue },
             activities: plan.activities.enumerated().map { index, a in
                 ActivityPortion(id: a.id, label: a.label, sharePercent: a.sharePercent,

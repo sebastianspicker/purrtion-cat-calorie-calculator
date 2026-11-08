@@ -220,6 +220,13 @@ final class CalculatorTests: XCTestCase {
             }
         }
     }
+    func testFloatLevelOvershootIsNotOverBudget() throws {
+        var plan = try PlanCodec.sample(); plan.cats[0].extraKcal = 0
+        plan.cats[0].targetKcal = try CalorieCalculator.calculate(plan, asOf: Self.asOf).cats[0].fixedKcal - 1e-12
+        let cat = try CalorieCalculator.calculate(plan, asOf: Self.asOf).cats[0]
+        XCTAssertFalse(cat.warnings.contains(.overBudget))
+        XCTAssertEqual(cat.overBudgetKcal, 0)
+    }
     /// CSV rounding matches JavaScript toFixed on exact halves (101.125 -> "101.13").
     func testCSVRoundsHalvesAwayFromZero() throws {
         var plan = try PlanCodec.sample()

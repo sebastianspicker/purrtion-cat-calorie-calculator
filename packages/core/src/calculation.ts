@@ -67,7 +67,7 @@ function calculateCat(cat: Cat, plan: Plan, foods: Map<string, Food>, asOf: stri
   const series = weightSeries(cat, asOf);
   const estimate = estimateEnergy(cat, asOf, trendStops(cat, series, stageOf(cat, asOf)));
   return { id: cat.id, fixedGrams, fixedKcal, extraKcal: cat.extraKcal, balanceFoodId: balance.id, balanceKcal,
-    balanceGramsExact, balanceGramsRounded, overBudgetKcal: Math.max(0, -remaining), roundedDailyKcal,
+    balanceGramsExact, balanceGramsRounded, overBudgetKcal: remaining < -1e-8 ? -remaining : 0, roundedDailyKcal,
     rerKcal: rer(cat.weightKg), warnings: [...warnings].sort(),
     activities: plan.activities.map((a, i) => ({ ...a, exactGrams: balanceGramsExact * a.sharePercent / 100, roundedGrams: rounded[i] ?? 0 })),
     estimate, trend: trendFor(cat, asOf, estimate, series),

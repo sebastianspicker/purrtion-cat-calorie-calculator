@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Create a clean source ZIP. Excludes build output, dependencies, git internals and QA screenshots."""
+import sys
 from fnmatch import fnmatch
 from pathlib import Path
-from zipfile import ZipFile, ZIP_DEFLATED
-import sys
+from zipfile import ZIP_DEFLATED, ZipFile
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else ROOT.parent / "purrtion-scaffold.zip"
 EXCLUDE = {".git", "node_modules", "dist", ".build", ".swiftpm", "DerivedData", ".DS_Store", "__pycache__", ".venv", "venv",

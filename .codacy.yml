@@ -1,0 +1,30 @@
+---
+# Test code, vendored and generated files: not production source.
+exclude_paths:
+  - "tests/**"
+  - "apps/web/test/**"
+  - "packages/core/test/**"
+  - "packages/swift-core/Tests/**"
+  - "apps/web/vendor/**"
+  - "packages/core/src/generated/**"
+  - "packages/swift-core/Sources/PurrtionCore/Generated/**"
+  - "package-lock.json"
+
+# Tool settings come from the "Default coding standard" (repo config files are not read),
+# so noise is cut per engine here.
+engines:
+  lizard:
+    exclude_paths:
+      # SwiftLint already reports Swift complexity and function length; Lizard repeats every one.
+      - "**/*.swift"
+      # Translation tables: long by nature, no logic.
+      - "apps/web/src/i18n.ts"
+  swiftlint:
+    exclude_paths:
+      - "apps/macos/Sources/Support/L10nStrings.swift"
+  agentlinter:
+    # Agentlinter checks agent instructions; ordinary user docs are not agent rules.
+    exclude_paths:
+      - "README.md"
+      - "SECURITY.md"
+      - "docs/**"

@@ -53,7 +53,9 @@ struct L10n: Sendable, Equatable {
     }
     func percent(_ value: Double, digits: Int = 1) -> String { "\(num(value, digits: digits)) %" }
     func signedPercent(_ value: Double, digits: Int = 1) -> String {
-        "\(value > 0 ? "+" : value < 0 ? "−" : "")\(num(abs(value), digits: digits)) %"
+        let shown = num(abs(value), digits: digits), zero = num(0, digits: digits)
+        // The sign follows the rounded value, so -0.04 shows "0 %", not "−0 %".
+        return "\(shown == zero ? "" : value > 0 ? "+" : "−")\(shown) %"
     }
     func kcalPerDay(_ value: Double) -> String { "\(int(value)) \(t("unit.kcalPerDay"))" }
     func grams(_ value: Double, digits: Int = 1) -> String { "\(num(value, digits: digits)) g" }

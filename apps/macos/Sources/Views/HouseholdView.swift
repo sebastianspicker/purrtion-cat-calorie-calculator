@@ -95,7 +95,7 @@ struct HouseholdView: View {
                             Text(meal.label).frame(width: 140, alignment: .leading)
                             Text(store.plan.foodName(meal.foodId))
                             Spacer()
-                            Text(l.t("household.gramsEaten", ["grams": l.num(meal.grams)])).monospacedDigit()
+                            Text(l.t("household.gramsEaten", ["grams": l.num(meal.grams, digits: 2)])).monospacedDigit()
                         }
                         .font(.callout)
                     }

@@ -181,3 +181,10 @@ test('CSV "Calories after rounding" cell shows 101.125 as 101.13 (half rounds up
   assert.equal(calculatePlan(p, opts).cats[0].roundedDailyKcal, 101.125);
   assert.ok(planToCSV(p, opts).split('\r\n')[1].includes('"101.13"'));
 });
+test('a float-level overshoot of the target is not reported as over budget', () => {
+  const p = clone(); p.cats[0].extraKcal = 0;
+  p.cats[0].targetKcal = calculatePlan(p, opts).cats[0].fixedKcal - 1e-12;
+  const r = calculatePlan(p, opts).cats[0];
+  assert.equal(r.warnings.includes('over-budget'), false);
+  assert.equal(r.overBudgetKcal, 0);
+});

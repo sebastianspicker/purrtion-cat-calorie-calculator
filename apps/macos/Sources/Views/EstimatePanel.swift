@@ -225,7 +225,7 @@ struct PortionsSection: View {
             Text(l.t("portions.calculated", ["grams": l.fixed(result.balanceGramsExact, 2)])).font(.caption).monospacedDigit()
             if showsKcal {
                 Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 4) {
-                    row(l.t("portions.fixed"), "\(l.grams(result.fixedGrams)), \(l.num(result.fixedKcal)) kcal")
+                    row(l.t("portions.fixed"), "\(l.grams(result.fixedGrams, digits: 2)), \(l.num(result.fixedKcal)) kcal")
                     row(l.t("portions.extras"), "\(l.num(result.extraKcal)) kcal")
                     row(l.t("portions.balanceKcal"), "\(l.num(result.balanceKcal)) kcal")
                     row(l.t("portions.afterRounding"), "\(l.num(result.roundedDailyKcal)) \(l.t("unit.kcalPerDay"))")

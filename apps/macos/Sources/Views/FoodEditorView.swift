@@ -7,6 +7,8 @@ struct FoodEditorView: View {
     @State private var draft: Food
     @State private var invalidFields = Set<String>()
     @State private var error = ""
+    /// The declared label value before switching to analysis, restored if the analysis yields no energy.
+    @State private var labelEnergy: Double?
     @State private var confirmDelete = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.l10n) private var l
@@ -53,6 +55,7 @@ struct FoodEditorView: View {
         Section(existing ? l.t("food.edit") : l.t("food.new")) {
             TextField(l.t("food.name"), text: $draft.name)
             Picker(l.t("food.type"), selection: $draft.type) { ForEach(FoodType.allCases, id: \.self) { Text(l.foodType($0)).tag($0) } }
+                .onChange(of: draft) { error = "" } // a failed save must not hide later validation
                 .onChange(of: draft.type) { _, type in if type == .dry, draft.analysis?.moisture == 0 { draft.analysis?.moisture = nil } }
             Picker(l.t("food.completeness"), selection: $draft.completeness) {
                 ForEach(Completeness.allCases, id: \.self) { Text(l.completeness($0)).tag($0) }
@@ -137,21 +140,23 @@ struct FoodEditorView: View {
     }
     /// Changing the unit converts the stored number so the energy density is preserved.
     private func setUnit(_ unit: EnergyUnit) {
-        if let value = draft.energyPerUnit, draft.energySource != .analysis {
-            let kcalPerGram = FoodAnalysis.labelKcalPerGram(value, draft.energyUnit)
-            draft.energyPerUnit = kcalPerGram * (unit.rawValue.hasSuffix("/kg") ? 1000 : 100)
+        func convert(_ value: Double) -> Double {
+            FoodAnalysis.labelKcalPerGram(value, draft.energyUnit) * (unit.rawValue.hasSuffix("/kg") ? 1000 : 100)
                 * (unit.rawValue.hasPrefix("kJ") ? EnergyModel.Units.kjPerKcal : 1)
         }
+        if let value = draft.energyPerUnit, draft.energySource != .analysis { draft.energyPerUnit = convert(value) }
+        labelEnergy = labelEnergy.map(convert)
         draft.energyUnit = unit
     }
     /// Analysis energy needs an analysis and no declared value; switching back keeps the computed value as a starting point.
     private func setSource(_ source: EnergySource) {
         if source == .analysis {
             if draft.analysis == nil { draft.analysis = Analysis(protein: 0, fat: 0, fibre: 0, ash: 0, moisture: draft.type == .dry ? nil : 0) }
+            if draft.energySource != .analysis { labelEnergy = draft.energyPerUnit }
             draft.energySource = .analysis
             draft.energyPerUnit = nil
         } else {
-            if draft.energySource == .analysis { draft.energyPerUnit = draft.displayEnergy.map { ($0 * 10).rounded() / 10 } }
+            if draft.energySource == .analysis { draft.energyPerUnit = draft.displayEnergy.map { ($0 * 10).rounded() / 10 } ?? labelEnergy }
             draft.energySource = source
         }
     }
